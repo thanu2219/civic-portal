@@ -1,0 +1,69 @@
+<div class="page-container">
+  @if (loading) {
+    <div class="loading-spinner">Loading...</div>
+  } @else if (!post) {
+    <div class="empty-state">
+      <p>Article not found.</p>
+      <a routerLink="/news" class="btn btn-outline">Back to News</a>
+    </div>
+  } @else {
+    <a routerLink="/news" class="back-link">← Back to News</a>
+
+    <article class="article-card">
+      @if (post.image_url) {
+        <img [src]="post.image_url" [alt]="post.title" class="article-img" />
+      }
+      <div class="article-body">
+        <h1>{{ post.title }}</h1>
+        <div class="article-meta">
+          @if (post.author) {
+            <span>By {{ post.author.full_name }}</span>
+          }
+          <span>{{ post.created_at | slice:0:10 }}</span>
+        </div>
+        <div class="article-content">
+          <p>{{ post.body }}</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- Comments -->
+    <section class="comments-section">
+      <h2>Comments ({{ comments.length }})</h2>
+
+      @if (auth.isLoggedIn()) {
+        <form class="comment-form" (ngSubmit)="submitComment()">
+          <textarea
+            [(ngModel)]="newComment"
+            name="comment"
+            placeholder="Write a comment..."
+            rows="3"
+          ></textarea>
+          <button type="submit" class="btn btn-primary" [disabled]="submitting || !newComment.trim()">
+            {{ submitting ? 'Posting...' : 'Post Comment' }}
+          </button>
+        </form>
+      } @else {
+        <p class="login-prompt">
+          <a routerLink="/login">Sign in</a> to leave a comment.
+        </p>
+      }
+
+      @if (comments.length) {
+        <div class="comment-list">
+          @for (comment of comments; track comment.id) {
+            <div class="comment-item">
+              <div class="comment-header">
+                <strong>{{ comment.profile?.full_name ?? 'Anonymous' }}</strong>
+                <span class="comment-date">{{ comment.created_at | slice:0:16 }}</span>
+              </div>
+              <p>{{ comment.content }}</p>
+            </div>
+          }
+        </div>
+      } @else {
+        <p class="no-comments">No comments yet. Be the first to share your thoughts!</p>
+      }
+    </section>
+  }
+</div>

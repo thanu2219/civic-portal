@@ -1,0 +1,96 @@
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <h2>Admin Panel</h2>
+    <nav>
+      <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
+      <a routerLink="/admin/requests" routerLinkActive="active">Request Queue</a>
+      <a routerLink="/admin/news" routerLinkActive="active">Manage News</a>
+      <a routerLink="/admin/users" routerLinkActive="active">Manage Users</a>
+    </nav>
+  </aside>
+
+  <main class="admin-main">
+    <div class="page-header">
+      <h1>Manage News</h1>
+      <button class="btn btn-primary" (click)="openNewForm()">New Article</button>
+    </div>
+
+    <!-- Form Modal -->
+    @if (showForm) {
+      <div class="modal-overlay" (click)="showForm = false">
+        <div class="modal modal-lg" (click)="$event.stopPropagation()">
+          <h2>{{ editId ? 'Edit Article' : 'New Article' }}</h2>
+
+          @if (formError) {
+            <div class="alert alert-error">{{ formError }}</div>
+          }
+
+          <div class="form-group">
+            <label>Title *</label>
+            <input type="text" [(ngModel)]="formTitle" placeholder="Article title" />
+          </div>
+
+          <div class="form-group">
+            <label>Body *</label>
+            <textarea [(ngModel)]="formBody" rows="8" placeholder="Article body..."></textarea>
+          </div>
+
+          @if (!editId) {
+            <div class="form-group">
+              <label>Cover Image</label>
+              <input type="file" accept="image/*" (change)="onFileSelect($event)" />
+            </div>
+          }
+
+          <div class="modal-actions">
+            <button class="btn btn-outline" (click)="showForm = false">Cancel</button>
+            <button class="btn btn-primary" [disabled]="formLoading" (click)="submitForm()">
+              {{ formLoading ? 'Saving...' : (editId ? 'Update' : 'Publish') }}
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
+    @if (loading) {
+      <div class="loading-spinner">Loading...</div>
+    } @else if (!posts.length) {
+      <div class="empty-state"><p>No articles yet. Create your first one!</p></div>
+    } @else {
+      <div class="news-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (post of posts; track post.id) {
+              <tr>
+                <td>
+                  <a [routerLink]="['/news', post.id]" class="title-link">{{ post.title }}</a>
+                </td>
+                <td>
+                  <span class="badge" [class.published]="post.published" [class.draft]="!post.published">
+                    {{ post.published ? 'Published' : 'Draft' }}
+                  </span>
+                </td>
+                <td>{{ post.created_at | slice:0:10 }}</td>
+                <td class="actions-cell">
+                  <button class="btn-sm btn-edit" (click)="openEditForm(post)">Edit</button>
+                  <button class="btn-sm btn-toggle" (click)="togglePublish(post)">
+                    {{ post.published ? 'Unpublish' : 'Publish' }}
+                  </button>
+                  <button class="btn-sm btn-delete" (click)="deletePost(post)">Delete</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </main>
+</div>

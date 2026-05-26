@@ -1,0 +1,21 @@
+@use '../../../../styles-shared';
+
+.confirmation-box {
+  text-align: center;
+  padding: 1rem 0;
+
+  h2 {
+    color: #1a1a2e;
+    margin: 1rem 0 0.75rem;
+  }
+
+  p {
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+}
+
+.confirmation-icon {
+  font-size: 3rem;
+}

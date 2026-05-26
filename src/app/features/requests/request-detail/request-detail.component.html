@@ -1,0 +1,84 @@
+<div class="page-container">
+  @if (loading) {
+    <div class="loading-spinner">Loading...</div>
+  } @else if (!request) {
+    <div class="empty-state">
+      <p>Request not found.</p>
+      <a routerLink="/requests" class="btn btn-outline">Back to My Requests</a>
+    </div>
+  } @else {
+    <a routerLink="/requests" class="back-link">← Back to My Requests</a>
+
+    <div class="detail-card">
+      <div class="detail-header">
+        <div>
+          <h1>{{ request.title }}</h1>
+          <div class="detail-meta">
+            <span class="category-tag">{{ getCategoryLabel(request.category) }}</span>
+            <span class="date">Submitted {{ request.created_at | slice:0:10 }}</span>
+            @if (request.department) {
+              <span class="dept-tag">{{ request.department.name }}</span>
+            }
+          </div>
+        </div>
+        <span class="badge badge-lg" [attr.data-status]="request.status">
+          {{ getStatusLabel(request.status) }}
+        </span>
+      </div>
+
+      <div class="detail-body">
+        <h2>Description</h2>
+        <p>{{ request.description }}</p>
+
+        @if (request.photos.length) {
+          <h2>Photos</h2>
+          <div class="photo-gallery">
+            @for (photo of request.photos; track photo) {
+              <img [src]="photo" alt="Incident photo" />
+            }
+          </div>
+        }
+
+        @if (request.resolution) {
+          <div class="resolution-box">
+            <h3>Resolution</h3>
+            <p>{{ request.resolution }}</p>
+          </div>
+        }
+
+        @if (request.rejection_reason) {
+          <div class="rejection-box">
+            <h3>Rejection Reason</h3>
+            <p>{{ request.rejection_reason }}</p>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    @if (events.length) {
+      <div class="timeline-section">
+        <h2>Activity Timeline</h2>
+        <div class="timeline">
+          @for (event of events; track event.id) {
+            <div class="timeline-item">
+              <div class="timeline-dot" [attr.data-action]="event.action"></div>
+              <div class="timeline-content">
+                <div class="timeline-header">
+                  <strong>{{ event.action | titlecase }}</strong>
+                  <span class="timeline-date">{{ event.created_at | slice:0:16 }}</span>
+                </div>
+                @if (event.notes) {
+                  <p>{{ event.notes }}</p>
+                }
+                @if (event.actor) {
+                  <span class="timeline-actor">by {{ event.actor.full_name }}</span>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  }
+</div>

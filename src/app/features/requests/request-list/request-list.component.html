@@ -1,0 +1,38 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>My Requests</h1>
+    <a routerLink="/requests/new" class="btn btn-primary">Report New Issue</a>
+  </div>
+
+  @if (error) {
+    <div class="alert alert-error">{{ error }}</div>
+  }
+
+  @if (loading) {
+    <div class="loading-spinner">Loading...</div>
+  } @else if (!requests.length) {
+    <div class="empty-state">
+      <p>You haven't submitted any requests yet.</p>
+      <a routerLink="/requests/new" class="btn btn-primary">Report Your First Issue</a>
+    </div>
+  } @else {
+    <div class="request-grid">
+      @for (req of requests; track req.id) {
+        <a [routerLink]="['/requests', req.id]" class="request-card">
+          <div class="request-card-header">
+            <span class="badge" [attr.data-status]="req.status">{{ getStatusLabel(req.status) }}</span>
+            <span class="category-tag">{{ getCategoryLabel(req.category) }}</span>
+          </div>
+          <h3>{{ req.title }}</h3>
+          <p>{{ req.description | slice:0:100 }}{{ req.description.length > 100 ? '...' : '' }}</p>
+          <div class="request-meta">
+            <span>{{ req.created_at | slice:0:10 }}</span>
+            @if (req.department) {
+              <span>Dept: {{ req.department.name }}</span>
+            }
+          </div>
+        </a>
+      }
+    </div>
+  }
+</div>

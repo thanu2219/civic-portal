@@ -1,0 +1,161 @@
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <h2>Admin Panel</h2>
+    <nav>
+      <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
+      <a routerLink="/admin/requests" routerLinkActive="active">Request Queue</a>
+      @if (auth.isAdmin()) {
+        <a routerLink="/admin/news" routerLinkActive="active">Manage News</a>
+        <a routerLink="/admin/users" routerLinkActive="active">Manage Users</a>
+      }
+    </nav>
+  </aside>
+
+  <main class="admin-main">
+    <div class="page-header">
+      <h1>Request Queue</h1>
+      <button class="btn btn-outline" (click)="bulkMode = !bulkMode">
+        {{ bulkMode ? 'Cancel Bulk' : 'Bulk Resolve' }}
+      </button>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+      <select [(ngModel)]="filterStatus" (ngModelChange)="load()">
+        <option value="">All Statuses</option>
+        @for (s of statuses; track s) {
+          <option [value]="s">{{ getStatusLabel(s) }}</option>
+        }
+      </select>
+      <select [(ngModel)]="filterCategory" (ngModelChange)="load()">
+        <option value="">All Categories</option>
+        @for (cat of categories; track cat[0]) {
+          <option [value]="cat[0]">{{ cat[1] }}</option>
+        }
+      </select>
+    </div>
+
+    <!-- Bulk bar -->
+    @if (bulkMode && selectedIds.size) {
+      <div class="bulk-bar">
+        <span>{{ selectedIds.size }} selected</span>
+        <textarea
+          [(ngModel)]="bulkResolution"
+          placeholder="Resolution for all selected requests..."
+          rows="2"
+        ></textarea>
+        <button class="btn btn-primary" [disabled]="actionLoading" (click)="submitBulkResolve()">
+          {{ actionLoading ? 'Resolving...' : 'Resolve Selected' }}
+        </button>
+      </div>
+    }
+
+    @if (loading) {
+      <div class="loading-spinner">Loading...</div>
+    } @else if (!requests.length) {
+      <div class="empty-state"><p>No requests match your filters.</p></div>
+    } @else {
+      <div class="request-table">
+        <table>
+          <thead>
+            <tr>
+              @if (bulkMode) { <th></th> }
+              <th>Title</th>
+              <th>Category</th>
+              <th>Status</th>
+              <th>Submitted</th>
+              <th>Submitted By</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (req of requests; track req.id) {
+              <tr>
+                @if (bulkMode) {
+                  <td>
+                    <input
+                      type="checkbox"
+                      [checked]="selectedIds.has(req.id)"
+                      (change)="toggleSelect(req.id)"
+                    />
+                  </td>
+                }
+                <td>
+                  <a [routerLink]="['/requests', req.id]" class="title-link">{{ req.title }}</a>
+                </td>
+                <td><span class="category-tag">{{ getCategoryLabel(req.category) }}</span></td>
+                <td><span class="badge" [attr.data-status]="req.status">{{ getStatusLabel(req.status) }}</span></td>
+                <td>{{ req.created_at | slice:0:10 }}</td>
+                <td>{{ req.profile?.full_name ?? '—' }}</td>
+                <td class="actions-cell">
+                  @if (req.status === 'pending') {
+                    <button class="btn-sm btn-approve" (click)="openModal(req, 'approve')">Approve</button>
+                    <button class="btn-sm btn-reject" (click)="openModal(req, 'reject')">Reject</button>
+                  }
+                  @if (req.status === 'in_progress') {
+                    <button class="btn-sm btn-resolve" (click)="openModal(req, 'resolve')">Resolve</button>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+    <!-- Action Modal -->
+    @if (modalMode && activeRequest) {
+      <div class="modal-overlay" (click)="closeModal()">
+        <div class="modal" (click)="$event.stopPropagation()">
+          <h2>
+            @if (modalMode === 'approve') { Approve Request }
+            @if (modalMode === 'reject') { Reject Request }
+            @if (modalMode === 'resolve') { Resolve Request }
+          </h2>
+          <p class="modal-subtitle">{{ activeRequest.title }}</p>
+
+          @if (modalMode === 'approve') {
+            <div class="form-group">
+              <label>Assign to Department *</label>
+              <select [(ngModel)]="selectedDepartment" required>
+                <option value="" disabled>Select department</option>
+                @for (dept of departments; track dept.id) {
+                  <option [value]="dept.id">{{ dept.name }}</option>
+                }
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Notes (optional)</label>
+              <textarea [(ngModel)]="actionNotes" rows="3" placeholder="Additional notes..."></textarea>
+            </div>
+          }
+
+          @if (modalMode === 'reject') {
+            <div class="form-group">
+              <label>Rejection Reason *</label>
+              <textarea [(ngModel)]="actionNotes" rows="3" placeholder="Explain why this request is being rejected..." required></textarea>
+            </div>
+          }
+
+          @if (modalMode === 'resolve') {
+            <div class="form-group">
+              <label>Resolution Details *</label>
+              <textarea [(ngModel)]="actionNotes" rows="3" placeholder="Describe how the issue was resolved..." required></textarea>
+            </div>
+          }
+
+          @if (actionError) {
+            <div class="error-message">{{ actionError }}</div>
+          }
+
+          <div class="modal-actions">
+            <button class="btn btn-outline" (click)="closeModal()">Cancel</button>
+            <button class="btn btn-primary" [disabled]="actionLoading" (click)="submitAction()">
+              {{ actionLoading ? 'Processing...' : 'Confirm' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+  </main>
+</div>

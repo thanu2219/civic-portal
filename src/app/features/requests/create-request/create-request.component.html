@@ -1,0 +1,77 @@
+<div class="page-container">
+  <div class="form-card">
+    <h1>Report an Issue</h1>
+    <p class="subtitle">Provide details about the civic issue you'd like to report.</p>
+
+    @if (error) {
+      <div class="alert alert-error">{{ error }}</div>
+    }
+
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="title">Title *</label>
+        <input
+          id="title"
+          type="text"
+          [(ngModel)]="title"
+          name="title"
+          placeholder="Brief summary of the issue"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="category">Category *</label>
+        <select id="category" [(ngModel)]="category" name="category" required>
+          <option value="" disabled>Select a category</option>
+          @for (cat of categories; track cat[0]) {
+            <option [value]="cat[0]">{{ cat[1] }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description *</label>
+        <textarea
+          id="description"
+          [(ngModel)]="description"
+          name="description"
+          rows="5"
+          placeholder="Describe the issue in detail — location, severity, how long it has persisted..."
+          required
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Photos (max 5, up to 5 MB each)</label>
+        <div class="file-upload">
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            (change)="onFileSelect($event)"
+            id="photos"
+          />
+          <label for="photos" class="file-label">
+            <span>📷</span> Click to upload photos
+          </label>
+        </div>
+
+        @if (previewUrls.length) {
+          <div class="photo-previews">
+            @for (url of previewUrls; track url; let i = $index) {
+              <div class="preview-item">
+                <img [src]="url" alt="Preview" />
+                <button type="button" class="remove-btn" (click)="removePhoto(i)">✕</button>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-full" [disabled]="loading">
+        {{ loading ? 'Submitting...' : 'Submit Report' }}
+      </button>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <a routerLink="/" class="navbar-brand">
+      <span class="brand-icon">🏛️</span>
+      <span class="brand-text">CivicPortal</span>
+    </a>
+
+    <button class="menu-toggle" (click)="toggleMenu()" [class.active]="menuOpen">
+      <span></span><span></span><span></span>
+    </button>
+
+    <div class="navbar-menu" [class.open]="menuOpen">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="menuOpen=false">Home</a>
+      <a routerLink="/news" routerLinkActive="active" (click)="menuOpen=false">News</a>
+
+      @if (auth.isLoggedIn()) {
+        <a routerLink="/requests" routerLinkActive="active" (click)="menuOpen=false">My Requests</a>
+        <a routerLink="/requests/new" routerLinkActive="active" (click)="menuOpen=false" class="btn-report">Report Issue</a>
+
+        @if (auth.isStaff()) {
+          <a routerLink="/admin" routerLinkActive="active" (click)="menuOpen=false">Admin</a>
+        }
+
+        <div class="user-menu">
+          <span class="user-name">{{ auth.profile()?.full_name }}</span>
+          <span class="user-role badge" [attr.data-role]="auth.role()">{{ auth.role() }}</span>
+          <button class="btn-logout" (click)="logout()">Sign Out</button>
+        </div>
+      } @else {
+        <a routerLink="/login" routerLinkActive="active" (click)="menuOpen=false">Sign In</a>
+        <a routerLink="/register" routerLinkActive="active" (click)="menuOpen=false" class="btn-register">Register</a>
+      }
+    </div>
+  </div>
+</nav>

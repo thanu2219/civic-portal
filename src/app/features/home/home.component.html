@@ -1,0 +1,100 @@
+<div class="home">
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Report. Track. Resolve.</h1>
+      <p>Your voice matters. Report civic issues in your area and track them until resolution.</p>
+      <div class="hero-actions">
+        @if (auth.isLoggedIn()) {
+          <a routerLink="/requests/new" class="btn btn-primary btn-lg">Report an Issue</a>
+          <a routerLink="/requests" class="btn btn-outline btn-lg">My Requests</a>
+        } @else {
+          <a routerLink="/register" class="btn btn-primary btn-lg">Get Started</a>
+          <a routerLink="/login" class="btn btn-outline btn-lg">Sign In</a>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- How it Works -->
+  <section class="section how-it-works">
+    <h2>How It Works</h2>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-number">1</div>
+        <h3>Report</h3>
+        <p>Submit your civic issue with photos and details. Choose a category that fits.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-number">2</div>
+        <h3>Review</h3>
+        <p>Our team reviews your request and assigns it to the concerned department.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-number">3</div>
+        <h3>Resolve</h3>
+        <p>The department works on the issue and provides resolution details.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories -->
+  <section class="section categories">
+    <h2>Issue Categories</h2>
+    <div class="category-grid">
+      @for (cat of categories; track cat[0]) {
+        <div class="category-card">
+          <span class="category-icon">{{ categoryIcons[cat[0]] }}</span>
+          <span class="category-name">{{ cat[1] }}</span>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="section stats-section">
+    <h2>Platform Statistics</h2>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number">{{ stats.total }}</div>
+        <div class="stat-label">Total Reports</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">{{ stats.pending }}</div>
+        <div class="stat-label">Pending Review</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">{{ stats.inProgress }}</div>
+        <div class="stat-label">In Progress</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">{{ stats.completed }}</div>
+        <div class="stat-label">Resolved</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Recent News -->
+  @if (recentNews.length) {
+    <section class="section news-teaser">
+      <h2>Latest News</h2>
+      <div class="news-grid">
+        @for (post of recentNews; track post.id) {
+          <a [routerLink]="['/news', post.id]" class="news-card">
+            @if (post.image_url) {
+              <img [src]="post.image_url" [alt]="post.title" class="news-img" />
+            }
+            <div class="news-card-body">
+              <h3>{{ post.title }}</h3>
+              <p>{{ post.body | slice:0:120 }}...</p>
+              <span class="news-date">{{ post.created_at | slice:0:10 }}</span>
+            </div>
+          </a>
+        }
+      </div>
+      <div class="section-footer">
+        <a routerLink="/news" class="btn btn-outline">View All News</a>
+      </div>
+    </section>
+  }
+</div>

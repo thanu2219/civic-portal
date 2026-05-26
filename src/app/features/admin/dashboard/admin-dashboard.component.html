@@ -1,0 +1,56 @@
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <h2>Admin Panel</h2>
+    <nav>
+      <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
+      <a routerLink="/admin/requests" routerLinkActive="active">Request Queue</a>
+      @if (auth.isAdmin()) {
+        <a routerLink="/admin/news" routerLinkActive="active">Manage News</a>
+        <a routerLink="/admin/users" routerLinkActive="active">Manage Users</a>
+      }
+    </nav>
+  </aside>
+
+  <main class="admin-main">
+    <h1>Dashboard</h1>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number">{{ stats.total }}</div>
+        <div class="stat-label">Total Requests</div>
+      </div>
+      <div class="stat-card stat-pending">
+        <div class="stat-number">{{ stats.pending }}</div>
+        <div class="stat-label">Pending Review</div>
+      </div>
+      <div class="stat-card stat-progress">
+        <div class="stat-number">{{ stats.inProgress }}</div>
+        <div class="stat-label">In Progress</div>
+      </div>
+      <div class="stat-card stat-done">
+        <div class="stat-number">{{ stats.completed }}</div>
+        <div class="stat-label">Completed</div>
+      </div>
+    </div>
+
+    <div class="quick-actions">
+      <h2>Quick Actions</h2>
+      <div class="action-grid">
+        <a routerLink="/admin/requests" class="action-card">
+          <span>📋</span>
+          <span>Review Pending Requests</span>
+        </a>
+        @if (auth.isAdmin()) {
+          <a routerLink="/admin/news" class="action-card">
+            <span>📰</span>
+            <span>Publish News</span>
+          </a>
+          <a routerLink="/admin/users" class="action-card">
+            <span>👥</span>
+            <span>Manage Users</span>
+          </a>
+        }
+      </div>
+    </div>
+  </main>
+</div>

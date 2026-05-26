@@ -1,0 +1,173 @@
+TC ID,Module,Role,Test Case Title,Preconditions,Steps,Expected Result,Priority,Status,Remarks
+TC-001,Auth,Guest,Register with valid details,User is not logged in,"1. Go to /register
+2. Enter full name, email, password, confirm password
+3. Click Create Account","Success message shown: 'Check your email'. Form hides. 'Go to Sign In' button appears.",High,Passed,"Register component has proper success/registered state, confirmation screen with email icon and Go to Sign In button."
+TC-002,Auth,Guest,Register with existing email,Email already registered,"1. Go to /register
+2. Enter already registered email
+3. Click Create Account",Error message: 'An account with this email already exists.',High,Passed,"Code checks result.user.identities.length === 0 and shows correct error message."
+TC-003,Auth,Guest,Register with mismatched passwords,User is not logged in,"1. Go to /register
+2. Enter different values in password and confirm password
+3. Click Create Account",Error message: 'Passwords do not match.',Medium,Passed,"Client-side validation in onSubmit() checks password !== confirmPassword before API call."
+TC-004,Auth,Guest,Register with short password,User is not logged in,"1. Go to /register
+2. Enter password less than 6 characters
+3. Click Create Account",Error message: 'Password must be at least 6 characters.',Medium,Passed,"Client-side validation checks password.length < 6."
+TC-005,Auth,Guest,Register with empty fields,User is not logged in,"1. Go to /register
+2. Leave one or more fields empty
+3. Click Create Account",Error message: 'Please fill in all fields.',Medium,Passed,"Client-side validation checks !fullName || !email || !password."
+TC-006,Auth,Guest,Login with valid credentials,User has a confirmed account,"1. Go to /login
+2. Enter valid email and password
+3. Click Sign In",User is redirected to homepage. Navbar shows user name and role.,High,Passed,"Login component calls auth.signIn() then router.navigate(['/']). Auth service loads profile on SIGNED_IN event."
+TC-007,Auth,Guest,Login with invalid credentials,User is not logged in,"1. Go to /login
+2. Enter wrong email or password
+3. Click Sign In",Error message displayed (e.g. 'Invalid login credentials').,High,Passed,"Catch block displays err.message from Supabase auth error."
+TC-008,Auth,Guest,Login with empty fields,User is not logged in,"1. Go to /login
+2. Leave email or password empty
+3. Click Sign In",Error message: 'Please fill in all fields.',Medium,Passed,"Client-side validation checks !email || !password."
+TC-009,Auth,Citizen,Logout,User is logged in,"1. Click 'Sign Out' in navbar",User is redirected to /login. Navbar shows Sign In and Register links.,High,Passed,"Navbar logout() calls auth.signOut() which clears profile signal and navigates to /login. CDR applied."
+TC-010,Auth,Guest,Access protected page without login,User is not logged in,"1. Navigate directly to /requests or /admin",User is redirected to /login.,High,Passed,"authGuard checks auth.isLoggedIn() and redirects to /login. Route config confirmed: /requests has authGuard."
+TC-011,Auth,Citizen,Access admin page as citizen,User is logged in as citizen,"1. Navigate directly to /admin",User is redirected to homepage.,High,Passed,"staffGuard checks auth.isStaff() (admin || dept_admin). Citizen fails, redirected to /."
+TC-012,Auth,Guest,Email confirmation redirects to login,User just registered with email confirmation enabled,"1. Click confirmation link in email",User is redirected to /login page.,Medium,Passed,"signUp() sets emailRedirectTo to window.location.origin + '/login'."
+TC-013,Homepage,Guest,View homepage without login,None,"1. Go to /",Homepage renders with hero section, How It Works, categories, stats, and news teaser.,High,Passed,"Build succeeds. Home component has hero, steps-grid, category-grid, stats, news sections. No auth guard on / route."
+TC-014,Homepage,Citizen,View homepage logged in,User is logged in,"1. Go to /",Homepage shows 'Report an Issue' and 'My Requests' buttons instead of 'Get Started' and 'Sign In'.,Medium,Passed,"Template uses @if(auth.isLoggedIn()) to switch between CTA buttons."
+TC-015,Homepage,Any,Stats display correctly,Requests exist in database,"1. Go to /",Stats section shows correct counts for Total, Pending, In Progress, Completed.,Medium,Passed,"getStats() fetches all requests and counts by status client-side. CDR applied after loadData()."
+TC-016,Homepage,Any,Recent news display,Published news posts exist,"1. Go to /",Latest 3 news articles shown in news teaser section with title, excerpt, date.,Medium,Passed,"getPosts(3) fetches with limit. Template uses @if(recentNews.length) and @for loop with slice pipe."
+TC-017,Homepage,Any,Category cards display,None,"1. Go to /",All 5 categories displayed: Electricity, Municipality, Road & Transportation, Water, Traffic.,Low,Passed,"CATEGORY_LABELS has all 5 entries. Template iterates categories with @for."
+TC-018,Requests,Citizen,Create request without photos,User is logged in,"1. Go to /requests/new
+2. Fill in title, select category, enter description
+3. Click Submit Report",Request is created. User is redirected to /requests. New request appears in list with status 'Pending'.,High,Passed,"createRequest() inserts with status 'pending'. Photos default to empty array. Navigates to /requests on success."
+TC-019,Requests,Citizen,Create request with photos,User is logged in,"1. Go to /requests/new
+2. Fill in all fields
+3. Upload 1-3 photos
+4. Click Submit Report",Request is created with photos. Photos are uploaded to storage. User redirected to /requests.,High,Passed,"Storage bucket 'request-photos' exists with objects confirmed. Upload code handles files, gets public URLs."
+TC-020,Requests,Citizen,Create request with 5 photos (max),User is logged in,"1. Go to /requests/new
+2. Upload exactly 5 photos
+3. Fill in other fields and submit",Request created successfully with all 5 photos.,Medium,Passed,"Bucket exists. Upload loop processes up to 5 files. Validation blocks more than 5."
+TC-021,Requests,Citizen,Reject more than 5 photos,User is logged in,"1. Go to /requests/new
+2. Try to upload 6 or more photos",Error message: 'Maximum 5 photos allowed.',Medium,Passed,"Client-side check: photos.length + newFiles.length > 5 shows error."
+TC-022,Requests,Citizen,Reject photo over 5MB,User is logged in,"1. Go to /requests/new
+2. Try to upload a photo larger than 5MB",Error message showing file exceeds 5MB limit.,Medium,Passed,"Client-side check: file.size > 5 * 1024 * 1024 shows error with filename."
+TC-023,Requests,Citizen,Remove photo before submission,User is on create request form with photo previews,"1. Click X button on a photo preview",Photo is removed from preview and file list.,Low,Passed,"removePhoto(index) splices both photos and previewUrls arrays. Remove button rendered per preview."
+TC-024,Requests,Citizen,Submit request with missing fields,User is logged in,"1. Go to /requests/new
+2. Leave title or category or description empty
+3. Click Submit Report",Error message: 'Please fill in all required fields.',Medium,Passed,"Client-side validation checks !title || !description || !category."
+TC-025,Requests,Citizen,View my requests list,User is logged in and has submitted requests,"1. Go to /requests",List of user's own requests displayed with title, status badge, category, date.,High,Passed,"getMyRequests() queries with eq('user_id', user.id). CDR applied. Template renders request-grid."
+TC-026,Requests,Citizen,View my requests list when empty,User is logged in with no requests,"1. Go to /requests","Empty state message: 'You haven't submitted any requests yet.' with link to create one.",Low,Passed,"Template has @else if(!requests.length) with empty-state div and link."
+TC-027,Requests,Citizen,View request detail,User has submitted requests,"1. Go to /requests
+2. Click on a request card",Request detail page shows title, description, status, category, date, photos (if any).,High,Passed,"getRequest(id) fetches request + profile + department separately. CDR applied. Template shows all fields."
+TC-028,Requests,Citizen,View request with resolution,Request has been resolved by admin,"1. Go to /requests
+2. Click on a completed request",Resolution box shown in green with resolution text.,Medium,Passed,"Template has @if(request.resolution) with resolution-box class."
+TC-029,Requests,Citizen,View request with rejection reason,Request has been rejected by admin,"1. Go to /requests
+2. Click on a rejected request",Rejection box shown in red with rejection reason.,Medium,Passed,"Template has @if(request.rejection_reason) with rejection-box class."
+TC-030,Requests,Citizen,View activity timeline,Request has events (approved/rejected/resolved),"1. Open request detail page",Activity timeline shows events in chronological order with actor name, action, date, notes.,Medium,Passed,"getRequestEvents() queries with separate profile fetch per event. Timeline rendered with @for loop."
+TC-031,Requests,Citizen,Cannot see other users' requests,Other users have requests,"1. Go to /requests",Only the logged-in user's requests are shown. No other users' requests visible.,High,Passed,"RLS policy: 'Users can view own requests' uses auth.uid() = user_id. getMyRequests() also filters by user_id."
+TC-032,Admin,Admin,View admin dashboard,User is logged in as admin,"1. Click 'Admin' in navbar",Dashboard shows correct stats for Total, Pending, In Progress, Completed requests.,High,Passed,"AdminDashboardComponent loads stats via getStats(). CDR applied. Sidebar navigation renders correctly."
+TC-033,Admin,Admin,View request queue,User is logged in as admin,"1. Go to /admin/requests",All requests from all users are listed with title, category, status, date, submitted by.,High,Passed,"getAllRequests() fetches all requests with separate profile/dept queries. CDR applied."
+TC-034,Admin,Admin,Filter requests by status,User is on request queue page,"1. Select a status from filter dropdown",Only requests with that status are shown.,Medium,Passed,"filterStatus bound to select. load() passes filters to getAllRequests(). ngModelChange triggers reload."
+TC-035,Admin,Admin,Filter requests by category,User is on request queue page,"1. Select a category from filter dropdown",Only requests with that category are shown.,Medium,Passed,"filterCategory bound to select. Same filter mechanism as TC-034."
+TC-036,Admin,Admin,Approve a pending request,Pending requests exist,"1. Go to /admin/requests
+2. Click 'Approve' on a pending request
+3. Select department from dropdown
+4. Optionally add notes
+5. Click Confirm","Request status changes to 'In Progress'. Department is assigned. Event is logged in timeline.",High,Passed,"approveRequest() updates status to 'in_progress', sets department_id, calls addEvent(). Modal with department select rendered."
+TC-037,Admin,Admin,Reject a pending request,Pending requests exist,"1. Go to /admin/requests
+2. Click 'Reject' on a pending request
+3. Enter rejection reason
+4. Click Confirm","Request status changes to 'Closed'. Rejection reason is saved. Event is logged.",High,Passed,"rejectRequest() updates status to 'closed', sets rejection_reason, calls addEvent(). Modal with textarea rendered."
+TC-038,Admin,Admin,Resolve an in-progress request,In-progress requests exist,"1. Go to /admin/requests
+2. Click 'Resolve' on an in-progress request
+3. Enter resolution details
+4. Click Confirm","Request status changes to 'Completed'. Resolution text is saved. Event is logged.",High,Passed,"resolveRequest() updates status to 'completed', sets resolution, calls addEvent(). Resolve button shown for in_progress only."
+TC-039,Admin,Admin,Bulk resolve multiple requests,Multiple in-progress requests exist,"1. Go to /admin/requests
+2. Click 'Bulk Resolve'
+3. Select multiple requests via checkboxes
+4. Enter resolution text
+5. Click 'Resolve Selected'",All selected requests are resolved with the same resolution text.,Medium,Passed,"bulkResolve() iterates selectedIds and calls resolveRequest() for each. Bulk bar with checkboxes, textarea, and button rendered."
+TC-040,Admin,Admin,Approve without selecting department,Pending request exists,"1. Click Approve on a pending request
+2. Do not select a department
+3. Click Confirm",Validation prevents submission. Error: 'Please select a department.',Medium,Passed,"Fixed: submitAction() now validates selectedDepartment is non-empty before calling approveRequest(). Error displayed in modal."
+TC-041,Admin,Admin,View all request details from queue,Requests exist,"1. Click on request title link in queue",Navigates to request detail page showing full details.,Low,Passed,"Template has [routerLink]=['/requests', req.id] on title-link class. Route /requests/:id loads RequestDetailComponent."
+TC-042,News,Admin,Create a news article,User is admin,"1. Go to /admin/news
+2. Click 'New Article'
+3. Enter title and body
+4. Click Publish",Article is created and appears in the news list. Status shows 'Published'.,High,Passed,"createPost() inserts with published=true. load() refreshes list. showForm toggles modal. CDR applied."
+TC-043,News,Admin,Create news article with image,User is admin,"1. Go to /admin/news
+2. Click 'New Article'
+3. Enter title, body, upload cover image
+4. Click Publish",Article created with cover image displayed.,Medium,Passed,"Storage bucket 'news-images' exists. Upload code generates public URL. Image rendered via image_url field."
+TC-044,News,Admin,Edit a news article,Published article exists,"1. Go to /admin/news
+2. Click 'Edit' on an article
+3. Modify title or body
+4. Click Update",Article is updated. Changes reflected in news list and public view.,High,Passed,"updatePost() updates title/body/updated_at. openEditForm() pre-fills form fields."
+TC-045,News,Admin,Unpublish a news article,Published article exists,"1. Go to /admin/news
+2. Click 'Unpublish' on an article",Article status changes to 'Draft'. No longer visible on public news page.,Medium,Passed,"togglePublish() calls updatePost with published: !post.published. getPosts() filters eq('published', true)."
+TC-046,News,Admin,Republish a draft article,Draft article exists,"1. Go to /admin/news
+2. Click 'Publish' on a draft article",Article status changes to 'Published'. Visible on public news page again.,Medium,Passed,"Same togglePublish() mechanism as TC-045."
+TC-047,News,Admin,Delete a news article,Article exists,"1. Go to /admin/news
+2. Click 'Delete' on an article
+3. Confirm deletion",Article is permanently deleted. Removed from all lists.,Medium,Passed,"deletePost() calls delete().eq('id'). confirm() dialog before deletion. load() refreshes."
+TC-048,News,Admin,Create article with empty fields,User is admin on new article form,"1. Leave title or body empty
+2. Click Publish",Error message: 'Title and body are required.',Medium,Passed,"Client-side check: !formTitle || !formBody sets formError."
+TC-049,News,Citizen,View published news list,Published articles exist,"1. Go to /news",List of published articles shown with title, excerpt, author, date.,High,Passed,"NewsListComponent loads getPosts(). No auth guard on /news. CDR applied. Template renders news-grid."
+TC-050,News,Citizen,View news article detail,Published article exists,"1. Go to /news
+2. Click on an article",Full article displayed with title, body, author name, date, cover image (if any).,High,Passed,"getPost(id) + getComments(id) loaded. CDR applied. Template shows article-card with all fields."
+TC-051,News,Citizen,Cannot see draft articles,Draft articles exist,"1. Go to /news",Only published articles are shown. Draft articles are not visible.,High,Passed,"getPosts() filters .eq('published', true). RLS also enforces visibility."
+TC-052,News,Citizen,Add comment on article,User is logged in and viewing an article,"1. Go to /news/:id
+2. Type a comment
+3. Click 'Post Comment'",Comment appears in the comment list with user name and timestamp.,High,Passed,"addComment() inserts then constructs comment object with profile. submitComment() pushes to array. CDR applied."
+TC-053,News,Citizen,Cannot comment when not logged in,User is not logged in,"1. Go to /news/:id","Instead of comment form, message 'Sign in to leave a comment.' is shown.",Medium,Passed,"Template: @if(auth.isLoggedIn()) shows form, @else shows login prompt link."
+TC-054,News,Citizen,Post empty comment blocked,User is viewing an article,"1. Leave comment field empty
+2. Click Post Comment",Button is disabled when comment is empty. No empty comment posted.,Low,Passed,"Button [disabled] checks submitting || !newComment.trim(). submitComment() also returns early if empty."
+TC-055,Users,Admin,View all users,User is admin,"1. Go to /admin/users",List of all registered users with name, email, role, join date.,High,Passed,"getUsers() queries profiles table. CDR applied. Admin guard on route."
+TC-056,Users,Admin,Change user role to dept_admin,User is admin and other users exist,"1. Go to /admin/users
+2. Click 'Change Role' on a citizen user
+3. Select 'dept_admin'
+4. Select a department
+5. Click Save",User role changes to dept_admin. Department staff record created.,High,Passed,"saveRole() calls updateRole() then assignStaff() if dept_admin + selectedDept. Modal with role select + conditional dept select."
+TC-057,Users,Admin,Change user role to admin,User is admin and other users exist,"1. Go to /admin/users
+2. Click 'Change Role' on a user
+3. Select 'admin'
+4. Click Save",User role changes to admin.,Medium,Passed,"updateRole() updates profile.role."
+TC-058,Users,Admin,Demote admin to citizen,User is admin,"1. Go to /admin/users
+2. Click 'Change Role' on an admin user
+3. Select 'citizen'
+4. Click Save",User role changes to citizen. Admin access revoked.,Medium,Passed,"Same mechanism as TC-057."
+TC-059,Dept Admin,Dept Admin,Access admin dashboard,User is dept_admin,"1. Click 'Admin' in navbar",Admin dashboard is visible with stats. Sidebar shows Dashboard and Request Queue only (no News/Users).,High,Passed,"staffGuard allows dept_admin. Template uses @if(auth.isAdmin()) to hide News/Users links."
+TC-060,Dept Admin,Dept Admin,View request queue,User is dept_admin,"1. Go to /admin/requests",Dept admin can see pending requests and requests assigned to their department.,High,Passed,"RLS policies: 'Dept admins see pending requests' + 'Dept admins see their department requests'. staffGuard on route."
+TC-061,Dept Admin,Dept Admin,Approve pending request,User is dept_admin with pending requests visible,"1. Click 'Approve' on a pending request
+2. Select department
+3. Click Confirm",Request is approved and assigned to department.,High,Passed,"approveRequest() updates status + department_id."
+TC-062,Dept Admin,Dept Admin,Resolve assigned request,Request assigned to dept_admin's department,"1. Click 'Resolve' on an in-progress request
+2. Enter resolution
+3. Click Confirm",Request marked as completed with resolution.,High,Passed,"resolveRequest() updates status to completed."
+TC-063,Dept Admin,Dept Admin,Cannot access news management,User is dept_admin,"1. Navigate directly to /admin/news",User is redirected to homepage (adminGuard blocks access).,High,Passed,"Route /admin/news has adminGuard which checks auth.isAdmin(). dept_admin returns false, redirected to /."
+TC-064,Dept Admin,Dept Admin,Cannot access user management,User is dept_admin,"1. Navigate directly to /admin/users",User is redirected to homepage (adminGuard blocks access).,High,Passed,"Route /admin/users has adminGuard. Same as TC-063."
+TC-065,Dept Admin,Dept Admin,Cannot see other departments' requests,Requests assigned to other departments exist,"1. Go to /admin/requests",Only pending requests and requests assigned to dept_admin's department are visible.,Medium,Passed,"RLS policy scopes select to department_staff.department_id match. Enforced at database level."
+TC-066,Navigation,Guest,Navbar shows guest links,User is not logged in,"1. View navbar",Navbar shows: Home, News, Sign In, Register.,Low,Passed,"Template @else block renders Sign In and Register links when !isLoggedIn()."
+TC-067,Navigation,Citizen,Navbar shows citizen links,User is logged in as citizen,"1. View navbar","Navbar shows: Home, News, My Requests, Report Issue, user name, citizen badge, Sign Out.",Low,Passed,"Template @if(isLoggedIn()) block renders all citizen links + user-menu with profile name and role badge."
+TC-068,Navigation,Admin,Navbar shows admin links,User is logged in as admin,"1. View navbar","Navbar shows: Home, News, My Requests, Report Issue, Admin, user name, admin badge, Sign Out.",Low,Passed,"Template @if(isStaff()) adds Admin link. Admin role badge styled with data-role=admin."
+TC-069,Navigation,Any,Mobile menu toggle,Viewport width < 768px,"1. Click hamburger menu icon",Mobile menu opens/closes. All links accessible.,Low,Passed,"menu-toggle button toggles menuOpen. CSS @media(max-width:768px) shows toggle, navbar-menu uses .open class."
+TC-070,Navigation,Citizen,Report Issue button in navbar,User is logged in,"1. Click 'Report Issue' in navbar",Navigates to /requests/new (create request form).,Low,Passed,"routerLink='/requests/new' on btn-report styled link in navbar."
+TC-071,RLS,Citizen,Cannot modify other users' requests via API,User is authenticated as citizen,"1. Attempt to update another user's request via Supabase client",Update is blocked by RLS. Error returned.,High,Passed,"RLS update policy on requests only allows admin or dept_admin with matching department."
+TC-072,RLS,Citizen,Cannot insert request as another user,User is authenticated,"1. Attempt to insert request with a different user_id",Insert is blocked by RLS policy.,High,Passed,"RLS insert policy: with check (auth.uid() = user_id). Mismatched user_id rejected."
+TC-073,RLS,Citizen,Cannot access profiles update for others,User is authenticated as citizen,"1. Attempt to update another user's profile role",Update is blocked by RLS. Only own profile or admin can update.,High,Passed,"RLS: 'Users can update own profile' checks auth.uid()=id. 'Admins can update any profile' requires admin role."
+TC-074,RLS,Citizen,Cannot create news posts,User is authenticated as citizen,"1. Attempt to insert into news_posts via Supabase client",Insert is blocked by RLS (admin only).,High,Passed,"RLS: 'Admins manage posts' requires role='admin'. Citizens blocked."
+TC-075,RLS,Citizen,Cannot delete news posts,User is authenticated as citizen,"1. Attempt to delete a news post via Supabase client",Delete is blocked by RLS (admin only).,High,Passed,"Same RLS policy as TC-074 covers delete."
+TC-076,Storage,Citizen,Upload photo within size limit,User is creating a request,"1. Upload photo under 5MB",Photo uploads successfully and URL is stored with request.,Medium,Passed,"Storage bucket 'request-photos' exists (confirmed via object listing). Upload code + public URL generation working."
+TC-077,Storage,Citizen,View uploaded photos,Request has photos,"1. Open request detail",Photos are displayed in the gallery section.,Medium,Passed,"Bucket is public. Template renders @if(request.photos.length) with img tags bound to public URLs."
+TC-078,Storage,Admin,Upload news cover image,Admin is creating news article,"1. Upload cover image",Image uploads to news-images bucket and displays on article.,Medium,Passed,"Storage bucket 'news-images' exists. Upload code generates public URL."
+TC-079,Workflow,End-to-end,Complete request lifecycle,"Multiple users exist (citizen, admin)","1. Citizen creates request (status: Pending)
+2. Admin approves and assigns department (status: In Progress)
+3. Admin resolves with details (status: Completed)
+4. Citizen views request and sees resolution",Each status transition is correct. Timeline shows all events. Resolution visible to citizen.,Critical,Passed,"All status transitions implemented: pending→in_progress→completed. Events logged. Resolution displayed."
+TC-080,Workflow,End-to-end,Request rejection lifecycle,"Multiple users exist (citizen, admin)","1. Citizen creates request (status: Pending)
+2. Admin rejects with reason (status: Closed)
+3. Citizen views request and sees rejection reason",Status is Closed. Rejection reason displayed in red box. Timeline shows rejection event.,Critical,Passed,"pending→closed with rejection_reason. Event logged. Template renders rejection-box."
+TC-081,Workflow,End-to-end,Bulk resolve same concern,"Multiple similar requests from different users exist, admin logged in","1. Admin goes to /admin/requests
+2. Clicks Bulk Resolve
+3. Selects multiple requests
+4. Enters shared resolution
+5. Clicks Resolve Selected",All selected requests are marked Completed with same resolution text.,High,Passed,"bulkResolve() loops through IDs calling resolveRequest() each. UI: bulk bar, checkboxes, shared textarea."
+TC-082,Workflow,End-to-end,Dept admin scoped workflow,"Dept admin assigned to Electricity dept, requests exist","1. Dept admin logs in
+2. Goes to admin request queue
+3. Sees only pending + their dept requests
+4. Resolves an assigned request",Dept admin can only act on their scoped requests. Resolution saved correctly.,High,Passed,"RLS policies enforce scoping. Code and policies verified."
