@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { SlicePipe } from '@angular/common';
+import { SlicePipe, TitleCasePipe } from '@angular/common';
 import { RequestService } from '../../../core/services/request.service';
 import { DepartmentService } from '../../../core/services/department.service';
 import { AuthService } from '../../../core/services/auth.service';
@@ -10,6 +10,7 @@ import {
   Department,
   RequestStatus,
   RequestCategory,
+  RequestEvent,
   CATEGORY_LABELS,
   STATUS_LABELS,
   DEPT_REJECTION_REASONS,
@@ -18,7 +19,7 @@ import {
 @Component({
   selector: 'app-request-queue',
   standalone: true,
-  imports: [FormsModule, RouterLink, RouterLinkActive, SlicePipe],
+  imports: [FormsModule, RouterLink, RouterLinkActive, SlicePipe, TitleCasePipe],
   templateUrl: './request-queue.component.html',
   styleUrl: './request-queue.component.scss',
 })
@@ -34,6 +35,11 @@ export class RequestQueueComponent implements OnInit {
   categoryLabels = CATEGORY_LABELS;
   statusLabels = STATUS_LABELS;
   rejectionReasons = DEPT_REJECTION_REASONS;
+
+  // Detail panel
+  viewRequest: ServiceRequest | null = null;
+  viewEvents: RequestEvent[] = [];
+  viewLoading = false;
 
   activeRequest: ServiceRequest | null = null;
   modalMode: 'approve' | 'reject' | 'resolve' | 'dept_reject' | null = null;
@@ -84,6 +90,34 @@ export class RequestQueueComponent implements OnInit {
 
     this.loading = false;
     this.cdr.detectChanges();
+  }
+
+  async openDetail(request: ServiceRequest) {
+    this.viewRequest = request;
+    this.viewEvents = [];
+    this.viewLoading = true;
+    this.cdr.detectChanges();
+
+    try {
+      const full = await this.requestService.getRequest(request.id);
+      this.viewRequest = full;
+      this.viewEvents = await this.requestService.getRequestEvents(request.id);
+    } catch (err) {
+      console.error('Failed to load request detail:', err);
+    }
+
+    this.viewLoading = false;
+    this.cdr.detectChanges();
+  }
+
+  closeDetail() {
+    this.viewRequest = null;
+    this.viewEvents = [];
+  }
+
+  openModalFromDetail(mode: 'approve' | 'reject' | 'resolve' | 'dept_reject') {
+    if (!this.viewRequest) return;
+    this.openModal(this.viewRequest, mode);
   }
 
   openModal(request: ServiceRequest, mode: 'approve' | 'reject' | 'resolve' | 'dept_reject') {
@@ -195,6 +229,9 @@ export class RequestQueueComponent implements OnInit {
       }
       this.closeModal();
       await this.load();
+      if (this.viewRequest) {
+        await this.openDetail(this.viewRequest);
+      }
     } catch (err: any) {
       console.error('Action failed:', err);
       this.actionError = err.message || 'Action failed. Please try again.';

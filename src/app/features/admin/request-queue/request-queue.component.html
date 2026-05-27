@@ -50,6 +50,101 @@
       </div>
     }
 
+    <!-- Detail Panel -->
+    @if (viewRequest) {
+      <div class="detail-panel">
+        <div class="detail-panel-header">
+          <div>
+            <h2>{{ viewRequest.title }}</h2>
+            <div class="detail-panel-meta">
+              <span class="category-tag">{{ getCategoryLabel(viewRequest.category) }}</span>
+              <span class="badge" [attr.data-status]="viewRequest.status">{{ getStatusLabel(viewRequest.status) }}</span>
+              @if (viewRequest.department) {
+                <span class="dept-tag">{{ viewRequest.department.name }}</span>
+              }
+              <span class="date-tag">{{ viewRequest.created_at | slice:0:10 }}</span>
+              @if (viewRequest.profile) {
+                <span class="user-tag">by {{ viewRequest.profile.full_name }}</span>
+              }
+            </div>
+          </div>
+          <button class="btn-close" (click)="closeDetail()">✕</button>
+        </div>
+
+        @if (viewLoading) {
+          <div class="loading-spinner">Loading details...</div>
+        } @else {
+          <div class="detail-panel-body">
+            <h3>Description</h3>
+            <p>{{ viewRequest.description }}</p>
+
+            @if (viewRequest.photos.length) {
+              <h3>Photos</h3>
+              <div class="detail-photos">
+                @for (photo of viewRequest.photos; track photo) {
+                  <img [src]="photo" alt="Incident photo" />
+                }
+              </div>
+            }
+
+            @if (viewRequest.resolution) {
+              <div class="resolution-box">
+                <h3>Resolution</h3>
+                <p>{{ viewRequest.resolution }}</p>
+                @if (viewRequest.resolution_photo) {
+                  <img [src]="viewRequest.resolution_photo" alt="Resolution photo" class="resolution-img" />
+                }
+              </div>
+            }
+
+            @if (viewRequest.rejection_reason) {
+              <div class="rejection-box">
+                <h3>Rejection Reason</h3>
+                <p>{{ viewRequest.rejection_reason }}</p>
+              </div>
+            }
+
+            <!-- Timeline -->
+            @if (viewEvents.length) {
+              <h3>Activity Timeline</h3>
+              <div class="detail-timeline">
+                @for (event of viewEvents; track event.id) {
+                  <div class="timeline-entry">
+                    <span class="timeline-dot-sm" [attr.data-action]="event.action"></span>
+                    <div>
+                      <strong>{{ event.action | titlecase }}</strong>
+                      <span class="timeline-date-sm">{{ event.created_at | slice:0:16 }}</span>
+                      @if (event.notes) {
+                        <p class="timeline-notes">{{ event.notes }}</p>
+                      }
+                      @if (event.actor) {
+                        <span class="timeline-actor-sm">by {{ event.actor.full_name }}</span>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Action buttons in detail panel -->
+          <div class="detail-panel-actions">
+            @if (auth.isAdmin() && viewRequest.status === 'pending') {
+              <button class="btn btn-approve-lg" (click)="openModalFromDetail('approve')">Approve</button>
+              <button class="btn btn-reject-lg" (click)="openModalFromDetail('reject')">Reject</button>
+            }
+            @if (auth.isAdmin() && viewRequest.status === 'in_progress') {
+              <button class="btn btn-resolve-lg" (click)="openModalFromDetail('resolve')">Resolve</button>
+            }
+            @if (auth.isDeptAdmin() && viewRequest.status === 'in_progress') {
+              <button class="btn btn-resolve-lg" (click)="openModalFromDetail('resolve')">Resolve</button>
+              <button class="btn btn-reject-lg" (click)="openModalFromDetail('dept_reject')">Reject</button>
+            }
+          </div>
+        }
+      </div>
+    }
+
     @if (loading) {
       <div class="loading-spinner">Loading...</div>
     } @else if (!requests.length) {
@@ -71,9 +166,9 @@
           </thead>
           <tbody>
             @for (req of requests; track req.id) {
-              <tr>
+              <tr class="clickable-row" [class.active-row]="viewRequest?.id === req.id" (click)="openDetail(req)">
                 @if (bulkMode) {
-                  <td>
+                  <td (click)="$event.stopPropagation()">
                     <input
                       type="checkbox"
                       [checked]="selectedIds.has(req.id)"
@@ -82,14 +177,14 @@
                   </td>
                 }
                 <td>
-                  <a [routerLink]="['/requests', req.id]" class="title-link">{{ req.title }}</a>
+                  <span class="title-text">{{ req.title }}</span>
                 </td>
                 <td><span class="category-tag">{{ getCategoryLabel(req.category) }}</span></td>
                 <td>{{ req.department?.name ?? '—' }}</td>
                 <td><span class="badge" [attr.data-status]="req.status">{{ getStatusLabel(req.status) }}</span></td>
                 <td>{{ req.created_at | slice:0:10 }}</td>
                 <td>{{ req.profile?.full_name ?? '—' }}</td>
-                <td class="actions-cell">
+                <td class="actions-cell" (click)="$event.stopPropagation()">
                   <!-- Admin actions on pending requests -->
                   @if (auth.isAdmin() && req.status === 'pending') {
                     <button class="btn-sm btn-approve" (click)="openModal(req, 'approve')">Approve</button>
@@ -124,7 +219,6 @@
           </h2>
           <p class="modal-subtitle">{{ activeRequest.title }}</p>
 
-          <!-- Admin Approve -->
           @if (modalMode === 'approve') {
             <div class="form-group">
               <label>Assign to Department *</label>
@@ -141,7 +235,6 @@
             </div>
           }
 
-          <!-- Admin Reject -->
           @if (modalMode === 'reject') {
             <div class="form-group">
               <label>Rejection Reason *</label>
@@ -149,7 +242,6 @@
             </div>
           }
 
-          <!-- Resolve (admin or dept_admin) -->
           @if (modalMode === 'resolve') {
             <div class="form-group">
               <label>Resolution Details *</label>
@@ -167,7 +259,6 @@
             </div>
           }
 
-          <!-- Dept Admin Reject -->
           @if (modalMode === 'dept_reject') {
             <div class="form-group">
               <label>Rejection Reason *</label>
