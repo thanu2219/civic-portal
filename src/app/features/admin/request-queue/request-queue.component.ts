@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SlicePipe } from '@angular/common';
@@ -12,6 +12,7 @@ import {
   RequestCategory,
   CATEGORY_LABELS,
   STATUS_LABELS,
+  DEPT_REJECTION_REASONS,
 } from '../../../core/models/types';
 
 @Component({
@@ -32,13 +33,22 @@ export class RequestQueueComponent implements OnInit {
   categories = Object.entries(CATEGORY_LABELS) as [RequestCategory, string][];
   categoryLabels = CATEGORY_LABELS;
   statusLabels = STATUS_LABELS;
+  rejectionReasons = DEPT_REJECTION_REASONS;
 
-  // Modal state
   activeRequest: ServiceRequest | null = null;
-  modalMode: 'approve' | 'reject' | 'resolve' | null = null;
+  modalMode: 'approve' | 'reject' | 'resolve' | 'dept_reject' | null = null;
   selectedDepartment = '';
   actionNotes = '';
   actionLoading = false;
+  actionError = '';
+
+  // Dept admin rejection
+  selectedRejectionReason = '';
+  rejectionFreeText = '';
+
+  // Resolution photo
+  resolutionPhoto: File | null = null;
+  resolutionPhotoPreview = '';
 
   // Bulk resolve
   selectedIds = new Set<string>();
@@ -49,7 +59,8 @@ export class RequestQueueComponent implements OnInit {
     private requestService: RequestService,
     private departmentService: DepartmentService,
     public auth: AuthService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private zone: NgZone
   ) {}
 
   ngOnInit() {
@@ -75,12 +86,21 @@ export class RequestQueueComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  openModal(request: ServiceRequest, mode: 'approve' | 'reject' | 'resolve') {
+  openModal(request: ServiceRequest, mode: 'approve' | 'reject' | 'resolve' | 'dept_reject') {
     this.activeRequest = request;
     this.modalMode = mode;
-    this.selectedDepartment = '';
     this.actionNotes = '';
     this.actionError = '';
+    this.selectedRejectionReason = '';
+    this.rejectionFreeText = '';
+    this.resolutionPhoto = null;
+    this.resolutionPhotoPreview = '';
+
+    if (mode === 'approve' && request.department_id) {
+      this.selectedDepartment = request.department_id;
+    } else {
+      this.selectedDepartment = '';
+    }
   }
 
   closeModal() {
@@ -88,7 +108,35 @@ export class RequestQueueComponent implements OnInit {
     this.modalMode = null;
   }
 
-  actionError = '';
+  onResolutionPhotoSelect(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) return;
+
+    const file = input.files[0];
+    if (file.size > 5 * 1024 * 1024) {
+      this.actionError = 'Photo must be under 5 MB.';
+      return;
+    }
+
+    this.resolutionPhoto = file;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.zone.run(() => {
+        this.resolutionPhotoPreview = e.target?.result as string;
+        this.cdr.detectChanges();
+      });
+    };
+    reader.readAsDataURL(file);
+  }
+
+  removeResolutionPhoto() {
+    this.resolutionPhoto = null;
+    this.resolutionPhotoPreview = '';
+  }
+
+  get selectedReasonConfig() {
+    return this.rejectionReasons.find(r => r.value === this.selectedRejectionReason);
+  }
 
   async submitAction() {
     if (!this.activeRequest || !this.modalMode) return;
@@ -106,6 +154,16 @@ export class RequestQueueComponent implements OnInit {
       this.actionError = 'Please provide resolution details.';
       return;
     }
+    if (this.modalMode === 'dept_reject') {
+      if (!this.selectedRejectionReason) {
+        this.actionError = 'Please select a rejection reason.';
+        return;
+      }
+      if (this.selectedRejectionReason === 'other' && !this.rejectionFreeText.trim()) {
+        this.actionError = 'Please provide a rejection reason.';
+        return;
+      }
+    }
 
     this.actionLoading = true;
 
@@ -119,7 +177,21 @@ export class RequestQueueComponent implements OnInit {
       } else if (this.modalMode === 'reject') {
         await this.requestService.rejectRequest(this.activeRequest.id, this.actionNotes);
       } else if (this.modalMode === 'resolve') {
-        await this.requestService.resolveRequest(this.activeRequest.id, this.actionNotes);
+        await this.requestService.resolveRequest(
+          this.activeRequest.id,
+          this.actionNotes,
+          this.resolutionPhoto ?? undefined
+        );
+      } else if (this.modalMode === 'dept_reject') {
+        const reason = this.selectedRejectionReason === 'other'
+          ? this.rejectionFreeText
+          : this.selectedReasonConfig?.label ?? this.selectedRejectionReason;
+
+        if (this.selectedReasonConfig?.reroutes) {
+          await this.requestService.rerouteRequest(this.activeRequest.id, reason);
+        } else {
+          await this.requestService.deptRejectRequest(this.activeRequest.id, reason);
+        }
       }
       this.closeModal();
       await this.load();

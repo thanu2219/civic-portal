@@ -46,6 +46,12 @@ export class RequestService {
       }
     }
 
+    const { data: dept } = await this.db
+      .from('departments')
+      .select('id')
+      .eq('slug', category)
+      .single();
+
     const { error } = await this.db
       .from('requests')
       .insert({
@@ -55,6 +61,7 @@ export class RequestService {
         category,
         photos: photoUrls,
         status: 'pending' as RequestStatus,
+        department_id: dept?.id ?? null,
       });
 
     if (error) {
@@ -204,14 +211,60 @@ export class RequestService {
     await this.addEvent(id, 'rejected', reason);
   }
 
-  async resolveRequest(id: string, resolution: string) {
+  async resolveRequest(id: string, resolution: string, photo?: File) {
+    let resolutionPhotoUrl: string | null = null;
+
+    if (photo) {
+      try {
+        const { data: { user } } = await this.supabaseService.auth.getUser();
+        const fileName = `resolutions/${user?.id}/${Date.now()}_${photo.name}`;
+        const { error: uploadError } = await this.supabaseService.storage
+          .from('request-photos')
+          .upload(fileName, photo);
+
+        if (!uploadError) {
+          const { data: urlData } = this.supabaseService.storage
+            .from('request-photos')
+            .getPublicUrl(fileName);
+          resolutionPhotoUrl = urlData.publicUrl;
+        } else {
+          console.warn('Resolution photo upload failed:', uploadError.message);
+        }
+      } catch (err) {
+        console.warn('Resolution photo upload error:', err);
+      }
+    }
+
+    const updateData: any = { status: 'completed', resolution };
+    if (resolutionPhotoUrl) updateData.resolution_photo = resolutionPhotoUrl;
+
     const { error } = await this.db
       .from('requests')
-      .update({ status: 'completed', resolution })
+      .update(updateData)
       .eq('id', id);
     if (error) throw error;
 
     await this.addEvent(id, 'resolved', resolution);
+  }
+
+  async rerouteRequest(id: string, reason: string) {
+    const { error } = await this.db
+      .from('requests')
+      .update({ status: 'pending', department_id: null, rejection_reason: null })
+      .eq('id', id);
+    if (error) throw error;
+
+    await this.addEvent(id, 'rerouted', reason);
+  }
+
+  async deptRejectRequest(id: string, reason: string) {
+    const { error } = await this.db
+      .from('requests')
+      .update({ status: 'closed', rejection_reason: reason })
+      .eq('id', id);
+    if (error) throw error;
+
+    await this.addEvent(id, 'rejected', reason);
   }
 
   async bulkResolve(requestIds: string[], resolution: string) {

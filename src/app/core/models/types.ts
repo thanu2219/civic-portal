@@ -24,6 +24,14 @@ export const STATUS_LABELS: Record<RequestStatus, string> = {
   closed: 'Closed',
 };
 
+export const DEPT_REJECTION_REASONS = [
+  { value: 'wrong_department', label: 'Wrong Department', reroutes: true },
+  { value: 'duplicate_request', label: 'Duplicate Request', reroutes: false },
+  { value: 'insufficient_information', label: 'Insufficient Information', reroutes: false },
+  { value: 'not_actionable', label: 'Not Actionable', reroutes: false },
+  { value: 'other', label: 'Other', reroutes: false },
+] as const;
+
 export interface Profile {
   id: string;
   email: string;
@@ -53,6 +61,7 @@ export interface ServiceRequest {
   department_id: string | null;
   assigned_to: string | null;
   resolution: string | null;
+  resolution_photo: string | null;
   rejection_reason: string | null;
   merged_into: string | null;
   photos: string[];

@@ -43,6 +43,11 @@
           <div class="resolution-box">
             <h3>Resolution</h3>
             <p>{{ request.resolution }}</p>
+            @if (request.resolution_photo) {
+              <div class="resolution-photo">
+                <img [src]="request.resolution_photo" alt="Resolution photo" />
+              </div>
+            }
           </div>
         }
 

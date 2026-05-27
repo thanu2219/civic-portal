@@ -62,6 +62,7 @@
               @if (bulkMode) { <th></th> }
               <th>Title</th>
               <th>Category</th>
+              <th>Department</th>
               <th>Status</th>
               <th>Submitted</th>
               <th>Submitted By</th>
@@ -84,16 +85,24 @@
                   <a [routerLink]="['/requests', req.id]" class="title-link">{{ req.title }}</a>
                 </td>
                 <td><span class="category-tag">{{ getCategoryLabel(req.category) }}</span></td>
+                <td>{{ req.department?.name ?? '—' }}</td>
                 <td><span class="badge" [attr.data-status]="req.status">{{ getStatusLabel(req.status) }}</span></td>
                 <td>{{ req.created_at | slice:0:10 }}</td>
                 <td>{{ req.profile?.full_name ?? '—' }}</td>
                 <td class="actions-cell">
-                  @if (req.status === 'pending') {
+                  <!-- Admin actions on pending requests -->
+                  @if (auth.isAdmin() && req.status === 'pending') {
                     <button class="btn-sm btn-approve" (click)="openModal(req, 'approve')">Approve</button>
                     <button class="btn-sm btn-reject" (click)="openModal(req, 'reject')">Reject</button>
                   }
-                  @if (req.status === 'in_progress') {
+                  <!-- Admin can also resolve in-progress -->
+                  @if (auth.isAdmin() && req.status === 'in_progress') {
                     <button class="btn-sm btn-resolve" (click)="openModal(req, 'resolve')">Resolve</button>
+                  }
+                  <!-- Dept admin actions on in-progress requests -->
+                  @if (auth.isDeptAdmin() && req.status === 'in_progress') {
+                    <button class="btn-sm btn-resolve" (click)="openModal(req, 'resolve')">Resolve</button>
+                    <button class="btn-sm btn-reject" (click)="openModal(req, 'dept_reject')">Reject</button>
                   }
                 </td>
               </tr>
@@ -111,9 +120,11 @@
             @if (modalMode === 'approve') { Approve Request }
             @if (modalMode === 'reject') { Reject Request }
             @if (modalMode === 'resolve') { Resolve Request }
+            @if (modalMode === 'dept_reject') { Reject Request }
           </h2>
           <p class="modal-subtitle">{{ activeRequest.title }}</p>
 
+          <!-- Admin Approve -->
           @if (modalMode === 'approve') {
             <div class="form-group">
               <label>Assign to Department *</label>
@@ -130,6 +141,7 @@
             </div>
           }
 
+          <!-- Admin Reject -->
           @if (modalMode === 'reject') {
             <div class="form-group">
               <label>Rejection Reason *</label>
@@ -137,11 +149,44 @@
             </div>
           }
 
+          <!-- Resolve (admin or dept_admin) -->
           @if (modalMode === 'resolve') {
             <div class="form-group">
               <label>Resolution Details *</label>
               <textarea [(ngModel)]="actionNotes" rows="3" placeholder="Describe how the issue was resolved..." required></textarea>
             </div>
+            <div class="form-group">
+              <label>Resolution Photo (optional)</label>
+              <input type="file" accept="image/*" (change)="onResolutionPhotoSelect($event)" />
+              @if (resolutionPhotoPreview) {
+                <div class="photo-preview-single">
+                  <img [src]="resolutionPhotoPreview" alt="Resolution photo preview" />
+                  <button type="button" class="remove-photo" (click)="removeResolutionPhoto()">✕</button>
+                </div>
+              }
+            </div>
+          }
+
+          <!-- Dept Admin Reject -->
+          @if (modalMode === 'dept_reject') {
+            <div class="form-group">
+              <label>Rejection Reason *</label>
+              <select [(ngModel)]="selectedRejectionReason" required>
+                <option value="" disabled>Select reason</option>
+                @for (reason of rejectionReasons; track reason.value) {
+                  <option [value]="reason.value">{{ reason.label }}</option>
+                }
+              </select>
+            </div>
+            @if (selectedRejectionReason === 'wrong_department') {
+              <div class="alert alert-info">This request will be sent back to the admin queue for re-routing to the correct department.</div>
+            }
+            @if (selectedRejectionReason === 'other') {
+              <div class="form-group">
+                <label>Please explain *</label>
+                <textarea [(ngModel)]="rejectionFreeText" rows="3" placeholder="Provide details..." required></textarea>
+              </div>
+            }
           }
 
           @if (actionError) {

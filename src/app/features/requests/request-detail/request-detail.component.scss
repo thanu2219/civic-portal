@@ -97,6 +97,16 @@
   h3 { color: #2e7d32; }
 }
 
+.resolution-photo {
+  margin-top: 1rem;
+
+  img {
+    max-width: 300px;
+    border-radius: 8px;
+    border: 1px solid #c8e6c9;
+  }
+}
+
 .rejection-box {
   background: #fce4ec;
   border-left: 4px solid #e94560;
@@ -145,6 +155,7 @@
   &[data-action="rejected"] { background: #e94560; }
   &[data-action="resolved"] { background: #2196f3; }
   &[data-action="created"] { background: #ff9800; }
+  &[data-action="rerouted"] { background: #ff9800; }
 }
 
 .timeline-content {
