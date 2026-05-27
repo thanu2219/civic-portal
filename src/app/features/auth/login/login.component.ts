@@ -15,6 +15,8 @@ export class LoginComponent {
   password = '';
   loading = false;
   error = '';
+  resetMode = false;
+  resetSuccess = '';
 
   constructor(
     private auth: AuthService,
@@ -45,5 +47,38 @@ export class LoginComponent {
         this.cdr.detectChanges();
       });
     }
+  }
+
+  async onResetPassword() {
+    if (!this.email) {
+      this.error = 'Please enter your email address above.';
+      return;
+    }
+
+    this.loading = true;
+    this.error = '';
+    this.resetSuccess = '';
+    this.cdr.detectChanges();
+
+    try {
+      await this.auth.resetPassword(this.email);
+      this.zone.run(() => {
+        this.resetSuccess = 'Password reset link sent! Check your email.';
+        this.loading = false;
+        this.cdr.detectChanges();
+      });
+    } catch (err: any) {
+      this.zone.run(() => {
+        this.error = err.message || 'Failed to send reset email. Please try again.';
+        this.loading = false;
+        this.cdr.detectChanges();
+      });
+    }
+  }
+
+  toggleResetMode() {
+    this.resetMode = !this.resetMode;
+    this.error = '';
+    this.resetSuccess = '';
   }
 }

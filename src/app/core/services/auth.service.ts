@@ -110,6 +110,14 @@ export class AuthService {
     return data;
   }
 
+  async resetPassword(email: string) {
+    const redirectUrl = `${window.location.origin}/login`;
+    const { error } = await this.supabaseService.auth.resetPasswordForEmail(email, {
+      redirectTo: redirectUrl,
+    });
+    if (error) throw error;
+  }
+
   async signOut() {
     await this.supabaseService.auth.signOut();
     this.profileSignal.set(null);
