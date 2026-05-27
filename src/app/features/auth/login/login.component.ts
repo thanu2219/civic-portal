@@ -13,13 +13,15 @@ import { AuthService } from '../../../core/services/auth.service';
 export class LoginComponent {
   email = '';
   password = '';
+  newPassword = '';
+  confirmNewPassword = '';
   loading = false;
   error = '';
   resetMode = false;
   resetSuccess = '';
 
   constructor(
-    private auth: AuthService,
+    public auth: AuthService,
     private router: Router,
     private cdr: ChangeDetectorRef,
     private zone: NgZone
@@ -70,6 +72,41 @@ export class LoginComponent {
     } catch (err: any) {
       this.zone.run(() => {
         this.error = err.message || 'Failed to send reset email. Please try again.';
+        this.loading = false;
+        this.cdr.detectChanges();
+      });
+    }
+  }
+
+  async onUpdatePassword() {
+    if (!this.newPassword || !this.confirmNewPassword) {
+      this.error = 'Please fill in both password fields.';
+      return;
+    }
+    if (this.newPassword.length < 6) {
+      this.error = 'Password must be at least 6 characters.';
+      return;
+    }
+    if (this.newPassword !== this.confirmNewPassword) {
+      this.error = 'Passwords do not match.';
+      return;
+    }
+
+    this.loading = true;
+    this.error = '';
+    this.resetSuccess = '';
+    this.cdr.detectChanges();
+
+    try {
+      await this.auth.updatePassword(this.newPassword);
+      this.zone.run(() => {
+        this.resetSuccess = 'Password updated successfully! You can now sign in.';
+        this.loading = false;
+        this.cdr.detectChanges();
+      });
+    } catch (err: any) {
+      this.zone.run(() => {
+        this.error = err.message || 'Failed to update password. Please try again.';
         this.loading = false;
         this.cdr.detectChanges();
       });

@@ -7,9 +7,11 @@ import { Profile, UserRole } from '../models/types';
 export class AuthService {
   private profileSignal = signal<Profile | null>(null);
   private loadingSignal = signal(true);
+  private recoveryModeSignal = signal(false);
 
   readonly profile = this.profileSignal.asReadonly();
   readonly loading = this.loadingSignal.asReadonly();
+  readonly isRecoveryMode = this.recoveryModeSignal.asReadonly();
   readonly isLoggedIn = computed(() => !!this.profileSignal());
   readonly role = computed(() => this.profileSignal()?.role ?? null);
   readonly isAdmin = computed(() => this.profileSignal()?.role === 'admin');
@@ -43,7 +45,10 @@ export class AuthService {
 
       this.supabaseService.auth.onAuthStateChange(async (event, session) => {
         this.zone.run(async () => {
-          if (event === 'SIGNED_IN' && session?.user) {
+          if (event === 'PASSWORD_RECOVERY') {
+            this.recoveryModeSignal.set(true);
+            this.router.navigate(['/login']);
+          } else if (event === 'SIGNED_IN' && session?.user) {
             await this.ensureProfile(session.user);
           } else if (event === 'SIGNED_OUT') {
             this.profileSignal.set(null);
@@ -88,7 +93,7 @@ export class AuthService {
   }
 
   async signUp(email: string, password: string, fullName: string) {
-    const redirectUrl = `${window.location.origin}/login`;
+    const redirectUrl = `${window.location.origin}/civic-portal/login`;
     const { data, error } = await this.supabaseService.auth.signUp({
       email,
       password,
@@ -111,11 +116,17 @@ export class AuthService {
   }
 
   async resetPassword(email: string) {
-    const redirectUrl = `${window.location.origin}/login`;
+    const redirectUrl = `${window.location.origin}/civic-portal/login`;
     const { error } = await this.supabaseService.auth.resetPasswordForEmail(email, {
       redirectTo: redirectUrl,
     });
     if (error) throw error;
+  }
+
+  async updatePassword(newPassword: string) {
+    const { error } = await this.supabaseService.auth.updateUser({ password: newPassword });
+    if (error) throw error;
+    this.recoveryModeSignal.set(false);
   }
 
   async signOut() {
