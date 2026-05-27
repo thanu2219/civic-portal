@@ -149,11 +149,13 @@
             <label>Department @if (selectedRole === 'dept_admin') { * }</label>
             <select [(ngModel)]="selectedDept" [required]="selectedRole === 'dept_admin'">
               <option value="">{{ selectedRole === 'dept_admin' ? 'Select department' : 'None' }}</option>
-              @for (cat of categoryList; track cat[0]) {
-                <option [value]="getDeptIdBySlug(cat[0])">{{ cat[1] }}</option>
+              @for (dept of departments; track dept.id) {
+                <option [value]="dept.id">{{ dept.name }}</option>
               }
             </select>
-            @if (selectedRole === 'dept_admin') {
+            @if (selectedRole === 'dept_admin' && !departments.length) {
+              <p class="field-hint error">No departments found in database. Make sure your departments table is seeded.</p>
+            } @else if (selectedRole === 'dept_admin') {
               <p class="field-hint">Department admin will only see requests for this department.</p>
             }
           </div>
