@@ -2,6 +2,25 @@
 @use '../dashboard/admin-dashboard.component' as admin;
 @use '../request-queue/request-queue.component' as queue;
 
+.role-section {
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0 0.75rem;
+  font-size: 1.1rem;
+  color: #1a1a2e;
+}
+
+.section-count {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: 400;
+}
+
 .user-table {
   background: #fff;
   border-radius: 10px;
@@ -36,4 +55,35 @@
   &[data-role="citizen"] { background: #e8ecf0; color: #555; }
 }
 
+.dept-tag {
+  background: #e3f2fd;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  color: #1565c0;
+  font-weight: 500;
+}
+
+.unassigned {
+  color: #999;
+  font-style: italic;
+  font-size: 0.85rem;
+}
+
 .btn-edit { background: #0f3460; color: #fff; }
+
+.error-message {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  background: #fce4ec;
+  color: #c62828;
+  border: 1px solid #f8bbd0;
+}
+
+.field-hint {
+  margin: 0.25rem 0 0;
+  font-size: 0.8rem;
+  color: #999;
+}

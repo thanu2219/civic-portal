@@ -40,6 +40,17 @@ export class DepartmentService {
     return departments;
   }
 
+  async getAllStaff(): Promise<{ data: { user_id: string; department_id: string }[] | null }> {
+    const { data, error } = await this.db
+      .from('department_staff')
+      .select('user_id, department_id');
+    if (error) {
+      console.error('Failed to fetch staff:', error);
+      return { data: [] };
+    }
+    return { data: (data ?? []) as { user_id: string; department_id: string }[] };
+  }
+
   async assignStaff(userId: string, departmentId: string) {
     const { error } = await this.db
       .from('department_staff')

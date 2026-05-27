@@ -14,36 +14,118 @@
 
     @if (loading) {
       <div class="loading-spinner">Loading...</div>
-    } @else if (!users.length) {
-      <div class="empty-state"><p>No users found.</p></div>
     } @else {
-      <div class="user-table">
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Joined</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (user of users; track user.id) {
-              <tr>
-                <td>{{ user.full_name }}</td>
-                <td>{{ user.email }}</td>
-                <td>
-                  <span class="badge" [attr.data-role]="user.role">{{ user.role }}</span>
-                </td>
-                <td>{{ user.created_at | slice:0:10 }}</td>
-                <td>
-                  <button class="btn-sm btn-edit" (click)="openRoleModal(user)">Change Role</button>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
+
+      <!-- Admins -->
+      @if (admins.length) {
+        <div class="role-section">
+          <h2 class="section-title">
+            <span class="badge" data-role="admin">Admin</span>
+            <span class="section-count">{{ admins.length }}</span>
+          </h2>
+          <div class="user-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Joined</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (user of admins; track user.id) {
+                  <tr>
+                    <td>{{ user.full_name || '—' }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.created_at | slice:0:10 }}</td>
+                    <td>
+                      <button class="btn-sm btn-edit" (click)="openRoleModal(user)">Change Role</button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      }
+
+      <!-- Dept Admins -->
+      @if (deptAdmins.length) {
+        <div class="role-section">
+          <h2 class="section-title">
+            <span class="badge" data-role="dept_admin">Dept Admin</span>
+            <span class="section-count">{{ deptAdmins.length }}</span>
+          </h2>
+          <div class="user-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Department</th>
+                  <th>Joined</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (user of deptAdmins; track user.id) {
+                  <tr>
+                    <td>{{ user.full_name || '—' }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>
+                      @if (user.departmentName) {
+                        <span class="dept-tag">{{ user.departmentName }}</span>
+                      } @else {
+                        <span class="unassigned">Not assigned</span>
+                      }
+                    </td>
+                    <td>{{ user.created_at | slice:0:10 }}</td>
+                    <td>
+                      <button class="btn-sm btn-edit" (click)="openRoleModal(user)">Change Role</button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      }
+
+      <!-- Citizens -->
+      <div class="role-section">
+        <h2 class="section-title">
+          <span class="badge" data-role="citizen">Citizen</span>
+          <span class="section-count">{{ citizens.length }}</span>
+        </h2>
+        @if (citizens.length) {
+          <div class="user-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Joined</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (user of citizens; track user.id) {
+                  <tr>
+                    <td>{{ user.full_name || '—' }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.created_at | slice:0:10 }}</td>
+                    <td>
+                      <button class="btn-sm btn-edit" (click)="openRoleModal(user)">Change Role</button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else {
+          <div class="empty-state"><p>No citizens registered yet.</p></div>
+        }
       </div>
     }
 
@@ -65,14 +147,21 @@
 
           @if (selectedRole === 'dept_admin') {
             <div class="form-group">
-              <label>Assign to Department</label>
+              <label>Assign to Department *</label>
               <select [(ngModel)]="selectedDept">
-                <option value="">Select department</option>
+                <option value="" disabled>Select department</option>
                 @for (dept of departments; track dept.id) {
                   <option [value]="dept.id">{{ dept.name }}</option>
                 }
               </select>
+              @if (!departments.length) {
+                <p class="field-hint">No departments found. Check Supabase departments table.</p>
+              }
             </div>
+          }
+
+          @if (actionError) {
+            <div class="error-message">{{ actionError }}</div>
           }
 
           <div class="modal-actions">

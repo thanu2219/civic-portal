@@ -7,6 +7,11 @@ import { DepartmentService } from '../../../core/services/department.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { Profile, Department, UserRole } from '../../../core/models/types';
 
+interface UserWithDept extends Profile {
+  departmentName?: string;
+  departmentId?: string;
+}
+
 @Component({
   selector: 'app-user-manage',
   standalone: true,
@@ -15,15 +20,18 @@ import { Profile, Department, UserRole } from '../../../core/models/types';
   styleUrl: './user-manage.component.scss',
 })
 export class UserManageComponent implements OnInit {
-  users: Profile[] = [];
+  admins: UserWithDept[] = [];
+  deptAdmins: UserWithDept[] = [];
+  citizens: UserWithDept[] = [];
   departments: Department[] = [];
   loading = true;
   roles: UserRole[] = ['citizen', 'dept_admin', 'admin'];
 
-  activeUser: Profile | null = null;
+  activeUser: UserWithDept | null = null;
   selectedRole: UserRole = 'citizen';
   selectedDept = '';
   actionLoading = false;
+  actionError = '';
 
   constructor(
     private userService: UserService,
@@ -41,8 +49,32 @@ export class UserManageComponent implements OnInit {
     this.cdr.detectChanges();
 
     try {
-      this.users = await this.userService.getUsers();
+      const users = await this.userService.getUsers();
       this.departments = await this.departmentService.getDepartments();
+
+      const { data: staffData } = await this.departmentService.getAllStaff();
+      const staffMap = new Map<string, string>();
+      for (const s of staffData ?? []) {
+        staffMap.set(s.user_id, s.department_id);
+      }
+
+      const deptMap = new Map<string, string>();
+      for (const d of this.departments) {
+        deptMap.set(d.id, d.name);
+      }
+
+      const enriched: UserWithDept[] = users.map(u => {
+        const deptId = staffMap.get(u.id);
+        return {
+          ...u,
+          departmentId: deptId,
+          departmentName: deptId ? deptMap.get(deptId) : undefined,
+        };
+      });
+
+      this.admins = enriched.filter(u => u.role === 'admin');
+      this.deptAdmins = enriched.filter(u => u.role === 'dept_admin');
+      this.citizens = enriched.filter(u => u.role === 'citizen');
     } catch (err) {
       console.error('Failed to load users:', err);
     }
@@ -51,10 +83,11 @@ export class UserManageComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  openRoleModal(user: Profile) {
+  openRoleModal(user: UserWithDept) {
     this.activeUser = user;
     this.selectedRole = user.role;
-    this.selectedDept = '';
+    this.selectedDept = user.departmentId ?? '';
+    this.actionError = '';
   }
 
   closeModal() {
@@ -63,6 +96,13 @@ export class UserManageComponent implements OnInit {
 
   async saveRole() {
     if (!this.activeUser) return;
+    this.actionError = '';
+
+    if (this.selectedRole === 'dept_admin' && !this.selectedDept) {
+      this.actionError = 'Please select a department for dept admin.';
+      return;
+    }
+
     this.actionLoading = true;
 
     try {
@@ -74,8 +114,9 @@ export class UserManageComponent implements OnInit {
 
       this.closeModal();
       await this.load();
-    } catch (err) {
+    } catch (err: any) {
       console.error('Role update failed:', err);
+      this.actionError = err.message || 'Failed to update role.';
     }
 
     this.actionLoading = false;
