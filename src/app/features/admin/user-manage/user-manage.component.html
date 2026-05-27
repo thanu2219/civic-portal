@@ -40,7 +40,7 @@
                     <td>{{ user.email }}</td>
                     <td>{{ user.created_at | slice:0:10 }}</td>
                     <td>
-                      <button class="btn-sm btn-edit" (click)="openRoleModal(user)">Change Role</button>
+                      <button class="btn-sm btn-edit" (click)="openRoleModal(user)">Manage</button>
                     </td>
                   </tr>
                 }
@@ -82,7 +82,7 @@
                     </td>
                     <td>{{ user.created_at | slice:0:10 }}</td>
                     <td>
-                      <button class="btn-sm btn-edit" (click)="openRoleModal(user)">Change Role</button>
+                      <button class="btn-sm btn-edit" (click)="openRoleModal(user)">Manage</button>
                     </td>
                   </tr>
                 }
@@ -116,7 +116,7 @@
                     <td>{{ user.email }}</td>
                     <td>{{ user.created_at | slice:0:10 }}</td>
                     <td>
-                      <button class="btn-sm btn-edit" (click)="openRoleModal(user)">Change Role</button>
+                      <button class="btn-sm btn-edit" (click)="openRoleModal(user)">Manage</button>
                     </td>
                   </tr>
                 }
@@ -129,36 +129,34 @@
       </div>
     }
 
-    <!-- Role Modal -->
+    <!-- Manage User Modal -->
     @if (activeUser) {
       <div class="modal-overlay" (click)="closeModal()">
         <div class="modal" (click)="$event.stopPropagation()">
-          <h2>Change Role</h2>
+          <h2>Manage User</h2>
           <p class="modal-subtitle">{{ activeUser.full_name }} ({{ activeUser.email }})</p>
 
           <div class="form-group">
             <label>Role</label>
             <select [(ngModel)]="selectedRole">
               @for (r of roles; track r) {
-                <option [value]="r">{{ r }}</option>
+                <option [value]="r">{{ roleLabels[r] }}</option>
               }
             </select>
           </div>
 
-          @if (selectedRole === 'dept_admin') {
-            <div class="form-group">
-              <label>Assign to Department *</label>
-              <select [(ngModel)]="selectedDept">
-                <option value="" disabled>Select department</option>
-                @for (dept of departments; track dept.id) {
-                  <option [value]="dept.id">{{ dept.name }}</option>
-                }
-              </select>
-              @if (!departments.length) {
-                <p class="field-hint">No departments found. Check Supabase departments table.</p>
+          <div class="form-group">
+            <label>Department @if (selectedRole === 'dept_admin') { * }</label>
+            <select [(ngModel)]="selectedDept" [required]="selectedRole === 'dept_admin'">
+              <option value="">{{ selectedRole === 'dept_admin' ? 'Select department' : 'None' }}</option>
+              @for (cat of categoryList; track cat[0]) {
+                <option [value]="getDeptIdBySlug(cat[0])">{{ cat[1] }}</option>
               }
-            </div>
-          }
+            </select>
+            @if (selectedRole === 'dept_admin') {
+              <p class="field-hint">Department admin will only see requests for this department.</p>
+            }
+          </div>
 
           @if (actionError) {
             <div class="error-message">{{ actionError }}</div>
@@ -167,7 +165,7 @@
           <div class="modal-actions">
             <button class="btn btn-outline" (click)="closeModal()">Cancel</button>
             <button class="btn btn-primary" [disabled]="actionLoading" (click)="saveRole()">
-              {{ actionLoading ? 'Saving...' : 'Save' }}
+              {{ actionLoading ? 'Saving...' : 'Save Changes' }}
             </button>
           </div>
         </div>

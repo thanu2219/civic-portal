@@ -5,7 +5,7 @@ import { SlicePipe } from '@angular/common';
 import { UserService } from '../../../core/services/user.service';
 import { DepartmentService } from '../../../core/services/department.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { Profile, Department, UserRole } from '../../../core/models/types';
+import { Profile, Department, UserRole, CATEGORY_LABELS, RequestCategory } from '../../../core/models/types';
 
 interface UserWithDept extends Profile {
   departmentName?: string;
@@ -26,6 +26,12 @@ export class UserManageComponent implements OnInit {
   departments: Department[] = [];
   loading = true;
   roles: UserRole[] = ['citizen', 'dept_admin', 'admin'];
+  roleLabels: Record<UserRole, string> = {
+    citizen: 'Citizen',
+    dept_admin: 'Department Admin',
+    admin: 'Admin',
+  };
+  categoryList = Object.entries(CATEGORY_LABELS) as [RequestCategory, string][];
 
   activeUser: UserWithDept | null = null;
   selectedRole: UserRole = 'citizen';
@@ -92,6 +98,10 @@ export class UserManageComponent implements OnInit {
 
   closeModal() {
     this.activeUser = null;
+  }
+
+  getDeptIdBySlug(slug: string): string {
+    return this.departments.find(d => d.slug === slug)?.id ?? '';
   }
 
   async saveRole() {
