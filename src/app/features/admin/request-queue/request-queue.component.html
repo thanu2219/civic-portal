@@ -157,7 +157,6 @@
               @if (bulkMode) { <th></th> }
               <th>Title</th>
               <th>Category</th>
-              <th>Department</th>
               <th>Status</th>
               <th>Submitted</th>
               <th>Submitted By</th>
@@ -180,7 +179,6 @@
                   <span class="title-text">{{ req.title }}</span>
                 </td>
                 <td><span class="category-tag">{{ getCategoryLabel(req.category) }}</span></td>
-                <td>{{ req.department?.name ?? '—' }}</td>
                 <td><span class="badge" [attr.data-status]="req.status">{{ getStatusLabel(req.status) }}</span></td>
                 <td>{{ req.created_at | slice:0:10 }}</td>
                 <td>{{ req.profile?.full_name ?? '—' }}</td>
@@ -224,8 +222,8 @@
               <label>Assign to Department *</label>
               <select [(ngModel)]="selectedDepartment" required>
                 <option value="" disabled>Select department</option>
-                @for (dept of departments; track dept.id) {
-                  <option [value]="dept.id">{{ dept.name }}</option>
+                @for (cat of categories; track cat[0]) {
+                  <option [value]="getDepartmentIdBySlug(cat[0])">{{ cat[1] }}</option>
                 }
               </select>
             </div>

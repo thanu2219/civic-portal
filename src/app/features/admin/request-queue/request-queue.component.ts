@@ -130,8 +130,9 @@ export class RequestQueueComponent implements OnInit {
     this.resolutionPhoto = null;
     this.resolutionPhotoPreview = '';
 
-    if (mode === 'approve' && request.department_id) {
-      this.selectedDepartment = request.department_id;
+    if (mode === 'approve') {
+      this.selectedDepartment = request.department_id
+        ?? this.getDepartmentIdBySlug(request.category);
     } else {
       this.selectedDepartment = '';
     }
@@ -268,6 +269,10 @@ export class RequestQueueComponent implements OnInit {
 
     this.actionLoading = false;
     this.cdr.detectChanges();
+  }
+
+  getDepartmentIdBySlug(slug: string): string {
+    return this.departments.find(d => d.slug === slug)?.id ?? '';
   }
 
   getCategoryLabel(cat: string): string {
