@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SlicePipe } from '@angular/common';
 import { NewsService } from '../../../core/services/news.service';
+import { DepartmentService } from '../../../core/services/department.service';
 import { AuthService } from '../../../core/services/auth.service';
 import {
   NewsPost,
@@ -51,8 +52,11 @@ export class NewsManageComponent implements OnInit {
   categoryList = Object.entries(NEWS_CATEGORY_LABELS) as [NewsCategory, string][];
   typeList: NewsPostType[] = ['news', 'announcement'];
 
+  myDeptSlugs: string[] = [];
+
   constructor(
     private newsService: NewsService,
+    private departmentService: DepartmentService,
     public auth: AuthService,
     private cdr: ChangeDetectorRef
   ) {}
@@ -67,10 +71,25 @@ export class NewsManageComponent implements OnInit {
     this.cdr.detectChanges();
 
     try {
+      const me = this.auth.profile();
+      let raw: NewsPost[] = [];
+
       if (this.auth.isAdmin()) {
-        this.posts = await this.newsService.getAllPosts();
+        raw = await this.newsService.getAllPosts();
+        this.posts = raw;
+      } else if (me) {
+        // Get this user's department slug(s) so we can scope the page to
+        // their own posts + same-dept posts (RLS will allow more, but we
+        // hide cross-dept approved posts here for a cleaner queue).
+        const myDepts = await this.departmentService.getMyDepartments(me.id);
+        this.myDeptSlugs = myDepts.map(d => d.slug);
+
+        raw = await this.newsService.getAllPosts();
+        this.posts = raw.filter(p =>
+          p.author_id === me.id || this.myDeptSlugs.includes(p.category)
+        );
       } else {
-        this.posts = await this.newsService.getMyPosts();
+        this.posts = [];
       }
     } catch (err) {
       console.error('Failed to load posts:', err);

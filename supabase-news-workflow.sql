@@ -37,6 +37,7 @@ drop policy if exists "Admins see all posts" on public.news_posts;
 drop policy if exists "Admins manage posts" on public.news_posts;
 drop policy if exists "Approved posts are viewable" on public.news_posts;
 drop policy if exists "Authors see own posts" on public.news_posts;
+drop policy if exists "Dept staff see same dept posts" on public.news_posts;
 drop policy if exists "Staff create posts" on public.news_posts;
 drop policy if exists "Authors update own pending posts" on public.news_posts;
 drop policy if exists "Admins manage all posts" on public.news_posts;
@@ -52,6 +53,22 @@ create policy "Authors see own posts"
   on public.news_posts for select
   to authenticated
   using (author_id = auth.uid());
+
+-- Dept admins of the same department can see their dept's posts (any status).
+-- A post "belongs" to a dept when its category slug matches a department slug
+-- that the current user is staff of. Generic posts are not visible cross-dept.
+create policy "Dept staff see same dept posts"
+  on public.news_posts for select
+  to authenticated
+  using (
+    exists (
+      select 1
+      from public.department_staff ds
+      join public.departments d on d.id = ds.department_id
+      where ds.user_id = auth.uid()
+        and d.slug = news_posts.category
+    )
+  );
 
 -- Admins see all posts
 create policy "Admins see all posts"
@@ -82,6 +99,38 @@ create policy "Authors update own pending posts"
     and status in ('pending', 'rejected')
   )
   with check (author_id = auth.uid());
+
+-- Dept admins of the same department can edit pending/rejected posts in their dept
+drop policy if exists "Dept staff update same dept pending posts" on public.news_posts;
+create policy "Dept staff update same dept pending posts"
+  on public.news_posts for update
+  to authenticated
+  using (
+    status in ('pending', 'rejected')
+    and exists (
+      select 1
+      from public.department_staff ds
+      join public.departments d on d.id = ds.department_id
+      where ds.user_id = auth.uid()
+        and d.slug = news_posts.category
+    )
+  );
+
+-- Dept admins of the same department can delete pending/rejected posts in their dept
+drop policy if exists "Dept staff delete same dept pending posts" on public.news_posts;
+create policy "Dept staff delete same dept pending posts"
+  on public.news_posts for delete
+  to authenticated
+  using (
+    status in ('pending', 'rejected')
+    and exists (
+      select 1
+      from public.department_staff ds
+      join public.departments d on d.id = ds.department_id
+      where ds.user_id = auth.uid()
+        and d.slug = news_posts.category
+    )
+  );
 
 -- Admins can do everything (approve/reject/edit/delete)
 create policy "Admins manage all posts"

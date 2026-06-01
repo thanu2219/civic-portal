@@ -21,7 +21,7 @@
 
     @if (!auth.isAdmin()) {
       <p class="role-hint">
-        Posts you create are submitted for admin approval. You can edit rejected posts and resubmit.
+        You can see posts you created and posts for your department. New posts go to admin for approval; rejected ones can be edited and resubmitted.
       </p>
     } @else {
       <p class="role-hint">
@@ -46,7 +46,7 @@
         </button>
       } @else {
         <button class="tab-btn" [class.active]="activeTab === 'mine'" (click)="setTab('mine')">
-          All Mine <span class="tab-count">{{ allPosts.length }}</span>
+          My Department <span class="tab-count">{{ allPosts.length }}</span>
         </button>
         <button class="tab-btn" [class.active]="activeTab === 'pending'" (click)="setTab('pending')">
           Pending <span class="tab-count">{{ pendingPosts.length }}</span>
