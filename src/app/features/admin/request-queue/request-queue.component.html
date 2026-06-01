@@ -14,9 +14,11 @@
   <main class="admin-main">
     <div class="page-header">
       <h1>Request Queue</h1>
-      <button class="btn btn-outline" (click)="bulkMode = !bulkMode">
-        {{ bulkMode ? 'Cancel Bulk' : 'Bulk Resolve' }}
-      </button>
+      @if (auth.isDeptAdmin()) {
+        <button class="btn btn-outline" (click)="bulkMode = !bulkMode">
+          {{ bulkMode ? 'Cancel Bulk' : 'Bulk Resolve' }}
+        </button>
+      }
     </div>
 
     <!-- Filters -->
@@ -138,9 +140,6 @@
               <button class="btn btn-approve-lg" (click)="openModalFromDetail('approve')">Approve</button>
               <button class="btn btn-reject-lg" (click)="openModalFromDetail('reject')">Reject</button>
             }
-            @if (auth.isAdmin() && viewRequest.status === 'in_progress') {
-              <button class="btn btn-resolve-lg" (click)="openModalFromDetail('resolve')">Resolve</button>
-            }
             @if (auth.isDeptAdmin() && viewRequest.status === 'in_progress') {
               <button class="btn btn-resolve-lg" (click)="openModalFromDetail('resolve')">Resolve</button>
               <button class="btn btn-reject-lg" (click)="openModalFromDetail('dept_reject')">Reject</button>
@@ -192,10 +191,6 @@
                   @if (auth.isAdmin() && req.status === 'pending') {
                     <button class="btn-sm btn-approve" (click)="openModal(req, 'approve')">Approve</button>
                     <button class="btn-sm btn-reject" (click)="openModal(req, 'reject')">Reject</button>
-                  }
-                  <!-- Admin can also resolve in-progress -->
-                  @if (auth.isAdmin() && req.status === 'in_progress') {
-                    <button class="btn-sm btn-resolve" (click)="openModal(req, 'resolve')">Resolve</button>
                   }
                   <!-- Dept admin actions on in-progress requests -->
                   @if (auth.isDeptAdmin() && req.status === 'in_progress') {
