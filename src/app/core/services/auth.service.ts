@@ -102,7 +102,14 @@ export class AuthService {
     const { data: exists, error: checkErr } = await this.supabaseService.supabase
       .rpc('email_exists', { check_email: email });
 
-    if (!checkErr && exists === true) {
+    if (checkErr) {
+      console.warn(
+        '[Auth] email_exists() RPC missing or failed. Run supabase-email-check.sql in Supabase SQL Editor to enable duplicate email detection.',
+        checkErr
+      );
+    }
+
+    if (exists === true) {
       throw new Error('An account with this email already exists. Please sign in or use forgot password.');
     }
 
