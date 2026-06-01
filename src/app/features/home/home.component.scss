@@ -28,6 +28,17 @@
   gap: 1rem;
   justify-content: center;
   flex-wrap: wrap;
+
+  .btn-outline {
+    background: transparent;
+    color: #fff;
+    border-color: #fff;
+
+    &:hover:not(:disabled) {
+      background: #fff;
+      color: #1a1a2e;
+    }
+  }
 }
 
 .section {
