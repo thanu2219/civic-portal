@@ -160,9 +160,32 @@
   overflow: hidden;
   background: #fff;
   border: 1px solid #eee;
+  border-left: 4px solid #0d47a1;
   text-decoration: none;
   color: inherit;
   transition: box-shadow 0.2s, transform 0.2s;
+  position: relative;
+
+  &.is-announcement {
+    border-left-color: #c0410f;
+    background: linear-gradient(180deg, #fff8f4 0%, #ffffff 60%);
+  }
+
+  .type-tag {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    font-size: 0.68rem;
+    padding: 3px 9px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    z-index: 2;
+
+    &[data-type="news"] { background: rgba(227, 242, 253, 0.95); color: #0d47a1; }
+    &[data-type="announcement"] { background: rgba(255, 227, 213, 0.95); color: #c0410f; }
+  }
 
   &:hover {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);

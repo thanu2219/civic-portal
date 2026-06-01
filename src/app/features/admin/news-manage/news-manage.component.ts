@@ -4,7 +4,17 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SlicePipe } from '@angular/common';
 import { NewsService } from '../../../core/services/news.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { NewsPost } from '../../../core/models/types';
+import {
+  NewsPost,
+  NewsPostType,
+  NewsCategory,
+  NewsPostStatus,
+  NEWS_CATEGORY_LABELS,
+  NEWS_TYPE_LABELS,
+} from '../../../core/models/types';
+
+type AdminTab = 'pending' | 'approved' | 'rejected' | 'all';
+type DeptTab = 'mine' | 'pending' | 'approved' | 'rejected';
 
 @Component({
   selector: 'app-news-manage',
@@ -17,13 +27,29 @@ export class NewsManageComponent implements OnInit {
   posts: NewsPost[] = [];
   loading = true;
 
+  activeTab: AdminTab | DeptTab = 'pending';
+
   showForm = false;
   editId: string | null = null;
   formTitle = '';
   formBody = '';
+  formType: NewsPostType = 'news';
+  formCategory: NewsCategory = 'generic';
   formImage: File | null = null;
   formLoading = false;
   formError = '';
+
+  rejectTarget: NewsPost | null = null;
+  rejectReason = '';
+  rejectLoading = false;
+  rejectError = '';
+
+  detailPost: NewsPost | null = null;
+
+  typeLabels = NEWS_TYPE_LABELS;
+  categoryLabels = NEWS_CATEGORY_LABELS;
+  categoryList = Object.entries(NEWS_CATEGORY_LABELS) as [NewsCategory, string][];
+  typeList: NewsPostType[] = ['news', 'announcement'];
 
   constructor(
     private newsService: NewsService,
@@ -32,6 +58,7 @@ export class NewsManageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.activeTab = this.auth.isAdmin() ? 'pending' : 'mine';
     this.load();
   }
 
@@ -40,19 +67,49 @@ export class NewsManageComponent implements OnInit {
     this.cdr.detectChanges();
 
     try {
-      this.posts = await this.newsService.getAllPosts();
+      if (this.auth.isAdmin()) {
+        this.posts = await this.newsService.getAllPosts();
+      } else {
+        this.posts = await this.newsService.getMyPosts();
+      }
     } catch (err) {
-      console.error('Failed to load news:', err);
+      console.error('Failed to load posts:', err);
     }
 
     this.loading = false;
     this.cdr.detectChanges();
   }
 
+  setTab(tab: AdminTab | DeptTab) {
+    this.activeTab = tab;
+  }
+
+  private byStatus(s: NewsPostStatus) {
+    return this.posts.filter(p => p.status === s);
+  }
+
+  get pendingPosts() { return this.byStatus('pending'); }
+  get approvedPosts() { return this.byStatus('approved'); }
+  get rejectedPosts() { return this.byStatus('rejected'); }
+  get allPosts() { return this.posts; }
+
+  get visiblePosts(): NewsPost[] {
+    switch (this.activeTab) {
+      case 'pending': return this.pendingPosts;
+      case 'approved': return this.approvedPosts;
+      case 'rejected': return this.rejectedPosts;
+      case 'mine':
+      case 'all':
+      default: return this.allPosts;
+    }
+  }
+
   openNewForm() {
     this.editId = null;
     this.formTitle = '';
     this.formBody = '';
+    this.formType = 'news';
+    this.formCategory = 'generic';
     this.formImage = null;
     this.formError = '';
     this.showForm = true;
@@ -62,6 +119,8 @@ export class NewsManageComponent implements OnInit {
     this.editId = post.id;
     this.formTitle = post.title;
     this.formBody = post.body;
+    this.formType = post.post_type;
+    this.formCategory = post.category;
     this.formImage = null;
     this.formError = '';
     this.showForm = true;
@@ -75,7 +134,7 @@ export class NewsManageComponent implements OnInit {
   }
 
   async submitForm() {
-    if (!this.formTitle || !this.formBody) {
+    if (!this.formTitle.trim() || !this.formBody.trim()) {
       this.formError = 'Title and body are required.';
       return;
     }
@@ -89,11 +148,19 @@ export class NewsManageComponent implements OnInit {
         await this.newsService.updatePost(this.editId, {
           title: this.formTitle,
           body: this.formBody,
+          post_type: this.formType,
+          category: this.formCategory,
+          // editing a rejected post moves it back to pending for re-review
+          status: this.auth.isAdmin() ? undefined : 'pending',
         });
       } else {
         await this.newsService.createPost(
-          this.formTitle,
-          this.formBody,
+          {
+            title: this.formTitle,
+            body: this.formBody,
+            post_type: this.formType,
+            category: this.formCategory,
+          },
           this.formImage ?? undefined
         );
       }
@@ -107,13 +174,45 @@ export class NewsManageComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  async togglePublish(post: NewsPost) {
+  async approve(post: NewsPost) {
     try {
-      await this.newsService.updatePost(post.id, { published: !post.published });
+      await this.newsService.approvePost(post.id);
       await this.load();
-    } catch (err) {
-      console.error('Toggle publish failed:', err);
+    } catch (err: any) {
+      alert(err.message || 'Failed to approve.');
     }
+  }
+
+  openReject(post: NewsPost) {
+    this.rejectTarget = post;
+    this.rejectReason = '';
+    this.rejectError = '';
+  }
+
+  closeReject() {
+    this.rejectTarget = null;
+    this.rejectReason = '';
+    this.rejectError = '';
+  }
+
+  async confirmReject() {
+    if (!this.rejectTarget) return;
+    if (!this.rejectReason.trim()) {
+      this.rejectError = 'Please provide a reason for rejection.';
+      return;
+    }
+    this.rejectLoading = true;
+    this.cdr.detectChanges();
+    try {
+      await this.newsService.rejectPost(this.rejectTarget.id, this.rejectReason.trim());
+      this.rejectTarget = null;
+      this.rejectReason = '';
+      await this.load();
+    } catch (err: any) {
+      this.rejectError = err.message || 'Failed to reject.';
+    }
+    this.rejectLoading = false;
+    this.cdr.detectChanges();
   }
 
   async deletePost(post: NewsPost) {
@@ -121,8 +220,16 @@ export class NewsManageComponent implements OnInit {
     try {
       await this.newsService.deletePost(post.id);
       await this.load();
-    } catch (err) {
-      console.error('Delete failed:', err);
+    } catch (err: any) {
+      alert(err.message || 'Failed to delete.');
     }
+  }
+
+  openDetail(post: NewsPost) {
+    this.detailPost = post;
+  }
+
+  closeDetail() {
+    this.detailPost = null;
   }
 }

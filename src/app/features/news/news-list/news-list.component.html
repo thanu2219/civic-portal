@@ -1,33 +1,110 @@
 <div class="page-container">
-  <h1>Latest News</h1>
+  <div class="page-head">
+    <h1>News &amp; Announcements</h1>
+    <p class="subtitle">Stay up to date with the latest civic announcements and news.</p>
+  </div>
+
+  <!-- Filter bar -->
+  <div class="filter-bar">
+    <div class="type-pills">
+      <button class="pill" [class.active]="typeFilter === 'all'" (click)="setType('all')">All</button>
+      <button class="pill pill-news" [class.active]="typeFilter === 'news'" (click)="setType('news')">News</button>
+      <button
+        class="pill pill-announcement"
+        [class.active]="typeFilter === 'announcement'"
+        (click)="setType('announcement')"
+      >
+        Announcements
+      </button>
+    </div>
+
+    <div class="filter-controls">
+      <select [(ngModel)]="categoryFilter">
+        <option value="all">All Categories</option>
+        @for (c of categoryList; track c[0]) {
+          <option [value]="c[0]">{{ c[1] }}</option>
+        }
+      </select>
+      <input
+        type="search"
+        [(ngModel)]="search"
+        placeholder="Search by title or content..."
+      />
+    </div>
+  </div>
 
   @if (loading) {
     <div class="loading-spinner">Loading...</div>
-  } @else if (!posts.length) {
+  } @else if (!filteredPosts.length) {
     <div class="empty-state">
-      <p>No news articles published yet. Check back soon!</p>
+      <p>No posts match your filters.</p>
     </div>
   } @else {
-    <div class="news-grid">
-      @for (post of posts; track post.id) {
-        <a [routerLink]="['/news', post.id]" class="news-card">
-          @if (post.image_url) {
-            <img [src]="post.image_url" [alt]="post.title" class="news-img" />
-          } @else {
-            <div class="news-img-placeholder">📰</div>
-          }
-          <div class="news-card-body">
-            <h2>{{ post.title }}</h2>
-            <p>{{ post.body | slice:0:180 }}...</p>
-            <div class="news-meta">
-              @if (post.author) {
-                <span>By {{ post.author.full_name }}</span>
+    <!-- Announcements highlighted on top when not filtering by news only -->
+    @if (typeFilter !== 'news' && announcements.length) {
+      <section class="section-block">
+        <h2 class="section-heading announcement-heading">
+          <span class="type-tag" data-type="announcement">Announcements</span>
+        </h2>
+        <div class="news-grid">
+          @for (post of announcements; track post.id) {
+            <a [routerLink]="['/news', post.id]" class="news-card card-announcement">
+              <div class="card-tags">
+                <span class="type-tag" data-type="announcement">{{ typeLabels[post.post_type] }}</span>
+                <span class="cat-tag">{{ categoryLabels[post.category] }}</span>
+              </div>
+              @if (post.image_url) {
+                <img [src]="post.image_url" [alt]="post.title" class="news-img" />
+              } @else {
+                <div class="news-img-placeholder">📢</div>
               }
-              <span>{{ post.created_at | slice:0:10 }}</span>
-            </div>
-          </div>
-        </a>
-      }
-    </div>
+              <div class="news-card-body">
+                <h2>{{ post.title }}</h2>
+                <p>{{ post.body | slice:0:180 }}{{ post.body.length > 180 ? '…' : '' }}</p>
+                <div class="news-meta">
+                  @if (post.author) {
+                    <span>By {{ post.author.full_name }}</span>
+                  }
+                  <span>{{ post.created_at | slice:0:10 }}</span>
+                </div>
+              </div>
+            </a>
+          }
+        </div>
+      </section>
+    }
+
+    @if (typeFilter !== 'announcement' && newsOnly.length) {
+      <section class="section-block">
+        <h2 class="section-heading news-heading">
+          <span class="type-tag" data-type="news">News</span>
+        </h2>
+        <div class="news-grid">
+          @for (post of newsOnly; track post.id) {
+            <a [routerLink]="['/news', post.id]" class="news-card card-news">
+              <div class="card-tags">
+                <span class="type-tag" data-type="news">{{ typeLabels[post.post_type] }}</span>
+                <span class="cat-tag">{{ categoryLabels[post.category] }}</span>
+              </div>
+              @if (post.image_url) {
+                <img [src]="post.image_url" [alt]="post.title" class="news-img" />
+              } @else {
+                <div class="news-img-placeholder">📰</div>
+              }
+              <div class="news-card-body">
+                <h2>{{ post.title }}</h2>
+                <p>{{ post.body | slice:0:180 }}{{ post.body.length > 180 ? '…' : '' }}</p>
+                <div class="news-meta">
+                  @if (post.author) {
+                    <span>By {{ post.author.full_name }}</span>
+                  }
+                  <span>{{ post.created_at | slice:0:10 }}</span>
+                </div>
+              </div>
+            </a>
+          }
+        </div>
+      </section>
+    }
   }
 </div>

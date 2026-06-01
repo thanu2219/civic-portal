@@ -4,8 +4,8 @@
     <nav>
       <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
       <a routerLink="/admin/requests" routerLinkActive="active">Request Queue</a>
+      <a routerLink="/admin/news" routerLinkActive="active">News &amp; Announcements</a>
       @if (auth.isAdmin()) {
-        <a routerLink="/admin/news" routerLinkActive="active">Manage News</a>
         <a routerLink="/admin/users" routerLinkActive="active">Manage Users</a>
       }
     </nav>

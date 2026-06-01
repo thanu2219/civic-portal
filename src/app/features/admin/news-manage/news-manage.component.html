@@ -4,92 +4,245 @@
     <nav>
       <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
       <a routerLink="/admin/requests" routerLinkActive="active">Request Queue</a>
-      <a routerLink="/admin/news" routerLinkActive="active">Manage News</a>
-      <a routerLink="/admin/users" routerLinkActive="active">Manage Users</a>
+      <a routerLink="/admin/news" routerLinkActive="active">News &amp; Announcements</a>
+      @if (auth.isAdmin()) {
+        <a routerLink="/admin/users" routerLinkActive="active">Manage Users</a>
+      }
     </nav>
   </aside>
 
   <main class="admin-main">
     <div class="page-header">
-      <h1>Manage News</h1>
-      <button class="btn btn-primary" (click)="openNewForm()">New Article</button>
+      <h1>News &amp; Announcements</h1>
+      <button class="btn btn-primary" (click)="openNewForm()">
+        + New Post
+      </button>
     </div>
 
-    <!-- Form Modal -->
-    @if (showForm) {
-      <div class="modal-overlay" (click)="showForm = false">
-        <div class="modal modal-lg" (click)="$event.stopPropagation()">
-          <h2>{{ editId ? 'Edit Article' : 'New Article' }}</h2>
-
-          @if (formError) {
-            <div class="alert alert-error">{{ formError }}</div>
-          }
-
-          <div class="form-group">
-            <label>Title *</label>
-            <input type="text" [(ngModel)]="formTitle" placeholder="Article title" />
-          </div>
-
-          <div class="form-group">
-            <label>Body *</label>
-            <textarea [(ngModel)]="formBody" rows="8" placeholder="Article body..."></textarea>
-          </div>
-
-          @if (!editId) {
-            <div class="form-group">
-              <label>Cover Image</label>
-              <input type="file" accept="image/*" (change)="onFileSelect($event)" />
-            </div>
-          }
-
-          <div class="modal-actions">
-            <button class="btn btn-outline" (click)="showForm = false">Cancel</button>
-            <button class="btn btn-primary" [disabled]="formLoading" (click)="submitForm()">
-              {{ formLoading ? 'Saving...' : (editId ? 'Update' : 'Publish') }}
-            </button>
-          </div>
-        </div>
-      </div>
+    @if (!auth.isAdmin()) {
+      <p class="role-hint">
+        Posts you create are submitted for admin approval. You can edit rejected posts and resubmit.
+      </p>
+    } @else {
+      <p class="role-hint">
+        Review pending submissions from department admins. Approve to publish, or reject with a reason.
+      </p>
     }
+
+    <!-- Tabs -->
+    <div class="news-tabs" role="tablist">
+      @if (auth.isAdmin()) {
+        <button class="tab-btn" [class.active]="activeTab === 'pending'" (click)="setTab('pending')">
+          Pending <span class="tab-count">{{ pendingPosts.length }}</span>
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'approved'" (click)="setTab('approved')">
+          Approved <span class="tab-count">{{ approvedPosts.length }}</span>
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'rejected'" (click)="setTab('rejected')">
+          Rejected <span class="tab-count">{{ rejectedPosts.length }}</span>
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'all'" (click)="setTab('all')">
+          All <span class="tab-count">{{ allPosts.length }}</span>
+        </button>
+      } @else {
+        <button class="tab-btn" [class.active]="activeTab === 'mine'" (click)="setTab('mine')">
+          All Mine <span class="tab-count">{{ allPosts.length }}</span>
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'pending'" (click)="setTab('pending')">
+          Pending <span class="tab-count">{{ pendingPosts.length }}</span>
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'approved'" (click)="setTab('approved')">
+          Approved <span class="tab-count">{{ approvedPosts.length }}</span>
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'rejected'" (click)="setTab('rejected')">
+          Rejected <span class="tab-count">{{ rejectedPosts.length }}</span>
+        </button>
+      }
+    </div>
 
     @if (loading) {
       <div class="loading-spinner">Loading...</div>
-    } @else if (!posts.length) {
-      <div class="empty-state"><p>No articles yet. Create your first one!</p></div>
+    } @else if (!visiblePosts.length) {
+      <div class="empty-state"><p>No posts in this view.</p></div>
     } @else {
       <div class="news-table">
         <table>
           <thead>
             <tr>
               <th>Title</th>
+              <th>Type</th>
+              <th>Category</th>
               <th>Status</th>
+              @if (auth.isAdmin()) { <th>Author</th> }
               <th>Date</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            @for (post of posts; track post.id) {
-              <tr>
+            @for (post of visiblePosts; track post.id) {
+              <tr class="clickable-row" (click)="openDetail(post)">
                 <td>
-                  <a [routerLink]="['/news', post.id]" class="title-link">{{ post.title }}</a>
+                  <span class="title-text">{{ post.title }}</span>
+                  @if (post.status === 'rejected' && post.rejection_reason) {
+                    <div class="reject-snippet" title="{{ post.rejection_reason }}">
+                      Reason: {{ post.rejection_reason | slice:0:60 }}{{ post.rejection_reason.length > 60 ? '…' : '' }}
+                    </div>
+                  }
                 </td>
                 <td>
-                  <span class="badge" [class.published]="post.published" [class.draft]="!post.published">
-                    {{ post.published ? 'Published' : 'Draft' }}
+                  <span class="type-tag" [attr.data-type]="post.post_type">
+                    {{ typeLabels[post.post_type] }}
                   </span>
                 </td>
+                <td><span class="cat-tag">{{ categoryLabels[post.category] }}</span></td>
+                <td><span class="status-badge" [attr.data-status]="post.status">{{ post.status }}</span></td>
+                @if (auth.isAdmin()) {
+                  <td>{{ post.author?.full_name || '—' }}</td>
+                }
                 <td>{{ post.created_at | slice:0:10 }}</td>
-                <td class="actions-cell">
-                  <button class="btn-sm btn-edit" (click)="openEditForm(post)">Edit</button>
-                  <button class="btn-sm btn-toggle" (click)="togglePublish(post)">
-                    {{ post.published ? 'Unpublish' : 'Publish' }}
-                  </button>
-                  <button class="btn-sm btn-delete" (click)="deletePost(post)">Delete</button>
+                <td class="actions-cell" (click)="$event.stopPropagation()">
+                  @if (auth.isAdmin() && post.status === 'pending') {
+                    <button class="btn-sm btn-approve" (click)="approve(post)">Approve</button>
+                    <button class="btn-sm btn-reject" (click)="openReject(post)">Reject</button>
+                  }
+                  @if (auth.isAdmin() || post.author_id === auth.profile()?.id) {
+                    @if (post.status !== 'approved' || auth.isAdmin()) {
+                      <button class="btn-sm btn-edit" (click)="openEditForm(post)">Edit</button>
+                    }
+                    <button class="btn-sm btn-delete" (click)="deletePost(post)">Delete</button>
+                  }
                 </td>
               </tr>
             }
           </tbody>
         </table>
+      </div>
+    }
+
+    <!-- Detail panel -->
+    @if (detailPost) {
+      <div class="modal-overlay" (click)="closeDetail()">
+        <div class="modal modal-lg" (click)="$event.stopPropagation()">
+          <div class="detail-header">
+            <span class="type-tag" [attr.data-type]="detailPost.post_type">{{ typeLabels[detailPost.post_type] }}</span>
+            <span class="cat-tag">{{ categoryLabels[detailPost.category] }}</span>
+            <span class="status-badge" [attr.data-status]="detailPost.status">{{ detailPost.status }}</span>
+          </div>
+          <h2>{{ detailPost.title }}</h2>
+          <p class="detail-meta">
+            By {{ detailPost.author?.full_name || 'Unknown' }} · {{ detailPost.created_at | slice:0:10 }}
+          </p>
+          @if (detailPost.image_url) {
+            <img [src]="detailPost.image_url" alt="cover" class="detail-img" />
+          }
+          <div class="detail-body">{{ detailPost.body }}</div>
+
+          @if (detailPost.status === 'rejected' && detailPost.rejection_reason) {
+            <div class="reject-banner">
+              <strong>Rejection reason:</strong> {{ detailPost.rejection_reason }}
+            </div>
+          }
+
+          <div class="modal-actions">
+            @if (auth.isAdmin() && detailPost.status === 'pending') {
+              <button class="btn btn-success" (click)="approve(detailPost); closeDetail()">Approve</button>
+              <button class="btn btn-danger" (click)="openReject(detailPost); closeDetail()">Reject</button>
+            }
+            <button class="btn btn-outline" (click)="closeDetail()">Close</button>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- New / Edit form -->
+    @if (showForm) {
+      <div class="modal-overlay" (click)="showForm = false">
+        <div class="modal modal-lg" (click)="$event.stopPropagation()">
+          <h2>{{ editId ? 'Edit Post' : 'New Post' }}</h2>
+
+          @if (formError) {
+            <div class="alert alert-error">{{ formError }}</div>
+          }
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Type *</label>
+              <select [(ngModel)]="formType">
+                @for (t of typeList; track t) {
+                  <option [value]="t">{{ typeLabels[t] }}</option>
+                }
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Category *</label>
+              <select [(ngModel)]="formCategory">
+                @for (c of categoryList; track c[0]) {
+                  <option [value]="c[0]">{{ c[1] }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Title *</label>
+            <input type="text" [(ngModel)]="formTitle" placeholder="Post title" />
+          </div>
+
+          <div class="form-group">
+            <label>Body *</label>
+            <textarea [(ngModel)]="formBody" rows="8" placeholder="Write the full content here..."></textarea>
+          </div>
+
+          @if (!editId) {
+            <div class="form-group">
+              <label>Cover Image (optional)</label>
+              <input type="file" accept="image/*" (change)="onFileSelect($event)" />
+            </div>
+          }
+
+          @if (!auth.isAdmin()) {
+            <p class="field-hint">
+              Your post will be submitted for admin approval before being published.
+            </p>
+          }
+
+          <div class="modal-actions">
+            <button class="btn btn-outline" (click)="showForm = false">Cancel</button>
+            <button class="btn btn-primary" [disabled]="formLoading" (click)="submitForm()">
+              {{ formLoading ? 'Saving...' : (editId ? 'Save' : (auth.isAdmin() ? 'Publish' : 'Submit for Approval')) }}
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Reject reason modal -->
+    @if (rejectTarget) {
+      <div class="modal-overlay" (click)="closeReject()">
+        <div class="modal" (click)="$event.stopPropagation()">
+          <h2>Reject Post</h2>
+          <p class="modal-subtitle">{{ rejectTarget.title }}</p>
+
+          <div class="form-group">
+            <label>Reason *</label>
+            <textarea
+              [(ngModel)]="rejectReason"
+              rows="4"
+              placeholder="Explain why this post is being rejected..."
+            ></textarea>
+          </div>
+
+          @if (rejectError) {
+            <div class="alert alert-error">{{ rejectError }}</div>
+          }
+
+          <div class="modal-actions">
+            <button class="btn btn-outline" (click)="closeReject()">Cancel</button>
+            <button class="btn btn-danger" [disabled]="rejectLoading" (click)="confirmReject()">
+              {{ rejectLoading ? 'Rejecting...' : 'Reject' }}
+            </button>
+          </div>
+        </div>
       </div>
     }
   </main>

@@ -1,6 +1,19 @@
 import { Injectable } from '@angular/core';
 import { SupabaseService } from './supabase.service';
-import { NewsPost, NewsComment } from '../models/types';
+import {
+  NewsPost,
+  NewsComment,
+  NewsPostType,
+  NewsCategory,
+  NewsPostStatus,
+} from '../models/types';
+
+export interface CreateNewsPayload {
+  title: string;
+  body: string;
+  post_type: NewsPostType;
+  category: NewsCategory;
+}
 
 @Injectable({ providedIn: 'root' })
 export class NewsService {
@@ -11,15 +24,14 @@ export class NewsService {
   }
 
   private async attachAuthors(posts: NewsPost[]): Promise<void> {
+    const ids = Array.from(new Set(posts.map(p => p.author_id).filter(Boolean)));
+    if (!ids.length) return;
+    const { data } = await this.db.from('profiles').select('*').in('id', ids);
+    const map = new Map<string, any>();
+    for (const p of data ?? []) map.set((p as any).id, p);
     for (const post of posts) {
-      if (post.author_id) {
-        const { data } = await this.db
-          .from('profiles')
-          .select('*')
-          .eq('id', post.author_id)
-          .single();
-        if (data) post.author = data;
-      }
+      const a = map.get(post.author_id);
+      if (a) post.author = a;
     }
   }
 
@@ -27,7 +39,7 @@ export class NewsService {
     let query = this.db
       .from('news_posts')
       .select('*')
-      .eq('published', true)
+      .eq('status', 'approved')
       .order('created_at', { ascending: false });
 
     if (limit) query = query.limit(limit);
@@ -48,6 +60,35 @@ export class NewsService {
 
     if (error) throw error;
 
+    const posts = (data ?? []) as NewsPost[];
+    await this.attachAuthors(posts);
+    return posts;
+  }
+
+  async getMyPosts(): Promise<NewsPost[]> {
+    const { data: { user } } = await this.supabaseService.auth.getUser();
+    if (!user) throw new Error('Not authenticated');
+
+    const { data, error } = await this.db
+      .from('news_posts')
+      .select('*')
+      .eq('author_id', user.id)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    const posts = (data ?? []) as NewsPost[];
+    await this.attachAuthors(posts);
+    return posts;
+  }
+
+  async getPendingPosts(): Promise<NewsPost[]> {
+    const { data, error } = await this.db
+      .from('news_posts')
+      .select('*')
+      .eq('status', 'pending')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
     const posts = (data ?? []) as NewsPost[];
     await this.attachAuthors(posts);
     return posts;
@@ -74,7 +115,7 @@ export class NewsService {
     return post;
   }
 
-  async createPost(title: string, body: string, imageFile?: File): Promise<void> {
+  async createPost(payload: CreateNewsPayload, imageFile?: File): Promise<void> {
     const { data: { user } } = await this.supabaseService.auth.getUser();
     if (!user) throw new Error('Not authenticated');
 
@@ -98,17 +139,75 @@ export class NewsService {
       }
     }
 
-    const { error } = await this.db
-      .from('news_posts')
-      .insert({ title, body, image_url: imageUrl, author_id: user.id, published: true });
+    // Admins auto-approve their own posts; dept_admins go to pending queue.
+    const { data: profile } = await this.db
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+    const isAdmin = (profile as any)?.role === 'admin';
+    const status: NewsPostStatus = isAdmin ? 'approved' : 'pending';
+
+    const { error } = await this.db.from('news_posts').insert({
+      title: payload.title,
+      body: payload.body,
+      post_type: payload.post_type,
+      category: payload.category,
+      image_url: imageUrl,
+      author_id: user.id,
+      status,
+      published: status === 'approved',
+      approved_by: isAdmin ? user.id : null,
+      approved_at: isAdmin ? new Date().toISOString() : null,
+      rejection_reason: null,
+    });
 
     if (error) throw error;
   }
 
-  async updatePost(id: string, updates: Partial<Pick<NewsPost, 'title' | 'body' | 'published'>>) {
+  async updatePost(
+    id: string,
+    updates: Partial<
+      Pick<
+        NewsPost,
+        'title' | 'body' | 'post_type' | 'category' | 'published' | 'status'
+      >
+    >
+  ) {
     const { error } = await this.db
       .from('news_posts')
       .update({ ...updates, updated_at: new Date().toISOString() })
+      .eq('id', id);
+    if (error) throw error;
+  }
+
+  async approvePost(id: string): Promise<void> {
+    const { data: { user } } = await this.supabaseService.auth.getUser();
+    if (!user) throw new Error('Not authenticated');
+
+    const { error } = await this.db
+      .from('news_posts')
+      .update({
+        status: 'approved',
+        published: true,
+        rejection_reason: null,
+        approved_by: user.id,
+        approved_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', id);
+    if (error) throw error;
+  }
+
+  async rejectPost(id: string, reason: string): Promise<void> {
+    const { error } = await this.db
+      .from('news_posts')
+      .update({
+        status: 'rejected',
+        published: false,
+        rejection_reason: reason,
+        updated_at: new Date().toISOString(),
+      })
       .eq('id', id);
     if (error) throw error;
   }

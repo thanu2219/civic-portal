@@ -83,6 +83,32 @@ export interface RequestEvent {
   actor?: Profile;
 }
 
+export type NewsPostType = 'news' | 'announcement';
+
+export type NewsPostStatus = 'pending' | 'approved' | 'rejected';
+
+export type NewsCategory =
+  | 'generic'
+  | 'electricity'
+  | 'municipality'
+  | 'road_and_transportation'
+  | 'water'
+  | 'traffic';
+
+export const NEWS_CATEGORY_LABELS: Record<NewsCategory, string> = {
+  generic: 'Generic',
+  electricity: 'Electricity',
+  municipality: 'Municipality',
+  road_and_transportation: 'Road & Transportation',
+  water: 'Water',
+  traffic: 'Traffic',
+};
+
+export const NEWS_TYPE_LABELS: Record<NewsPostType, string> = {
+  news: 'News',
+  announcement: 'Announcement',
+};
+
 export interface NewsPost {
   id: string;
   title: string;
@@ -90,6 +116,12 @@ export interface NewsPost {
   image_url: string | null;
   author_id: string;
   published: boolean;
+  post_type: NewsPostType;
+  category: NewsCategory;
+  status: NewsPostStatus;
+  rejection_reason: string | null;
+  approved_by: string | null;
+  approved_at: string | null;
   created_at: string;
   updated_at: string;
   author?: Profile;

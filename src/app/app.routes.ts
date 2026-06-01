@@ -77,7 +77,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin/news',
-    canActivate: [adminGuard],
+    canActivate: [staffGuard],
     loadComponent: () =>
       import(
         './features/admin/news-manage/news-manage.component'

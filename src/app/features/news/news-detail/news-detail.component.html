@@ -3,17 +3,23 @@
     <div class="loading-spinner">Loading...</div>
   } @else if (!post) {
     <div class="empty-state">
-      <p>Article not found.</p>
-      <a routerLink="/news" class="btn btn-outline">Back to News</a>
+      <p>Post not found.</p>
+      <a routerLink="/news" class="btn btn-outline">Back to News &amp; Announcements</a>
     </div>
   } @else {
-    <a routerLink="/news" class="back-link">← Back to News</a>
+    <a routerLink="/news" class="back-link">← Back to News &amp; Announcements</a>
 
-    <article class="article-card">
+    <article class="article-card" [class.is-announcement]="post.post_type === 'announcement'">
       @if (post.image_url) {
         <img [src]="post.image_url" [alt]="post.title" class="article-img" />
       }
       <div class="article-body">
+        <div class="article-tags">
+          <span class="type-tag" [attr.data-type]="post.post_type">
+            {{ post.post_type === 'announcement' ? 'Announcement' : 'News' }}
+          </span>
+          <span class="cat-tag">{{ post.category }}</span>
+        </div>
         <h1>{{ post.title }}</h1>
         <div class="article-meta">
           @if (post.author) {

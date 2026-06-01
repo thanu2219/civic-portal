@@ -2,6 +2,58 @@
 @use '../dashboard/admin-dashboard.component' as admin;
 @use '../request-queue/request-queue.component' as queue;
 
+.role-hint {
+  margin: -0.5rem 0 1rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.news-tabs {
+  display: flex;
+  gap: 0.25rem;
+  border-bottom: 2px solid #e8ecf0;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+
+  .tab-btn {
+    background: transparent;
+    border: none;
+    padding: 0.65rem 1.1rem;
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: #666;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: color 0.15s ease, border-color 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+
+    &:hover { color: #1a1a2e; }
+
+    &.active {
+      color: #0f3460;
+      border-bottom-color: #0f3460;
+      font-weight: 600;
+    }
+  }
+
+  .tab-count {
+    background: #e8ecf0;
+    color: #555;
+    border-radius: 10px;
+    padding: 1px 8px;
+    font-size: 0.72rem;
+    font-weight: 600;
+  }
+
+  .tab-btn.active .tab-count {
+    background: #0f3460;
+    color: #fff;
+  }
+}
+
 .news-table {
   background: #fff;
   border-radius: 10px;
@@ -17,33 +69,147 @@
       text-align: left;
       border-bottom: 1px solid #f0f0f0;
       font-size: 0.9rem;
+      vertical-align: top;
     }
 
     th { background: #f8f9fa; font-weight: 600; color: #1a1a2e; }
+    tbody tr.clickable-row { cursor: pointer; }
     tbody tr:hover { background: #fafbfc; }
   }
 }
 
-.published {
-  background: #e8f5e9;
-  color: #2e7d32;
-  padding: 2px 10px;
-  border-radius: 12px;
+.title-text { font-weight: 500; color: #1a1a2e; }
+
+.reject-snippet {
+  margin-top: 4px;
   font-size: 0.75rem;
-  font-weight: 600;
+  color: #c62828;
 }
 
-.draft {
-  background: #fff3e0;
-  color: #e65100;
-  padding: 2px 10px;
+.type-tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  padding: 2px 9px;
   border-radius: 12px;
-  font-size: 0.75rem;
-  font-weight: 600;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+
+  &[data-type="news"] { background: #e3f2fd; color: #0d47a1; }
+  &[data-type="announcement"] { background: #fff3e0; color: #c0410f; }
 }
 
+.cat-tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: #f1f3f5;
+  color: #495057;
+  font-weight: 500;
+}
+
+.status-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  padding: 2px 9px;
+  border-radius: 12px;
+  text-transform: capitalize;
+  font-weight: 600;
+
+  &[data-status="pending"] { background: #fff8e1; color: #b26a00; }
+  &[data-status="approved"] { background: #e8f5e9; color: #2e7d32; }
+  &[data-status="rejected"] { background: #fdecea; color: #c62828; }
+}
+
+.actions-cell {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.btn-approve { background: #2e7d32; color: #fff; }
+.btn-reject { background: #c62828; color: #fff; }
 .btn-edit { background: #0f3460; color: #fff; }
-.btn-toggle { background: #ff9800; color: #fff; }
-.btn-delete { background: #e94560; color: #fff; }
+.btn-delete { background: #757575; color: #fff; }
 
-.modal-lg { max-width: 650px; }
+.btn-success {
+  background: #2e7d32;
+  color: #fff;
+  border: none;
+  &:hover:not(:disabled) { background: #1b5e20; }
+}
+
+.btn-danger {
+  background: #c62828;
+  color: #fff;
+  border: none;
+  &:hover:not(:disabled) { background: #a31f1f; }
+}
+
+.modal-lg { max-width: 720px; }
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.detail-header {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+
+.detail-meta {
+  color: #666;
+  font-size: 0.85rem;
+  margin: 0 0 1rem;
+}
+
+.detail-img {
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.detail-body {
+  white-space: pre-wrap;
+  line-height: 1.55;
+  color: #1a1a2e;
+}
+
+.reject-banner {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  background: #fdecea;
+  border: 1px solid #f5c2c0;
+  color: #c62828;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.alert-error {
+  background: #fdecea;
+  color: #c62828;
+  border: 1px solid #f5c2c0;
+  padding: 0.6rem 0.9rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.field-hint {
+  color: #666;
+  font-size: 0.85rem;
+  margin: 0 0 1rem;
+}
+
+.modal-subtitle {
+  color: #666;
+  font-size: 0.9rem;
+  margin: -0.25rem 0 1rem;
+}

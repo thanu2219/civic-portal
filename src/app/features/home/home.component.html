@@ -74,13 +74,16 @@
     </div>
   </section>
 
-  <!-- Recent News -->
+  <!-- Recent News & Announcements -->
   @if (recentNews.length) {
     <section class="section news-teaser">
-      <h2>Latest News</h2>
+      <h2>Latest News &amp; Announcements</h2>
       <div class="news-grid">
         @for (post of recentNews; track post.id) {
-          <a [routerLink]="['/news', post.id]" class="news-card">
+          <a [routerLink]="['/news', post.id]" class="news-card" [class.is-announcement]="post.post_type === 'announcement'">
+            <span class="type-tag" [attr.data-type]="post.post_type">
+              {{ post.post_type === 'announcement' ? 'Announcement' : 'News' }}
+            </span>
             @if (post.image_url) {
               <img [src]="post.image_url" [alt]="post.title" class="news-img" />
             }
@@ -93,7 +96,7 @@
         }
       </div>
       <div class="section-footer">
-        <a routerLink="/news" class="btn btn-outline">View All News</a>
+        <a routerLink="/news" class="btn btn-outline">View All</a>
       </div>
     </section>
   }
