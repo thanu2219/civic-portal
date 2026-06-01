@@ -11,7 +11,7 @@
 
     <div class="navbar-menu" [class.open]="menuOpen">
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="menuOpen=false">Home</a>
-      <a routerLink="/news" routerLinkActive="active" (click)="menuOpen=false">News</a>
+      <a routerLink="/news" routerLinkActive="active" (click)="menuOpen=false">News &amp; Announcements</a>
 
       @if (auth.isLoggedIn()) {
         <a routerLink="/requests" routerLinkActive="active" (click)="menuOpen=false">My Requests</a>

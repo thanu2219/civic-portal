@@ -150,6 +150,26 @@
   font-weight: 600;
 }
 
+.dept-tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  color: #fff;
+  background: #455a64;
+  backdrop-filter: blur(4px);
+
+  &[data-dept="generic"] { background: #607d8b; }
+  &[data-dept="electricity"] { background: #f9a825; color: #3e2723; }
+  &[data-dept="municipality"] { background: #6a1b9a; }
+  &[data-dept="road_and_transportation"] { background: #455a64; }
+  &[data-dept="water"] { background: #0277bd; }
+  &[data-dept="traffic"] { background: #c62828; }
+}
+
 .news-img {
   width: 100%;
   height: 200px;

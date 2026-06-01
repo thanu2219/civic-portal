@@ -18,13 +18,10 @@
           <span class="type-tag" [attr.data-type]="post.post_type">
             {{ post.post_type === 'announcement' ? 'Announcement' : 'News' }}
           </span>
-          <span class="cat-tag">{{ post.category }}</span>
+          <span class="dept-tag" [attr.data-dept]="post.category">{{ categoryLabel(post.category) }}</span>
         </div>
         <h1>{{ post.title }}</h1>
         <div class="article-meta">
-          @if (post.author) {
-            <span>By {{ post.author.full_name }}</span>
-          }
           <span>{{ post.created_at | slice:0:10 }}</span>
         </div>
         <div class="article-content">

@@ -90,57 +90,52 @@ create policy "Staff create posts"
     )
   );
 
--- Authors can update their own pending or rejected posts (resubmit/edit)
-create policy "Authors update own pending posts"
-  on public.news_posts for update
-  to authenticated
-  using (
-    author_id = auth.uid()
-    and status in ('pending', 'rejected')
-  )
-  with check (author_id = auth.uid());
+-- NOTE: Posts cannot be edited after creation by anyone.
+-- The only "update" allowed is the admin approve/reject workflow, which is
+-- handled by the dedicated policy below.
 
--- Dept admins of the same department can edit pending/rejected posts in their dept
+-- Drop any prior edit policies so this migration is idempotent
+drop policy if exists "Authors update own pending posts" on public.news_posts;
 drop policy if exists "Dept staff update same dept pending posts" on public.news_posts;
-create policy "Dept staff update same dept pending posts"
+
+-- Admins can update posts (used only for approve/reject workflow).
+drop policy if exists "Admins update posts" on public.news_posts;
+create policy "Admins update posts"
   on public.news_posts for update
-  to authenticated
-  using (
-    status in ('pending', 'rejected')
-    and exists (
-      select 1
-      from public.department_staff ds
-      join public.departments d on d.id = ds.department_id
-      where ds.user_id = auth.uid()
-        and d.slug = news_posts.category
-    )
-  );
-
--- Dept admins of the same department can delete pending/rejected posts in their dept
-drop policy if exists "Dept staff delete same dept pending posts" on public.news_posts;
-create policy "Dept staff delete same dept pending posts"
-  on public.news_posts for delete
-  to authenticated
-  using (
-    status in ('pending', 'rejected')
-    and exists (
-      select 1
-      from public.department_staff ds
-      join public.departments d on d.id = ds.department_id
-      where ds.user_id = auth.uid()
-        and d.slug = news_posts.category
-    )
-  );
-
--- Admins can do everything (approve/reject/edit/delete)
-create policy "Admins manage all posts"
-  on public.news_posts for all
   to authenticated
   using (
     exists (select 1 from public.profiles where id = auth.uid() and role = 'admin')
   )
   with check (
     exists (select 1 from public.profiles where id = auth.uid() and role = 'admin')
+  );
+
+-- Admins can delete ONLY rejected posts.
+drop policy if exists "Admins delete rejected posts" on public.news_posts;
+drop policy if exists "Admins manage all posts" on public.news_posts;
+create policy "Admins delete rejected posts"
+  on public.news_posts for delete
+  to authenticated
+  using (
+    status = 'rejected'
+    and exists (select 1 from public.profiles where id = auth.uid() and role = 'admin')
+  );
+
+-- Dept admins can delete ONLY rejected posts in their department.
+drop policy if exists "Dept staff delete same dept pending posts" on public.news_posts;
+drop policy if exists "Dept staff delete same dept rejected posts" on public.news_posts;
+create policy "Dept staff delete same dept rejected posts"
+  on public.news_posts for delete
+  to authenticated
+  using (
+    status = 'rejected'
+    and exists (
+      select 1
+      from public.department_staff ds
+      join public.departments d on d.id = ds.department_id
+      where ds.user_id = auth.uid()
+        and d.slug = news_posts.category
+    )
   );
 
 -- 3) Storage: allow dept admins to upload news images

@@ -21,11 +21,11 @@
 
     @if (!auth.isAdmin()) {
       <p class="role-hint">
-        You can see posts you created and posts for your department. New posts go to admin for approval; rejected ones can be edited and resubmitted.
+        You can see posts you created and posts for your department. Submitted posts cannot be edited; rejected ones can be deleted.
       </p>
     } @else {
       <p class="role-hint">
-        Review pending submissions from department admins. Approve to publish, or reject with a reason.
+        Review pending submissions from department admins. Approve to publish, or reject with a reason. Rejected posts can be deleted.
       </p>
     }
 
@@ -105,10 +105,7 @@
                     <button class="btn-sm btn-approve" (click)="approve(post)">Approve</button>
                     <button class="btn-sm btn-reject" (click)="openReject(post)">Reject</button>
                   }
-                  @if (auth.isAdmin() || post.author_id === auth.profile()?.id) {
-                    @if (post.status !== 'approved' || auth.isAdmin()) {
-                      <button class="btn-sm btn-edit" (click)="openEditForm(post)">Edit</button>
-                    }
+                  @if (post.status === 'rejected') {
                     <button class="btn-sm btn-delete" (click)="deletePost(post)">Delete</button>
                   }
                 </td>
@@ -154,11 +151,11 @@
       </div>
     }
 
-    <!-- New / Edit form -->
+    <!-- New post form -->
     @if (showForm) {
       <div class="modal-overlay" (click)="showForm = false">
         <div class="modal modal-lg" (click)="$event.stopPropagation()">
-          <h2>{{ editId ? 'Edit Post' : 'New Post' }}</h2>
+          <h2>New Post</h2>
 
           @if (formError) {
             <div class="alert alert-error">{{ formError }}</div>
@@ -193,23 +190,25 @@
             <textarea [(ngModel)]="formBody" rows="8" placeholder="Write the full content here..."></textarea>
           </div>
 
-          @if (!editId) {
-            <div class="form-group">
-              <label>Cover Image (optional)</label>
-              <input type="file" accept="image/*" (change)="onFileSelect($event)" />
-            </div>
-          }
+          <div class="form-group">
+            <label>Cover Image (optional)</label>
+            <input type="file" accept="image/*" (change)="onFileSelect($event)" />
+          </div>
 
           @if (!auth.isAdmin()) {
             <p class="field-hint">
-              Your post will be submitted for admin approval before being published.
+              Your post will be submitted for admin approval before being published. Once submitted, posts cannot be edited.
+            </p>
+          } @else {
+            <p class="field-hint">
+              Posts cannot be edited after creation.
             </p>
           }
 
           <div class="modal-actions">
             <button class="btn btn-outline" (click)="showForm = false">Cancel</button>
             <button class="btn btn-primary" [disabled]="formLoading" (click)="submitForm()">
-              {{ formLoading ? 'Saving...' : (editId ? 'Save' : (auth.isAdmin() ? 'Publish' : 'Submit for Approval')) }}
+              {{ formLoading ? 'Saving...' : (auth.isAdmin() ? 'Publish' : 'Submit for Approval') }}
             </button>
           </div>
         </div>

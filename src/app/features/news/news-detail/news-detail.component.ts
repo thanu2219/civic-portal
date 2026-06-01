@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { SlicePipe } from '@angular/common';
 import { NewsService } from '../../../core/services/news.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { NewsPost, NewsComment } from '../../../core/models/types';
+import { NewsPost, NewsComment, NewsCategory, NEWS_CATEGORY_LABELS } from '../../../core/models/types';
 
 @Component({
   selector: 'app-news-detail',
@@ -19,6 +19,10 @@ export class NewsDetailComponent implements OnInit {
   newComment = '';
   loading = true;
   submitting = false;
+
+  categoryLabel(c: NewsCategory): string {
+    return NEWS_CATEGORY_LABELS[c] ?? c;
+  }
 
   constructor(
     private route: ActivatedRoute,

@@ -51,7 +51,7 @@
             <a [routerLink]="['/news', post.id]" class="news-card card-announcement">
               <div class="card-tags">
                 <span class="type-tag" data-type="announcement">{{ typeLabels[post.post_type] }}</span>
-                <span class="cat-tag">{{ categoryLabels[post.category] }}</span>
+                <span class="dept-tag" [attr.data-dept]="post.category">{{ categoryLabels[post.category] }}</span>
               </div>
               @if (post.image_url) {
                 <img [src]="post.image_url" [alt]="post.title" class="news-img" />
@@ -62,9 +62,6 @@
                 <h2>{{ post.title }}</h2>
                 <p>{{ post.body | slice:0:180 }}{{ post.body.length > 180 ? '…' : '' }}</p>
                 <div class="news-meta">
-                  @if (post.author) {
-                    <span>By {{ post.author.full_name }}</span>
-                  }
                   <span>{{ post.created_at | slice:0:10 }}</span>
                 </div>
               </div>
@@ -84,7 +81,7 @@
             <a [routerLink]="['/news', post.id]" class="news-card card-news">
               <div class="card-tags">
                 <span class="type-tag" data-type="news">{{ typeLabels[post.post_type] }}</span>
-                <span class="cat-tag">{{ categoryLabels[post.category] }}</span>
+                <span class="dept-tag" [attr.data-dept]="post.category">{{ categoryLabels[post.category] }}</span>
               </div>
               @if (post.image_url) {
                 <img [src]="post.image_url" [alt]="post.title" class="news-img" />
@@ -95,9 +92,6 @@
                 <h2>{{ post.title }}</h2>
                 <p>{{ post.body | slice:0:180 }}{{ post.body.length > 180 ? '…' : '' }}</p>
                 <div class="news-meta">
-                  @if (post.author) {
-                    <span>By {{ post.author.full_name }}</span>
-                  }
                   <span>{{ post.created_at | slice:0:10 }}</span>
                 </div>
               </div>

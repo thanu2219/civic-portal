@@ -43,15 +43,23 @@
   &[data-type="announcement"] { background: #ffe3d5; color: #c0410f; }
 }
 
-.cat-tag {
+.dept-tag {
   display: inline-block;
   font-size: 0.72rem;
-  padding: 3px 9px;
+  padding: 3px 10px;
   border-radius: 12px;
-  background: #f1f3f5;
-  color: #495057;
-  font-weight: 600;
-  text-transform: capitalize;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  color: #fff;
+  background: #455a64;
+
+  &[data-dept="generic"] { background: #607d8b; }
+  &[data-dept="electricity"] { background: #f9a825; color: #3e2723; }
+  &[data-dept="municipality"] { background: #6a1b9a; }
+  &[data-dept="road_and_transportation"] { background: #455a64; }
+  &[data-dept="water"] { background: #0277bd; }
+  &[data-dept="traffic"] { background: #c62828; }
 }
 
 .article-img {

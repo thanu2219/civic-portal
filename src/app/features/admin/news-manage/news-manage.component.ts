@@ -31,7 +31,6 @@ export class NewsManageComponent implements OnInit {
   activeTab: AdminTab | DeptTab = 'pending';
 
   showForm = false;
-  editId: string | null = null;
   formTitle = '';
   formBody = '';
   formType: NewsPostType = 'news';
@@ -124,22 +123,10 @@ export class NewsManageComponent implements OnInit {
   }
 
   openNewForm() {
-    this.editId = null;
     this.formTitle = '';
     this.formBody = '';
     this.formType = 'news';
     this.formCategory = 'generic';
-    this.formImage = null;
-    this.formError = '';
-    this.showForm = true;
-  }
-
-  openEditForm(post: NewsPost) {
-    this.editId = post.id;
-    this.formTitle = post.title;
-    this.formBody = post.body;
-    this.formType = post.post_type;
-    this.formCategory = post.category;
     this.formImage = null;
     this.formError = '';
     this.showForm = true;
@@ -163,26 +150,15 @@ export class NewsManageComponent implements OnInit {
     this.cdr.detectChanges();
 
     try {
-      if (this.editId) {
-        await this.newsService.updatePost(this.editId, {
+      await this.newsService.createPost(
+        {
           title: this.formTitle,
           body: this.formBody,
           post_type: this.formType,
           category: this.formCategory,
-          // editing a rejected post moves it back to pending for re-review
-          status: this.auth.isAdmin() ? undefined : 'pending',
-        });
-      } else {
-        await this.newsService.createPost(
-          {
-            title: this.formTitle,
-            body: this.formBody,
-            post_type: this.formType,
-            category: this.formCategory,
-          },
-          this.formImage ?? undefined
-        );
-      }
+        },
+        this.formImage ?? undefined
+      );
       this.showForm = false;
       await this.load();
     } catch (err: any) {
