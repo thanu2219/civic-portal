@@ -31,6 +31,18 @@
       </div>
 
       <div class="form-group">
+        <label for="location">Location *</label>
+        <input
+          id="location"
+          type="text"
+          [(ngModel)]="location"
+          name="location"
+          placeholder="Street, landmark, area or address"
+          required
+        />
+      </div>
+
+      <div class="form-group">
         <label for="description">Description *</label>
         <textarea
           id="description"

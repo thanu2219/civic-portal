@@ -15,6 +15,7 @@ export class CreateRequestComponent {
   title = '';
   description = '';
   category: RequestCategory | '' = '';
+  location = '';
   photos: File[] = [];
   previewUrls: string[] = [];
   loading = false;
@@ -66,7 +67,7 @@ export class CreateRequestComponent {
   }
 
   async onSubmit() {
-    if (!this.title || !this.description || !this.category) {
+    if (!this.title || !this.description || !this.category || !this.location.trim()) {
       this.error = 'Please fill in all required fields.';
       return;
     }
@@ -80,6 +81,7 @@ export class CreateRequestComponent {
         this.title,
         this.description,
         this.category as RequestCategory,
+        this.location.trim(),
         this.photos
       );
       this.zone.run(() => {

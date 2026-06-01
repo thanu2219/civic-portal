@@ -75,6 +75,11 @@
           <div class="loading-spinner">Loading details...</div>
         } @else {
           <div class="detail-panel-body">
+            @if (viewRequest.location) {
+              <h3>Location</h3>
+              <p>{{ viewRequest.location }}</p>
+            }
+
             <h3>Description</h3>
             <p>{{ viewRequest.description }}</p>
 

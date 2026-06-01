@@ -19,6 +19,7 @@ export class RequestService {
     title: string,
     description: string,
     category: RequestCategory,
+    location: string,
     photos: File[]
   ): Promise<void> {
     const { data: { user } } = await this.supabaseService.auth.getUser();
@@ -59,6 +60,7 @@ export class RequestService {
         title,
         description,
         category,
+        location,
         photos: photoUrls,
         status: 'pending' as RequestStatus,
         department_id: dept?.id ?? null,

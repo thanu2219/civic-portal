@@ -27,6 +27,11 @@
       </div>
 
       <div class="detail-body">
+        @if (request.location) {
+          <h2>Location</h2>
+          <p>{{ request.location }}</p>
+        }
+
         <h2>Description</h2>
         <p>{{ request.description }}</p>
 

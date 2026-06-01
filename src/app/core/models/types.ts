@@ -57,6 +57,7 @@ export interface ServiceRequest {
   title: string;
   description: string;
   category: RequestCategory;
+  location: string;
   status: RequestStatus;
   department_id: string | null;
   assigned_to: string | null;
