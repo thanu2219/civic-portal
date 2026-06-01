@@ -1,21 +1,22 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { SlicePipe } from '@angular/common';
 import { UserService } from '../../../core/services/user.service';
 import { DepartmentService } from '../../../core/services/department.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { Profile, Department, UserRole, CATEGORY_LABELS, RequestCategory } from '../../../core/models/types';
+import { Profile, Department, UserRole } from '../../../core/models/types';
 
 interface UserWithDept extends Profile {
   departmentName?: string;
   departmentId?: string;
 }
 
+type TabKey = 'admin' | 'dept_admin' | 'citizen';
+
 @Component({
   selector: 'app-user-manage',
   standalone: true,
-  imports: [FormsModule, RouterLink, RouterLinkActive, SlicePipe],
+  imports: [FormsModule, RouterLink, RouterLinkActive],
   templateUrl: './user-manage.component.html',
   styleUrl: './user-manage.component.scss',
 })
@@ -31,13 +32,21 @@ export class UserManageComponent implements OnInit {
     dept_admin: 'Department Admin',
     admin: 'Admin',
   };
-  categoryList = Object.entries(CATEGORY_LABELS) as [RequestCategory, string][];
+
+  activeTab: TabKey = 'admin';
+  searchAdmin = '';
+  searchDeptAdmin = '';
+  searchCitizen = '';
 
   activeUser: UserWithDept | null = null;
+  editFullName = '';
   selectedRole: UserRole = 'citizen';
   selectedDept = '';
   actionLoading = false;
   actionError = '';
+
+  deleteTarget: UserWithDept | null = null;
+  deleteLoading = false;
 
   constructor(
     private userService: UserService,
@@ -89,8 +98,33 @@ export class UserManageComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  openRoleModal(user: UserWithDept) {
+  setTab(tab: TabKey) {
+    this.activeTab = tab;
+  }
+
+  private filter(list: UserWithDept[], term: string): UserWithDept[] {
+    const t = term.trim().toLowerCase();
+    if (!t) return list;
+    return list.filter(u =>
+      (u.full_name || '').toLowerCase().includes(t) ||
+      (u.email || '').toLowerCase().includes(t) ||
+      (u.departmentName || '').toLowerCase().includes(t)
+    );
+  }
+
+  get filteredAdmins() {
+    return this.filter(this.admins, this.searchAdmin);
+  }
+  get filteredDeptAdmins() {
+    return this.filter(this.deptAdmins, this.searchDeptAdmin);
+  }
+  get filteredCitizens() {
+    return this.filter(this.citizens, this.searchCitizen);
+  }
+
+  openEditModal(user: UserWithDept) {
     this.activeUser = user;
+    this.editFullName = user.full_name || '';
     this.selectedRole = user.role;
     this.selectedDept = user.departmentId ?? '';
     this.actionError = '';
@@ -98,13 +132,10 @@ export class UserManageComponent implements OnInit {
 
   closeModal() {
     this.activeUser = null;
+    this.actionError = '';
   }
 
-  getDeptIdBySlug(slug: string): string {
-    return this.departments.find(d => d.slug === slug)?.id ?? '';
-  }
-
-  async saveRole() {
+  async saveUser() {
     if (!this.activeUser) return;
     this.actionError = '';
 
@@ -116,20 +147,64 @@ export class UserManageComponent implements OnInit {
     this.actionLoading = true;
 
     try {
-      await this.userService.updateRole(this.activeUser.id, this.selectedRole);
+      const userId = this.activeUser.id;
+      const trimmedName = this.editFullName.trim();
 
-      if (this.selectedRole === 'dept_admin' && this.selectedDept) {
-        await this.departmentService.assignStaff(this.activeUser.id, this.selectedDept);
+      if (trimmedName !== (this.activeUser.full_name || '')) {
+        await this.userService.updateProfile(userId, { full_name: trimmedName });
+      }
+
+      if (this.selectedRole !== this.activeUser.role) {
+        await this.userService.updateRole(userId, this.selectedRole);
+      }
+
+      if (this.selectedRole === 'dept_admin') {
+        if (this.selectedDept && this.selectedDept !== this.activeUser.departmentId) {
+          await this.departmentService.assignStaff(userId, this.selectedDept);
+        }
+      } else {
+        if (this.activeUser.departmentId) {
+          await this.departmentService.removeAllStaffForUser(userId);
+        }
       }
 
       this.closeModal();
       await this.load();
     } catch (err: any) {
-      console.error('Role update failed:', err);
-      this.actionError = err.message || 'Failed to update role.';
+      console.error('Save user failed:', err);
+      this.actionError = err.message || 'Failed to save user.';
     }
 
     this.actionLoading = false;
+    this.cdr.detectChanges();
+  }
+
+  openDeleteConfirm(user: UserWithDept) {
+    this.deleteTarget = user;
+  }
+
+  closeDeleteConfirm() {
+    this.deleteTarget = null;
+  }
+
+  async confirmDelete() {
+    if (!this.deleteTarget) return;
+    this.deleteLoading = true;
+
+    try {
+      const userId = this.deleteTarget.id;
+      if (this.deleteTarget.departmentId) {
+        await this.departmentService.removeAllStaffForUser(userId);
+      }
+      await this.userService.deleteUser(userId);
+      this.deleteTarget = null;
+      await this.load();
+    } catch (err: any) {
+      console.error('Delete user failed:', err);
+      alert(err.message || 'Failed to delete user.');
+    }
+
+    this.deleteLoading = false;
     this.cdr.detectChanges();
   }
 }

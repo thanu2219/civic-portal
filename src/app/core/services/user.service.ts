@@ -27,4 +27,20 @@ export class UserService {
       .eq('id', userId);
     if (error) throw error;
   }
+
+  async updateProfile(userId: string, updates: Partial<Pick<Profile, 'full_name'>>) {
+    const { error } = await this.db
+      .from('profiles')
+      .update(updates)
+      .eq('id', userId);
+    if (error) throw error;
+  }
+
+  async deleteUser(userId: string) {
+    const { error } = await this.db
+      .from('profiles')
+      .delete()
+      .eq('id', userId);
+    if (error) throw error;
+  }
 }

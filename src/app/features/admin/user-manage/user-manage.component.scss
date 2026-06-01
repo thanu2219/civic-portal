@@ -2,23 +2,74 @@
 @use '../dashboard/admin-dashboard.component' as admin;
 @use '../request-queue/request-queue.component' as queue;
 
-.role-section {
+.user-tabs {
+  display: flex;
+  gap: 0.25rem;
+  border-bottom: 2px solid #e8ecf0;
+  margin-bottom: 1.25rem;
+
+  .tab-btn {
+    background: transparent;
+    border: none;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #666;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: color 0.15s ease, border-color 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &:hover { color: #1a1a2e; }
+
+    &.active {
+      color: #0f3460;
+      border-bottom-color: #0f3460;
+      font-weight: 600;
+    }
+  }
+
+  .tab-count {
+    background: #e8ecf0;
+    color: #555;
+    border-radius: 10px;
+    padding: 1px 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .tab-btn.active .tab-count {
+    background: #0f3460;
+    color: #fff;
+  }
+}
+
+.tab-panel {
   margin-bottom: 2rem;
 }
 
-.section-title {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin: 0 0 0.75rem;
-  font-size: 1.1rem;
-  color: #1a1a2e;
-}
+.search-bar {
+  margin-bottom: 0.75rem;
 
-.section-count {
-  font-size: 0.85rem;
-  color: #888;
-  font-weight: 400;
+  input {
+    width: 100%;
+    max-width: 360px;
+    padding: 0.55rem 0.85rem;
+    border: 1px solid #d0d4d9;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: #fff;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+    &:focus {
+      outline: none;
+      border-color: #0f3460;
+      box-shadow: 0 0 0 3px rgba(15, 52, 96, 0.12);
+    }
+  }
 }
 
 .user-table {
@@ -70,7 +121,24 @@
   font-size: 0.85rem;
 }
 
+.actions-cell {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
 .btn-edit { background: #0f3460; color: #fff; }
+.btn-delete { background: #c62828; color: #fff; }
+
+.btn-danger {
+  background: #c62828;
+  color: #fff;
+  border: none;
+
+  &:hover:not(:disabled) { background: #a31f1f; }
+}
+
+.modal-sm { max-width: 420px; }
 
 .error-message {
   padding: 0.75rem 1rem;
@@ -86,4 +154,6 @@
   margin: 0.25rem 0 0;
   font-size: 0.8rem;
   color: #999;
+
+  &.error { color: #c62828; }
 }

@@ -66,4 +66,12 @@ export class DepartmentService {
       .eq('department_id', departmentId);
     if (error) throw error;
   }
+
+  async removeAllStaffForUser(userId: string) {
+    const { error } = await this.db
+      .from('department_staff')
+      .delete()
+      .eq('user_id', userId);
+    if (error) throw error;
+  }
 }
