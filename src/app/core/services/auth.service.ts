@@ -37,9 +37,13 @@ export class AuthService {
 
     this.loadingSignal.set(true);
 
+    if (typeof window !== 'undefined' && window.location.hash.includes('type=recovery')) {
+      this.recoveryModeSignal.set(true);
+    }
+
     try {
       const { data: { session } } = await this.supabaseService.auth.getSession();
-      if (session?.user) {
+      if (session?.user && !this.recoveryModeSignal()) {
         await this.ensureProfile(session.user);
       }
 
@@ -47,11 +51,13 @@ export class AuthService {
         this.zone.run(async () => {
           if (event === 'PASSWORD_RECOVERY') {
             this.recoveryModeSignal.set(true);
+            this.profileSignal.set(null);
             this.router.navigate(['/login']);
-          } else if (event === 'SIGNED_IN' && session?.user) {
+          } else if (event === 'SIGNED_IN' && session?.user && !this.recoveryModeSignal()) {
             await this.ensureProfile(session.user);
           } else if (event === 'SIGNED_OUT') {
             this.profileSignal.set(null);
+            this.recoveryModeSignal.set(false);
           }
         });
       });
@@ -93,6 +99,13 @@ export class AuthService {
   }
 
   async signUp(email: string, password: string, fullName: string) {
+    const { data: exists, error: checkErr } = await this.supabaseService.supabase
+      .rpc('email_exists', { check_email: email });
+
+    if (!checkErr && exists === true) {
+      throw new Error('An account with this email already exists. Please sign in or use forgot password.');
+    }
+
     const redirectUrl = `${window.location.origin}/civic-portal/login`;
     const { data, error } = await this.supabaseService.auth.signUp({
       email,
@@ -127,6 +140,8 @@ export class AuthService {
     const { error } = await this.supabaseService.auth.updateUser({ password: newPassword });
     if (error) throw error;
     this.recoveryModeSignal.set(false);
+    await this.supabaseService.auth.signOut();
+    this.profileSignal.set(null);
   }
 
   async signOut() {
