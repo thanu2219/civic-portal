@@ -62,7 +62,10 @@
 }
 
 /* Tabs sit dead-center of the navbar regardless of brand or actions width,
-   so the row's position is stable across login states and roles. */
+   so the row's position is stable across login states and roles. The Admin
+   tab is always rendered in the DOM; for non-staff it's invisible but still
+   occupies its space (.tab-placeholder) so the tab positions never shift
+   when a staff user signs in. */
 .nav-tabs {
   position: absolute;
   left: 50%;
@@ -82,6 +85,11 @@
     white-space: nowrap;
 
     &:hover, &.active { color: #fff; }
+
+    &.tab-placeholder {
+      visibility: hidden;
+      pointer-events: none;
+    }
   }
 }
 
@@ -247,6 +255,10 @@
     align-items: flex-start;
     gap: 0.75rem;
     width: 100%;
+
+    /* In the stacked hamburger menu, hide the Admin placeholder entirely
+       so non-staff users don't see an awkward blank row. */
+    a.tab-placeholder { display: none; }
   }
 
   .nav-actions {
