@@ -28,7 +28,9 @@
         @if (auth.isLoggedIn()) {
           <div class="user-menu">
             <span class="user-name">{{ auth.profile()?.full_name }}</span>
-            <span class="user-role badge" [attr.data-role]="auth.role()">{{ ('role.' + auth.role()) | translate }}</span>
+            @if (auth.isStaff()) {
+              <span class="user-role badge" [attr.data-role]="auth.role()">{{ ('role.' + auth.role()) | translate }}</span>
+            }
           </div>
           <button class="btn-logout" (click)="logout()">{{ 'navbar.signOut' | translate }}</button>
         } @else {
