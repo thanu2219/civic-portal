@@ -293,6 +293,14 @@
   color: #666;
   font-size: 0.85rem;
   margin: 0 0 1rem;
+
+  &.schedule-rule {
+    background: #f1f6fb;
+    border-left: 3px solid #0f3460;
+    padding: 0.55rem 0.75rem;
+    border-radius: 4px;
+    margin-bottom: 0.75rem;
+  }
 }
 
 .modal-subtitle {
