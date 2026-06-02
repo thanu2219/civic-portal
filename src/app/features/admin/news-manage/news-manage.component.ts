@@ -51,6 +51,13 @@ export class NewsManageComponent implements OnInit {
   categoryList = Object.entries(NEWS_CATEGORY_LABELS) as [NewsCategory, string][];
   typeList: NewsPostType[] = ['news', 'announcement'];
 
+  get availableCategories(): [NewsCategory, string][] {
+    if (this.auth.isAdmin()) return this.categoryList;
+    return this.categoryList.filter(([slug]) =>
+      slug === 'generic' || this.myDeptSlugs.includes(slug)
+    );
+  }
+
   myDeptSlugs: string[] = [];
 
   constructor(
@@ -126,7 +133,7 @@ export class NewsManageComponent implements OnInit {
     this.formTitle = '';
     this.formBody = '';
     this.formType = 'news';
-    this.formCategory = 'generic';
+    this.formCategory = this.availableCategories[0]?.[0] ?? 'generic';
     this.formImage = null;
     this.formError = '';
     this.showForm = true;
@@ -142,6 +149,15 @@ export class NewsManageComponent implements OnInit {
   async submitForm() {
     if (!this.formTitle.trim() || !this.formBody.trim()) {
       this.formError = 'Title and body are required.';
+      return;
+    }
+
+    if (
+      !this.auth.isAdmin() &&
+      this.formCategory !== 'generic' &&
+      !this.myDeptSlugs.includes(this.formCategory)
+    ) {
+      this.formError = 'You can only post for your own department or as generic.';
       return;
     }
 

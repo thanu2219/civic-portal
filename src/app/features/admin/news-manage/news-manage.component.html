@@ -65,6 +65,7 @@
     } @else if (!visiblePosts.length) {
       <div class="empty-state"><p>No posts in this view.</p></div>
     } @else {
+      <p class="table-hint">Click a row to view full details and take action.</p>
       <div class="news-table">
         <table>
           <thead>
@@ -75,7 +76,6 @@
               <th>Status</th>
               @if (auth.isAdmin()) { <th>Author</th> }
               <th>Date</th>
-              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -83,11 +83,6 @@
               <tr class="clickable-row" (click)="openDetail(post)">
                 <td>
                   <span class="title-text">{{ post.title }}</span>
-                  @if (post.status === 'rejected' && post.rejection_reason) {
-                    <div class="reject-snippet" title="{{ post.rejection_reason }}">
-                      Reason: {{ post.rejection_reason | slice:0:60 }}{{ post.rejection_reason.length > 60 ? '…' : '' }}
-                    </div>
-                  }
                 </td>
                 <td>
                   <span class="type-tag" [attr.data-type]="post.post_type">
@@ -100,15 +95,6 @@
                   <td>{{ post.author?.full_name || '—' }}</td>
                 }
                 <td>{{ post.created_at | slice:0:10 }}</td>
-                <td class="actions-cell" (click)="$event.stopPropagation()">
-                  @if (auth.isAdmin() && post.status === 'pending') {
-                    <button class="btn-sm btn-approve" (click)="approve(post)">Approve</button>
-                    <button class="btn-sm btn-reject" (click)="openReject(post)">Reject</button>
-                  }
-                  @if (post.status === 'rejected') {
-                    <button class="btn-sm btn-delete" (click)="deletePost(post)">Delete</button>
-                  }
-                </td>
               </tr>
             }
           </tbody>
@@ -145,6 +131,9 @@
               <button class="btn btn-success" (click)="approve(detailPost); closeDetail()">Approve</button>
               <button class="btn btn-danger" (click)="openReject(detailPost); closeDetail()">Reject</button>
             }
+            @if (detailPost.status === 'rejected') {
+              <button class="btn btn-danger" (click)="deletePost(detailPost); closeDetail()">Delete</button>
+            }
             <button class="btn btn-outline" (click)="closeDetail()">Close</button>
           </div>
         </div>
@@ -173,10 +162,15 @@
             <div class="form-group">
               <label>Category *</label>
               <select [(ngModel)]="formCategory">
-                @for (c of categoryList; track c[0]) {
+                @for (c of availableCategories; track c[0]) {
                   <option [value]="c[0]">{{ c[1] }}</option>
                 }
               </select>
+              @if (!auth.isAdmin()) {
+                <p class="field-hint">
+                  You can post under <strong>Generic</strong> or your own department only.
+                </p>
+              }
             </div>
           </div>
 
