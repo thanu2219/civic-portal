@@ -1,19 +1,19 @@
 <div class="admin-layout">
   <aside class="admin-sidebar">
-    <h2>Admin Panel</h2>
+    <h2>{{ 'admin.panel' | translate }}</h2>
     <nav>
-      <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
-      <a routerLink="/admin/requests" routerLinkActive="active">Request Queue</a>
-      <a routerLink="/admin/news" routerLinkActive="active">News &amp; Announcements</a>
-      <a routerLink="/admin/users" routerLinkActive="active">Manage Users</a>
+      <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">{{ 'admin.nav.dashboard' | translate }}</a>
+      <a routerLink="/admin/requests" routerLinkActive="active">{{ 'admin.nav.requests' | translate }}</a>
+      <a routerLink="/admin/news" routerLinkActive="active">{{ 'admin.nav.news' | translate }}</a>
+      <a routerLink="/admin/users" routerLinkActive="active">{{ 'admin.nav.users' | translate }}</a>
     </nav>
   </aside>
 
   <main class="admin-main">
-    <h1>Manage Users</h1>
+    <h1>{{ 'admin.users.title' | translate }}</h1>
 
     @if (loading) {
-      <div class="loading-spinner">Loading...</div>
+      <div class="loading-spinner">{{ 'common.loading' | translate }}</div>
     } @else {
 
       <!-- Tabs -->
@@ -23,21 +23,21 @@
           [class.active]="activeTab === 'admin'"
           (click)="setTab('admin')"
         >
-          Admins <span class="tab-count">{{ admins.length }}</span>
+          {{ 'admin.users.tabAdmins' | translate }} <span class="tab-count">{{ admins.length }}</span>
         </button>
         <button
           class="tab-btn"
           [class.active]="activeTab === 'dept_admin'"
           (click)="setTab('dept_admin')"
         >
-          Dept Admins <span class="tab-count">{{ deptAdmins.length }}</span>
+          {{ 'admin.users.tabDeptAdmins' | translate }} <span class="tab-count">{{ deptAdmins.length }}</span>
         </button>
         <button
           class="tab-btn"
           [class.active]="activeTab === 'citizen'"
           (click)="setTab('citizen')"
         >
-          Citizens <span class="tab-count">{{ citizens.length }}</span>
+          {{ 'admin.users.tabCitizens' | translate }} <span class="tab-count">{{ citizens.length }}</span>
         </button>
       </div>
 
@@ -47,7 +47,7 @@
           <div class="search-bar">
             <input
               type="text"
-              placeholder="Search admins by name or email..."
+              [placeholder]="'admin.users.searchAdmins' | translate"
               [(ngModel)]="searchAdmin"
             />
           </div>
@@ -57,10 +57,10 @@
               <table>
                 <thead>
                   <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Actions</th>
+                    <th>{{ 'admin.users.tableName' | translate }}</th>
+                    <th>{{ 'admin.users.tableEmail' | translate }}</th>
+                    <th>{{ 'admin.users.tableRole' | translate }}</th>
+                    <th>{{ 'admin.users.tableActions' | translate }}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -68,10 +68,10 @@
                     <tr>
                       <td>{{ user.full_name || '—' }}</td>
                       <td>{{ user.email }}</td>
-                      <td><span class="badge" [attr.data-role]="user.role">{{ roleLabels[user.role] }}</span></td>
+                      <td><span class="badge" [attr.data-role]="user.role">{{ ('role.' + user.role) | translate }}</span></td>
                       <td class="actions-cell">
-                        <button class="btn-sm btn-edit" (click)="openEditModal(user)">Edit</button>
-                        <button class="btn-sm btn-delete" (click)="openDeleteConfirm(user)">Delete</button>
+                        <button class="btn-sm btn-edit" (click)="openEditModal(user)">{{ 'common.edit' | translate }}</button>
+                        <button class="btn-sm btn-delete" (click)="openDeleteConfirm(user)">{{ 'common.delete' | translate }}</button>
                       </td>
                     </tr>
                   }
@@ -79,7 +79,7 @@
               </table>
             </div>
           } @else {
-            <div class="empty-state"><p>No admins match your search.</p></div>
+            <div class="empty-state"><p>{{ 'admin.users.emptyAdmins' | translate }}</p></div>
           }
         </div>
       }
@@ -90,7 +90,7 @@
           <div class="search-bar">
             <input
               type="text"
-              placeholder="Search dept admins by name, email, or department..."
+              [placeholder]="'admin.users.searchDeptAdmins' | translate"
               [(ngModel)]="searchDeptAdmin"
             />
           </div>
@@ -100,11 +100,11 @@
               <table>
                 <thead>
                   <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Department</th>
-                    <th>Actions</th>
+                    <th>{{ 'admin.users.tableName' | translate }}</th>
+                    <th>{{ 'admin.users.tableEmail' | translate }}</th>
+                    <th>{{ 'admin.users.tableRole' | translate }}</th>
+                    <th>{{ 'admin.users.tableDepartment' | translate }}</th>
+                    <th>{{ 'admin.users.tableActions' | translate }}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -112,17 +112,17 @@
                     <tr>
                       <td>{{ user.full_name || '—' }}</td>
                       <td>{{ user.email }}</td>
-                      <td><span class="badge" [attr.data-role]="user.role">{{ roleLabels[user.role] }}</span></td>
+                      <td><span class="badge" [attr.data-role]="user.role">{{ ('role.' + user.role) | translate }}</span></td>
                       <td>
                         @if (user.departmentName) {
                           <span class="dept-tag">{{ user.departmentName }}</span>
                         } @else {
-                          <span class="unassigned">Not assigned</span>
+                          <span class="unassigned">{{ 'admin.users.notAssigned' | translate }}</span>
                         }
                       </td>
                       <td class="actions-cell">
-                        <button class="btn-sm btn-edit" (click)="openEditModal(user)">Edit</button>
-                        <button class="btn-sm btn-delete" (click)="openDeleteConfirm(user)">Delete</button>
+                        <button class="btn-sm btn-edit" (click)="openEditModal(user)">{{ 'common.edit' | translate }}</button>
+                        <button class="btn-sm btn-delete" (click)="openDeleteConfirm(user)">{{ 'common.delete' | translate }}</button>
                       </td>
                     </tr>
                   }
@@ -130,7 +130,7 @@
               </table>
             </div>
           } @else {
-            <div class="empty-state"><p>No dept admins match your search.</p></div>
+            <div class="empty-state"><p>{{ 'admin.users.emptyDeptAdmins' | translate }}</p></div>
           }
         </div>
       }
@@ -141,7 +141,7 @@
           <div class="search-bar">
             <input
               type="text"
-              placeholder="Search citizens by name or email..."
+              [placeholder]="'admin.users.searchCitizens' | translate"
               [(ngModel)]="searchCitizen"
             />
           </div>
@@ -151,10 +151,10 @@
               <table>
                 <thead>
                   <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Actions</th>
+                    <th>{{ 'admin.users.tableName' | translate }}</th>
+                    <th>{{ 'admin.users.tableEmail' | translate }}</th>
+                    <th>{{ 'admin.users.tableRole' | translate }}</th>
+                    <th>{{ 'admin.users.tableActions' | translate }}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -162,10 +162,10 @@
                     <tr>
                       <td>{{ user.full_name || '—' }}</td>
                       <td>{{ user.email }}</td>
-                      <td><span class="badge" [attr.data-role]="user.role">{{ roleLabels[user.role] }}</span></td>
+                      <td><span class="badge" [attr.data-role]="user.role">{{ ('role.' + user.role) | translate }}</span></td>
                       <td class="actions-cell">
-                        <button class="btn-sm btn-edit" (click)="openEditModal(user)">Edit</button>
-                        <button class="btn-sm btn-delete" (click)="openDeleteConfirm(user)">Delete</button>
+                        <button class="btn-sm btn-edit" (click)="openEditModal(user)">{{ 'common.edit' | translate }}</button>
+                        <button class="btn-sm btn-delete" (click)="openDeleteConfirm(user)">{{ 'common.delete' | translate }}</button>
                       </td>
                     </tr>
                   }
@@ -173,7 +173,7 @@
               </table>
             </div>
           } @else {
-            <div class="empty-state"><p>No citizens match your search.</p></div>
+            <div class="empty-state"><p>{{ 'admin.users.emptyCitizens' | translate }}</p></div>
           }
         </div>
       }
@@ -183,42 +183,42 @@
     @if (activeUser) {
       <div class="modal-overlay" (click)="closeModal()">
         <div class="modal" (click)="$event.stopPropagation()">
-          <h2>Edit User</h2>
+          <h2>{{ 'admin.users.edit.title' | translate }}</h2>
           <p class="modal-subtitle">{{ activeUser.email }}</p>
 
           <div class="form-group">
-            <label>Full Name</label>
-            <input type="text" [(ngModel)]="editFullName" placeholder="Full name" />
+            <label>{{ 'admin.users.edit.fullNameLabel' | translate }}</label>
+            <input type="text" [(ngModel)]="editFullName" [placeholder]="'admin.users.edit.fullNamePlaceholder' | translate" />
           </div>
 
           <div class="form-group">
-            <label>Email</label>
+            <label>{{ 'admin.users.edit.emailLabel' | translate }}</label>
             <input type="email" [value]="activeUser.email" disabled />
-            <p class="field-hint">Email cannot be changed.</p>
+            <p class="field-hint">{{ 'admin.users.edit.emailHint' | translate }}</p>
           </div>
 
           <div class="form-group">
-            <label>Role</label>
+            <label>{{ 'admin.users.edit.roleLabel' | translate }}</label>
             <select [(ngModel)]="selectedRole">
               @for (r of roles; track r) {
-                <option [value]="r">{{ roleLabels[r] }}</option>
+                <option [value]="r">{{ ('role.' + r) | translate }}</option>
               }
             </select>
           </div>
 
           @if (selectedRole === 'dept_admin') {
             <div class="form-group">
-              <label>Department *</label>
+              <label>{{ 'admin.users.edit.deptLabel' | translate }}</label>
               <select [(ngModel)]="selectedDept" required>
-                <option value="">Select department</option>
+                <option value="">{{ 'admin.users.edit.selectDept' | translate }}</option>
                 @for (dept of departments; track dept.id) {
                   <option [value]="dept.id">{{ dept.name }}</option>
                 }
               </select>
               @if (!departments.length) {
-                <p class="field-hint error">No departments found in database. Make sure your departments table is seeded.</p>
+                <p class="field-hint error">{{ 'admin.users.edit.noDepts' | translate }}</p>
               } @else {
-                <p class="field-hint">Department admin will only see requests for this department.</p>
+                <p class="field-hint">{{ 'admin.users.edit.deptHint' | translate }}</p>
               }
             </div>
           }
@@ -228,9 +228,9 @@
           }
 
           <div class="modal-actions">
-            <button class="btn btn-outline" (click)="closeModal()">Cancel</button>
+            <button class="btn btn-outline" (click)="closeModal()">{{ 'common.cancel' | translate }}</button>
             <button class="btn btn-primary" [disabled]="actionLoading" (click)="saveUser()">
-              {{ actionLoading ? 'Saving...' : 'Save Changes' }}
+              {{ (actionLoading ? 'common.saving' : 'common.save') | translate }}
             </button>
           </div>
         </div>
@@ -241,17 +241,13 @@
     @if (deleteTarget) {
       <div class="modal-overlay" (click)="closeDeleteConfirm()">
         <div class="modal modal-sm" (click)="$event.stopPropagation()">
-          <h2>Delete User</h2>
-          <p>
-            Are you sure you want to delete
-            <strong>{{ deleteTarget.full_name || deleteTarget.email }}</strong>?
-            This action cannot be undone.
-          </p>
+          <h2>{{ 'admin.users.delete.title' | translate }}</h2>
+          <p [innerHTML]="'admin.users.delete.confirm' | translate: { name: (deleteTarget.full_name || deleteTarget.email) }"></p>
 
           <div class="modal-actions">
-            <button class="btn btn-outline" (click)="closeDeleteConfirm()">Cancel</button>
+            <button class="btn btn-outline" (click)="closeDeleteConfirm()">{{ 'common.cancel' | translate }}</button>
             <button class="btn btn-danger" [disabled]="deleteLoading" (click)="confirmDelete()">
-              {{ deleteLoading ? 'Deleting...' : 'Delete' }}
+              {{ (deleteLoading ? 'common.deleting' : 'common.delete') | translate }}
             </button>
           </div>
         </div>

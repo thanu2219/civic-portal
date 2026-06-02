@@ -1,0 +1,397 @@
+{
+  "common": {
+    "appName": "ನಾಗರಿಕ ಪೋರ್ಟಲ್",
+    "loading": "ಲೋಡ್ ಆಗುತ್ತಿದೆ...",
+    "saving": "ಉಳಿಸಲಾಗುತ್ತಿದೆ...",
+    "submitting": "ಸಲ್ಲಿಸಲಾಗುತ್ತಿದೆ...",
+    "processing": "ಪ್ರಕ್ರಿಯೆಗೊಳಿಸಲಾಗುತ್ತಿದೆ...",
+    "deleting": "ಅಳಿಸಲಾಗುತ್ತಿದೆ...",
+    "sending": "ಕಳುಹಿಸಲಾಗುತ್ತಿದೆ...",
+    "creating": "ಖಾತೆ ರಚಿಸಲಾಗುತ್ತಿದೆ...",
+    "updating": "ನವೀಕರಿಸಲಾಗುತ್ತಿದೆ...",
+    "confirm": "ಖಚಿತಪಡಿಸಿ",
+    "cancel": "ರದ್ದುಮಾಡಿ",
+    "close": "ಮುಚ್ಚಿ",
+    "save": "ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಿ",
+    "edit": "ಸಂಪಾದಿಸಿ",
+    "delete": "ಅಳಿಸಿ",
+    "approve": "ಅನುಮೋದಿಸಿ",
+    "reject": "ತಿರಸ್ಕರಿಸಿ",
+    "resolve": "ಪರಿಹರಿಸಿ",
+    "back": "ಹಿಂದೆ",
+    "viewAll": "ಎಲ್ಲವನ್ನೂ ನೋಡಿ",
+    "anonymous": "ಅನಾಮಧೇಯ",
+    "notAvailable": "—",
+    "yes": "ಹೌದು",
+    "no": "ಇಲ್ಲ"
+  },
+  "language": {
+    "label": "ಭಾಷೆ",
+    "kannada": "ಕನ್ನಡ",
+    "english": "English",
+    "switchTo": "ಭಾಷೆ ಬದಲಾಯಿಸಿ"
+  },
+  "navbar": {
+    "home": "ಮುಖಪುಟ",
+    "news": "ಸುದ್ದಿ ಮತ್ತು ಪ್ರಕಟಣೆಗಳು",
+    "myRequests": "ನನ್ನ ವಿನಂತಿಗಳು",
+    "reportIssue": "ಸಮಸ್ಯೆ ವರದಿ ಮಾಡಿ",
+    "admin": "ನಿರ್ವಾಹಕ",
+    "signIn": "ಲಾಗಿನ್",
+    "register": "ನೋಂದಣಿ",
+    "signOut": "ಲಾಗ್‌ಔಟ್"
+  },
+  "footer": {
+    "tagline": "ನಾಗರಿಕ ಸಮಸ್ಯೆಗಳನ್ನು ವರದಿ ಮಾಡಲು ಮತ್ತು ಟ್ರ್ಯಾಕ್ ಮಾಡಲು ನಾಗರಿಕರಿಗೆ ಸಬಲೀಕರಣ.",
+    "copy": "© {{year}} ನಾಗರಿಕ ಪೋರ್ಟಲ್. ಎಲ್ಲ ಹಕ್ಕುಗಳನ್ನು ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ."
+  },
+  "home": {
+    "hero": {
+      "title": "ವರದಿ ಮಾಡಿ. ಟ್ರ್ಯಾಕ್ ಮಾಡಿ. ಪರಿಹರಿಸಿ.",
+      "subtitle": "ನಿಮ್ಮ ಧ್ವನಿ ಮುಖ್ಯ. ನಿಮ್ಮ ಪ್ರದೇಶದಲ್ಲಿನ ನಾಗರಿಕ ಸಮಸ್ಯೆಗಳನ್ನು ವರದಿ ಮಾಡಿ ಮತ್ತು ಪರಿಹಾರವಾಗುವವರೆಗೆ ಟ್ರ್ಯಾಕ್ ಮಾಡಿ.",
+      "reportBtn": "ಸಮಸ್ಯೆ ವರದಿ ಮಾಡಿ",
+      "myRequestsBtn": "ನನ್ನ ವಿನಂತಿಗಳು",
+      "getStartedBtn": "ಪ್ರಾರಂಭಿಸಿ",
+      "signInBtn": "ಲಾಗಿನ್"
+    },
+    "howItWorks": {
+      "title": "ಇದು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ",
+      "step1Title": "ವರದಿ ಮಾಡಿ",
+      "step1Body": "ಫೋಟೋ ಮತ್ತು ವಿವರಗಳೊಂದಿಗೆ ನಿಮ್ಮ ನಾಗರಿಕ ಸಮಸ್ಯೆಯನ್ನು ಸಲ್ಲಿಸಿ. ಸೂಕ್ತ ವಿಭಾಗವನ್ನು ಆಯ್ಕೆಮಾಡಿ.",
+      "step2Title": "ಪರಿಶೀಲನೆ",
+      "step2Body": "ನಮ್ಮ ತಂಡ ನಿಮ್ಮ ವಿನಂತಿಯನ್ನು ಪರಿಶೀಲಿಸಿ ಸಂಬಂಧಿಸಿದ ಇಲಾಖೆಗೆ ನಿಯೋಜಿಸುತ್ತದೆ.",
+      "step3Title": "ಪರಿಹಾರ",
+      "step3Body": "ಇಲಾಖೆಯು ಸಮಸ್ಯೆಯ ಮೇಲೆ ಕೆಲಸ ಮಾಡಿ ಪರಿಹಾರದ ವಿವರಗಳನ್ನು ಒದಗಿಸುತ್ತದೆ."
+    },
+    "categoriesTitle": "ಸಮಸ್ಯೆಯ ವಿಭಾಗಗಳು",
+    "stats": {
+      "title": "ವೇದಿಕೆಯ ಅಂಕಿಅಂಶಗಳು",
+      "total": "ಒಟ್ಟು ವರದಿಗಳು",
+      "pending": "ಪರಿಶೀಲನೆ ಬಾಕಿ",
+      "inProgress": "ಪ್ರಗತಿಯಲ್ಲಿದೆ",
+      "resolved": "ಪರಿಹರಿಸಲಾಗಿದೆ"
+    },
+    "latestNews": "ಇತ್ತೀಚಿನ ಸುದ್ದಿ ಮತ್ತು ಪ್ರಕಟಣೆಗಳು"
+  },
+  "auth": {
+    "login": {
+      "title": "ಮರಳಿ ಸ್ವಾಗತ",
+      "subtitle": "ನಿಮ್ಮ ನಾಗರಿಕ ಪೋರ್ಟಲ್ ಖಾತೆಗೆ ಲಾಗಿನ್ ಆಗಿ",
+      "emailLabel": "ಇಮೇಲ್ ವಿಳಾಸ",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "ಪಾಸ್‌ವರ್ಡ್",
+      "passwordPlaceholder": "ನಿಮ್ಮ ಪಾಸ್‌ವರ್ಡ್",
+      "forgot": "ಪಾಸ್‌ವರ್ಡ್ ಮರೆತಿರಾ?",
+      "signingIn": "ಲಾಗಿನ್ ಆಗುತ್ತಿದೆ...",
+      "signIn": "ಲಾಗಿನ್",
+      "noAccount": "ಖಾತೆ ಇಲ್ಲವೇ?",
+      "registerHere": "ಇಲ್ಲಿ ನೋಂದಾಯಿಸಿ"
+    },
+    "reset": {
+      "title": "ಪಾಸ್‌ವರ್ಡ್ ಮರುಹೊಂದಿಸಿ",
+      "subtitle": "ನಿಮ್ಮ ಇಮೇಲ್ ನಮೂದಿಸಿ, ನಾವು ಮರುಹೊಂದಿಕೆ ಲಿಂಕ್ ಕಳುಹಿಸುತ್ತೇವೆ",
+      "sendingBtn": "ಕಳುಹಿಸಲಾಗುತ್ತಿದೆ...",
+      "sendLinkBtn": "ಮರುಹೊಂದಿಕೆ ಲಿಂಕ್ ಕಳುಹಿಸಿ",
+      "backToSignIn": "← ಲಾಗಿನ್‌ಗೆ ಹಿಂದಿರುಗಿ",
+      "newTitle": "ಹೊಸ ಪಾಸ್‌ವರ್ಡ್ ಹೊಂದಿಸಿ",
+      "newSubtitle": "ಕೆಳಗೆ ನಿಮ್ಮ ಹೊಸ ಪಾಸ್‌ವರ್ಡ್ ನಮೂದಿಸಿ",
+      "newPasswordLabel": "ಹೊಸ ಪಾಸ್‌ವರ್ಡ್",
+      "newPasswordPlaceholder": "ಕನಿಷ್ಠ 6 ಅಕ್ಷರಗಳು",
+      "confirmNewLabel": "ಹೊಸ ಪಾಸ್‌ವರ್ಡ್ ಖಚಿತಪಡಿಸಿ",
+      "confirmNewPlaceholder": "ನಿಮ್ಮ ಹೊಸ ಪಾಸ್‌ವರ್ಡ್ ಮತ್ತೆ ನಮೂದಿಸಿ",
+      "updateBtn": "ಪಾಸ್‌ವರ್ಡ್ ನವೀಕರಿಸಿ",
+      "goToSignIn": "ಲಾಗಿನ್‌ಗೆ ಹೋಗಿ"
+    },
+    "register": {
+      "title": "ಖಾತೆ ರಚಿಸಿ",
+      "subtitle": "ನಾಗರಿಕ ಸಮಸ್ಯೆಗಳನ್ನು ವರದಿ ಮಾಡಲು ಮತ್ತು ಟ್ರ್ಯಾಕ್ ಮಾಡಲು ನಾಗರಿಕ ಪೋರ್ಟಲ್‌ಗೆ ಸೇರಿ",
+      "checkEmail": "ನಿಮ್ಮ ಇಮೇಲ್ ಪರಿಶೀಲಿಸಿ",
+      "goToSignIn": "ಲಾಗಿನ್‌ಗೆ ಹೋಗಿ",
+      "fullNameLabel": "ಪೂರ್ಣ ಹೆಸರು",
+      "fullNamePlaceholder": "ಪೂರ್ಣ ಹೆಸರು",
+      "emailLabel": "ಇಮೇಲ್ ವಿಳಾಸ",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "ಪಾಸ್‌ವರ್ಡ್",
+      "passwordPlaceholder": "ಕನಿಷ್ಠ 6 ಅಕ್ಷರಗಳು",
+      "confirmLabel": "ಪಾಸ್‌ವರ್ಡ್ ಖಚಿತಪಡಿಸಿ",
+      "confirmPlaceholder": "ನಿಮ್ಮ ಪಾಸ್‌ವರ್ಡ್ ಮತ್ತೆ ನಮೂದಿಸಿ",
+      "creatingBtn": "ಖಾತೆ ರಚಿಸಲಾಗುತ್ತಿದೆ...",
+      "createBtn": "ಖಾತೆ ರಚಿಸಿ",
+      "haveAccount": "ಈಗಾಗಲೇ ಖಾತೆ ಇದೆಯೇ?",
+      "signInHere": "ಇಲ್ಲಿ ಲಾಗಿನ್ ಆಗಿ"
+    }
+  },
+  "request": {
+    "list": {
+      "title": "ನನ್ನ ವಿನಂತಿಗಳು",
+      "newBtn": "ಹೊಸ ಸಮಸ್ಯೆ ವರದಿ ಮಾಡಿ",
+      "emptyTitle": "ನೀವು ಇನ್ನೂ ಯಾವುದೇ ವಿನಂತಿಯನ್ನು ಸಲ್ಲಿಸಿಲ್ಲ.",
+      "emptyBtn": "ನಿಮ್ಮ ಮೊದಲ ಸಮಸ್ಯೆ ವರದಿ ಮಾಡಿ",
+      "deptLabel": "ಇಲಾಖೆ"
+    },
+    "create": {
+      "title": "ಸಮಸ್ಯೆ ವರದಿ ಮಾಡಿ",
+      "subtitle": "ನೀವು ವರದಿ ಮಾಡಲು ಬಯಸುವ ನಾಗರಿಕ ಸಮಸ್ಯೆಯ ವಿವರಗಳನ್ನು ಒದಗಿಸಿ.",
+      "titleLabel": "ಶೀರ್ಷಿಕೆ *",
+      "titlePlaceholder": "ಸಮಸ್ಯೆಯ ಸಂಕ್ಷಿಪ್ತ ಸಾರಾಂಶ",
+      "categoryLabel": "ವಿಭಾಗ *",
+      "categoryPlaceholder": "ಒಂದು ವಿಭಾಗವನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+      "locationLabel": "ಸ್ಥಳ *",
+      "locationPlaceholder": "ಬೀದಿ, ಗುರುತು, ಪ್ರದೇಶ ಅಥವಾ ವಿಳಾಸ",
+      "descriptionLabel": "ವಿವರಣೆ *",
+      "descriptionPlaceholder": "ಸಮಸ್ಯೆಯನ್ನು ವಿವರವಾಗಿ ವಿವರಿಸಿ — ಸ್ಥಳ, ತೀವ್ರತೆ, ಎಷ್ಟು ಸಮಯದಿಂದ ಇದೆ...",
+      "photosLabel": "ಫೋಟೋಗಳು (ಗರಿಷ್ಠ 5, ಪ್ರತಿಯೊಂದು 5 MB ವರೆಗೆ)",
+      "photosCta": "ಫೋಟೋಗಳನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಲು ಕ್ಲಿಕ್ ಮಾಡಿ",
+      "submittingBtn": "ಸಲ್ಲಿಸಲಾಗುತ್ತಿದೆ...",
+      "submitBtn": "ವರದಿ ಸಲ್ಲಿಸಿ"
+    },
+    "detail": {
+      "backLink": "← ನನ್ನ ವಿನಂತಿಗಳಿಗೆ ಹಿಂದಿರುಗಿ",
+      "notFound": "ವಿನಂತಿ ಸಿಗಲಿಲ್ಲ.",
+      "backBtn": "ನನ್ನ ವಿನಂತಿಗಳಿಗೆ ಹಿಂದಿರುಗಿ",
+      "submittedOn": "{{date}} ರಂದು ಸಲ್ಲಿಸಲಾಗಿದೆ",
+      "locationHeading": "ಸ್ಥಳ",
+      "descriptionHeading": "ವಿವರಣೆ",
+      "photosHeading": "ಫೋಟೋಗಳು",
+      "resolutionHeading": "ಪರಿಹಾರ",
+      "rejectionHeading": "ತಿರಸ್ಕಾರ ಕಾರಣ",
+      "timelineHeading": "ಚಟುವಟಿಕೆ ಟೈಮ್‌ಲೈನ್"
+    },
+    "timeline": {
+      "approved": "ನಿರ್ವಾಹಕರಿಂದ ಅನುಮೋದಿಸಲಾಗಿದೆ",
+      "rejected": "ತಿರಸ್ಕರಿಸಲಾಗಿದೆ",
+      "rerouted": "ಮರು ಮಾರ್ಗದರ್ಶನ ಮಾಡಲಾಗಿದೆ",
+      "resolved": "ಪರಿಹರಿಸಲಾಗಿದೆ"
+    }
+  },
+  "news": {
+    "list": {
+      "title": "ಸುದ್ದಿ ಮತ್ತು ಪ್ರಕಟಣೆಗಳು",
+      "subtitle": "ಇತ್ತೀಚಿನ ನಾಗರಿಕ ಪ್ರಕಟಣೆಗಳು ಮತ್ತು ಸುದ್ದಿಗಳಿಂದ ಮಾಹಿತಿ ಪಡೆಯಿರಿ.",
+      "all": "ಎಲ್ಲ",
+      "news": "ಸುದ್ದಿ",
+      "announcements": "ಪ್ರಕಟಣೆಗಳು",
+      "allCategories": "ಎಲ್ಲ ವಿಭಾಗಗಳು",
+      "searchPlaceholder": "ಶೀರ್ಷಿಕೆ ಅಥವಾ ವಿಷಯದ ಮೂಲಕ ಹುಡುಕಿ...",
+      "empty": "ನಿಮ್ಮ ಫಿಲ್ಟರ್‌ಗಳಿಗೆ ಹೊಂದುವ ಯಾವುದೇ ಪೋಸ್ಟ್ ಇಲ್ಲ.",
+      "newsHeading": "ಸುದ್ದಿ",
+      "announcementsHeading": "ಪ್ರಕಟಣೆಗಳು"
+    },
+    "detail": {
+      "notAvailable": "ಈ ಪೋಸ್ಟ್ ಇದೀಗ ಲಭ್ಯವಿಲ್ಲ. ಇನ್ನೂ ಪ್ರಾರಂಭವಾಗಿಲ್ಲ ಅಥವಾ ಅದರ ನಿಗದಿತ ಅವಧಿ ಮುಗಿದಿರಬಹುದು.",
+      "notFound": "ಪೋಸ್ಟ್ ಸಿಗಲಿಲ್ಲ.",
+      "backLink": "← ಸುದ್ದಿ ಮತ್ತು ಪ್ರಕಟಣೆಗಳಿಗೆ ಹಿಂದಿರುಗಿ",
+      "backBtn": "ಸುದ್ದಿ ಮತ್ತು ಪ್ರಕಟಣೆಗಳಿಗೆ ಹಿಂದಿರುಗಿ",
+      "comments": "ಕಾಮೆಂಟ್‌ಗಳು ({{count}})",
+      "commentPlaceholder": "ಕಾಮೆಂಟ್ ಬರೆಯಿರಿ...",
+      "posting": "ಪೋಸ್ಟ್ ಆಗುತ್ತಿದೆ...",
+      "postComment": "ಕಾಮೆಂಟ್ ಪೋಸ್ಟ್ ಮಾಡಿ",
+      "signInToComment": "ಲಾಗಿನ್ ಆಗಿ",
+      "signInToCommentSuffix": "ಕಾಮೆಂಟ್ ಮಾಡಲು.",
+      "noComments": "ಇನ್ನೂ ಕಾಮೆಂಟ್‌ಗಳಿಲ್ಲ. ನಿಮ್ಮ ಆಲೋಚನೆಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳುವ ಮೊದಲಿಗರಾಗಿ!"
+    }
+  },
+  "admin": {
+    "panel": "ನಿರ್ವಾಹಕ ಫಲಕ",
+    "nav": {
+      "dashboard": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
+      "requests": "ವಿನಂತಿ ಸರತಿ",
+      "news": "ಸುದ್ದಿ ಮತ್ತು ಪ್ರಕಟಣೆಗಳು",
+      "users": "ಬಳಕೆದಾರರನ್ನು ನಿರ್ವಹಿಸಿ"
+    },
+    "dashboard": {
+      "title": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
+      "statTotal": "ಒಟ್ಟು ವಿನಂತಿಗಳು",
+      "statPending": "ಪರಿಶೀಲನೆ ಬಾಕಿ",
+      "statInProgress": "ಪ್ರಗತಿಯಲ್ಲಿದೆ",
+      "statCompleted": "ಪೂರ್ಣಗೊಂಡಿದೆ",
+      "quickActions": "ತ್ವರಿತ ಕ್ರಮಗಳು",
+      "reviewPending": "ಬಾಕಿ ವಿನಂತಿಗಳನ್ನು ಪರಿಶೀಲಿಸಿ",
+      "manageNews": "ಸುದ್ದಿ ಮತ್ತು ಪ್ರಕಟಣೆಗಳು",
+      "manageUsers": "ಬಳಕೆದಾರರನ್ನು ನಿರ್ವಹಿಸಿ"
+    },
+    "requests": {
+      "title": "ವಿನಂತಿ ಸರತಿ",
+      "bulkResolveBtn": "ಬಲ್ಕ್ ಪರಿಹರಿಸಿ",
+      "cancelBulkBtn": "ಬಲ್ಕ್ ರದ್ದು",
+      "tabActive": "ಸಕ್ರಿಯ",
+      "tabApproved": "ಅನುಮೋದಿತ",
+      "tabResolved": "ಪರಿಹೃತ",
+      "tabRejected": "ತಿರಸ್ಕೃತ",
+      "allCategories": "ಎಲ್ಲ ವಿಭಾಗಗಳು",
+      "selected": "{{count}} ಆಯ್ಕೆಮಾಡಲಾಗಿದೆ",
+      "bulkPlaceholder": "ಆಯ್ಕೆಮಾಡಿದ ಎಲ್ಲ ವಿನಂತಿಗಳಿಗೆ ಪರಿಹಾರ...",
+      "resolveSelected": "ಆಯ್ಕೆ ಪರಿಹರಿಸಿ",
+      "resolvingBtn": "ಪರಿಹರಿಸಲಾಗುತ್ತಿದೆ...",
+      "tableTitle": "ಶೀರ್ಷಿಕೆ",
+      "tableCategory": "ವಿಭಾಗ",
+      "tableStatus": "ಸ್ಥಿತಿ",
+      "tableSubmitted": "ಸಲ್ಲಿಸಿದ ದಿನಾಂಕ",
+      "tableSubmittedBy": "ಸಲ್ಲಿಸಿದವರು",
+      "rowHint": "ಪೂರ್ಣ ವಿವರಗಳನ್ನು ನೋಡಲು ಮತ್ತು ಕ್ರಮ ಕೈಗೊಳ್ಳಲು ಸಾಲನ್ನು ಕ್ಲಿಕ್ ಮಾಡಿ.",
+      "empty": "ಈ ವೀಕ್ಷಣೆಯಲ್ಲಿ ವಿನಂತಿಗಳಿಲ್ಲ.",
+      "detail": {
+        "submittedBy": "{{name}} ಅವರಿಂದ",
+        "locationHeading": "ಸ್ಥಳ",
+        "descriptionHeading": "ವಿವರಣೆ",
+        "photosHeading": "ಫೋಟೋಗಳು",
+        "resolutionHeading": "ಪರಿಹಾರ",
+        "rejectionHeading": "ತಿರಸ್ಕಾರ ಕಾರಣ",
+        "timelineHeading": "ಚಟುವಟಿಕೆ ಟೈಮ್‌ಲೈನ್",
+        "adminApproved": "ನಿರ್ವಾಹಕರಿಂದ ಅನುಮೋದಿಸಲಾಗಿದೆ",
+        "by": "{{name}} ಅವರಿಂದ"
+      },
+      "modal": {
+        "approveTitle": "ವಿನಂತಿಯನ್ನು ಅನುಮೋದಿಸಿ",
+        "rejectTitle": "ವಿನಂತಿಯನ್ನು ತಿರಸ್ಕರಿಸಿ",
+        "resolveTitle": "ವಿನಂತಿಯನ್ನು ಪರಿಹರಿಸಿ",
+        "deptRejectTitle": "ವಿನಂತಿಯನ್ನು ತಿರಸ್ಕರಿಸಿ",
+        "assignDeptLabel": "ಇಲಾಖೆಗೆ ನಿಯೋಜಿಸಿ *",
+        "selectDept": "ಇಲಾಖೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+        "notesLabel": "ಟಿಪ್ಪಣಿಗಳು (ಐಚ್ಛಿಕ)",
+        "notesPlaceholder": "ಹೆಚ್ಚುವರಿ ಟಿಪ್ಪಣಿಗಳು...",
+        "rejectionReasonLabel": "ತಿರಸ್ಕಾರ ಕಾರಣ *",
+        "rejectionReasonPlaceholder": "ಈ ವಿನಂತಿಯನ್ನು ಏಕೆ ತಿರಸ್ಕರಿಸಲಾಗುತ್ತಿದೆ ಎಂದು ವಿವರಿಸಿ...",
+        "resolutionLabel": "ಪರಿಹಾರ ವಿವರಗಳು *",
+        "resolutionPlaceholder": "ಸಮಸ್ಯೆಯನ್ನು ಹೇಗೆ ಪರಿಹರಿಸಲಾಯಿತು ಎಂದು ವಿವರಿಸಿ...",
+        "resolutionPhotoLabel": "ಪರಿಹಾರ ಫೋಟೋ (ಐಚ್ಛಿಕ)",
+        "deptReasonSelect": "ಕಾರಣವನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+        "wrongDeptInfo": "ಸರಿಯಾದ ಇಲಾಖೆಗೆ ಮರು ಮಾರ್ಗದರ್ಶನಕ್ಕಾಗಿ ಈ ವಿನಂತಿಯನ್ನು ನಿರ್ವಾಹಕರ ಸರತಿಗೆ ಮರಳಿ ಕಳುಹಿಸಲಾಗುತ್ತದೆ.",
+        "explainLabel": "ದಯವಿಟ್ಟು ವಿವರಿಸಿ *",
+        "explainPlaceholder": "ವಿವರಗಳನ್ನು ಒದಗಿಸಿ..."
+      }
+    },
+    "news": {
+      "title": "ಸುದ್ದಿ ಮತ್ತು ಪ್ರಕಟಣೆಗಳು",
+      "newPost": "+ ಹೊಸ ಪೋಸ್ಟ್",
+      "deptHint": "ನೀವು ರಚಿಸಿದ ಪೋಸ್ಟ್‌ಗಳನ್ನು ಮತ್ತು ನಿಮ್ಮ ಇಲಾಖೆಯ ಪೋಸ್ಟ್‌ಗಳನ್ನು ನೋಡಬಹುದು. ಬಾಕಿಯಿರುವ ಪೋಸ್ಟ್‌ಗಳನ್ನು ಇನ್ನೂ ಸಂಪಾದಿಸಬಹುದು; ತಿರಸ್ಕೃತವಾದವುಗಳನ್ನು ಅಳಿಸಬಹುದು.",
+      "adminHint": "ಇಲಾಖೆ ನಿರ್ವಾಹಕರಿಂದ ಬಾಕಿ ಸಲ್ಲಿಕೆಗಳನ್ನು ಪರಿಶೀಲಿಸಿ. ಪ್ರಕಟಿಸಲು ಅನುಮೋದಿಸಿ ಅಥವಾ ಕಾರಣದೊಂದಿಗೆ ತಿರಸ್ಕರಿಸಿ. ತಿರಸ್ಕೃತ ಪೋಸ್ಟ್‌ಗಳನ್ನು ಅಳಿಸಬಹುದು.",
+      "tabPending": "ಬಾಕಿ",
+      "tabApproved": "ಅನುಮೋದಿತ",
+      "tabRejected": "ತಿರಸ್ಕೃತ",
+      "tabAll": "ಎಲ್ಲ",
+      "tabMine": "ನನ್ನ ಇಲಾಖೆ",
+      "scheduleFilter": "ವೇಳಾಪಟ್ಟಿ:",
+      "scheduleAll": "ಎಲ್ಲ",
+      "scheduleLive": "ಲೈವ್",
+      "scheduleScheduled": "ನಿಗದಿಪಡಿಸಲಾಗಿದೆ",
+      "scheduleExpired": "ಅವಧಿ ಮುಗಿದಿದೆ",
+      "rowHint": "ಪೂರ್ಣ ವಿವರಗಳನ್ನು ನೋಡಲು ಸಾಲನ್ನು ಕ್ಲಿಕ್ ಮಾಡಿ. ಸಂಪಾದಿಸಲು ಅಥವಾ ಅಳಿಸಲು ಕೆಳಗಿನ ಕ್ರಮ ಬಟನ್‌ಗಳನ್ನು ಬಳಸಿ.",
+      "empty": "ಈ ವೀಕ್ಷಣೆಯಲ್ಲಿ ಪೋಸ್ಟ್‌ಗಳಿಲ್ಲ.",
+      "table": {
+        "title": "ಶೀರ್ಷಿಕೆ",
+        "type": "ಪ್ರಕಾರ",
+        "category": "ವಿಭಾಗ",
+        "status": "ಸ್ಥಿತಿ",
+        "schedule": "ವೇಳಾಪಟ್ಟಿ",
+        "author": "ಲೇಖಕ",
+        "date": "ದಿನಾಂಕ",
+        "actions": "ಕ್ರಮಗಳು"
+      },
+      "scheduleStarts": "ಪ್ರಾರಂಭ: {{date}}",
+      "scheduleEnds": "ಅಂತ್ಯ: {{date}}",
+      "form": {
+        "newTitle": "ಹೊಸ ಪೋಸ್ಟ್",
+        "editTitle": "ಪೋಸ್ಟ್ ಸಂಪಾದಿಸಿ",
+        "typeLabel": "ಪ್ರಕಾರ *",
+        "categoryLabel": "ವಿಭಾಗ *",
+        "deptScopeHint": "ನೀವು <strong>ಸಾಮಾನ್ಯ</strong> ಅಥವಾ ನಿಮ್ಮ ಸ್ವಂತ ಇಲಾಖೆಯಡಿಯಲ್ಲಿ ಮಾತ್ರ ಪೋಸ್ಟ್ ಮಾಡಬಹುದು.",
+        "titleLabel": "ಶೀರ್ಷಿಕೆ *",
+        "titlePlaceholder": "ಪೋಸ್ಟ್ ಶೀರ್ಷಿಕೆ",
+        "bodyLabel": "ವಿಷಯ *",
+        "bodyPlaceholder": "ಪೂರ್ಣ ವಿಷಯವನ್ನು ಇಲ್ಲಿ ಬರೆಯಿರಿ...",
+        "scheduleRule": "ಅನುಮೋದನೆಯ ತಕ್ಷಣ ಪ್ರಕಟಿಸಲು ಎರಡೂ ದಿನಾಂಕಗಳನ್ನು ಖಾಲಿ ಬಿಡಿ. ಇಲ್ಲದಿದ್ದರೆ ಪೋಸ್ಟ್ ಪ್ರಾರಂಭ ಮತ್ತು ಅಂತ್ಯ ದಿನಾಂಕಗಳ ನಡುವೆ ಮಾತ್ರ ಸಾರ್ವಜನಿಕರಿಗೆ ಗೋಚರಿಸುತ್ತದೆ.",
+        "startDateLabel": "ಪ್ರಾರಂಭ ದಿನಾಂಕ (ಐಚ್ಛಿಕ)",
+        "startDateHint": "ಈ ದಿನಾಂಕದವರೆಗೆ ಸಾರ್ವಜನಿಕರಿಂದ ಮರೆಮಾಡಿ.",
+        "endDateLabel": "ಅಂತ್ಯ ದಿನಾಂಕ (ಐಚ್ಛಿಕ)",
+        "endDateHint": "ಈ ದಿನಾಂಕದ ನಂತರ ಸಾರ್ವಜನಿಕರಿಂದ ಸ್ವಯಂ-ಮರೆಮಾಡಿ.",
+        "coverImageLabel": "ಕವರ್ ಚಿತ್ರ (ಐಚ್ಛಿಕ)",
+        "deptCreateHint": "ನಿಮ್ಮ ಪೋಸ್ಟ್ ಪ್ರಕಟಣೆಗೆ ಮುಂಚೆ ನಿರ್ವಾಹಕರ ಅನುಮೋದನೆಗಾಗಿ ಸಲ್ಲಿಸಲಾಗುತ್ತದೆ. ಬಾಕಿ ಇರುವಾಗ ನೀವು ಅದನ್ನು ಸಂಪಾದಿಸಬಹುದು.",
+        "adminCreateHint": "ಪೋಸ್ಟ್‌ಗಳನ್ನು ರಚಿಸಿದ ನಂತರ ಸಂಪಾದಿಸಲಾಗುವುದಿಲ್ಲ.",
+        "publishBtn": "ಪ್ರಕಟಿಸಿ",
+        "submitForApprovalBtn": "ಅನುಮೋದನೆಗೆ ಸಲ್ಲಿಸಿ",
+        "savingBtn": "ಉಳಿಸಲಾಗುತ್ತಿದೆ..."
+      },
+      "reject": {
+        "title": "ಪೋಸ್ಟ್ ತಿರಸ್ಕರಿಸಿ",
+        "reasonLabel": "ಕಾರಣ *",
+        "reasonPlaceholder": "ಈ ಪೋಸ್ಟ್ ಏಕೆ ತಿರಸ್ಕರಿಸಲಾಗುತ್ತಿದೆ ಎಂದು ವಿವರಿಸಿ...",
+        "rejectingBtn": "ತಿರಸ್ಕರಿಸಲಾಗುತ್ತಿದೆ...",
+        "rejectionReasonHeading": "ತಿರಸ್ಕಾರ ಕಾರಣ:"
+      }
+    },
+    "users": {
+      "title": "ಬಳಕೆದಾರರನ್ನು ನಿರ್ವಹಿಸಿ",
+      "tabAdmins": "ನಿರ್ವಾಹಕರು",
+      "tabDeptAdmins": "ಇಲಾಖೆ ನಿರ್ವಾಹಕರು",
+      "tabCitizens": "ನಾಗರಿಕರು",
+      "searchAdmins": "ಹೆಸರು ಅಥವಾ ಇಮೇಲ್ ಮೂಲಕ ನಿರ್ವಾಹಕರನ್ನು ಹುಡುಕಿ...",
+      "searchDeptAdmins": "ಹೆಸರು, ಇಮೇಲ್ ಅಥವಾ ಇಲಾಖೆಯ ಮೂಲಕ ಹುಡುಕಿ...",
+      "searchCitizens": "ಹೆಸರು ಅಥವಾ ಇಮೇಲ್ ಮೂಲಕ ನಾಗರಿಕರನ್ನು ಹುಡುಕಿ...",
+      "tableName": "ಹೆಸರು",
+      "tableEmail": "ಇಮೇಲ್",
+      "tableRole": "ಪಾತ್ರ",
+      "tableDepartment": "ಇಲಾಖೆ",
+      "tableActions": "ಕ್ರಮಗಳು",
+      "notAssigned": "ನಿಯೋಜಿಸಿಲ್ಲ",
+      "emptyAdmins": "ನಿಮ್ಮ ಹುಡುಕಾಟಕ್ಕೆ ಯಾವುದೇ ನಿರ್ವಾಹಕರು ಸಿಗಲಿಲ್ಲ.",
+      "emptyDeptAdmins": "ನಿಮ್ಮ ಹುಡುಕಾಟಕ್ಕೆ ಯಾವುದೇ ಇಲಾಖೆ ನಿರ್ವಾಹಕರು ಸಿಗಲಿಲ್ಲ.",
+      "emptyCitizens": "ನಿಮ್ಮ ಹುಡುಕಾಟಕ್ಕೆ ಯಾವುದೇ ನಾಗರಿಕರು ಸಿಗಲಿಲ್ಲ.",
+      "edit": {
+        "title": "ಬಳಕೆದಾರರನ್ನು ಸಂಪಾದಿಸಿ",
+        "fullNameLabel": "ಪೂರ್ಣ ಹೆಸರು",
+        "fullNamePlaceholder": "ಪೂರ್ಣ ಹೆಸರು",
+        "emailLabel": "ಇಮೇಲ್",
+        "emailHint": "ಇಮೇಲ್ ಬದಲಾಯಿಸಲಾಗುವುದಿಲ್ಲ.",
+        "roleLabel": "ಪಾತ್ರ",
+        "deptLabel": "ಇಲಾಖೆ *",
+        "selectDept": "ಇಲಾಖೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+        "noDepts": "ಡೇಟಾಬೇಸ್‌ನಲ್ಲಿ ಇಲಾಖೆಗಳಿಲ್ಲ. ನಿಮ್ಮ ಇಲಾಖೆಗಳ ಟೇಬಲ್ ಸೀಡ್ ಆಗಿದೆ ಎಂದು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ.",
+        "deptHint": "ಇಲಾಖೆ ನಿರ್ವಾಹಕರು ಈ ಇಲಾಖೆಯ ವಿನಂತಿಗಳನ್ನು ಮಾತ್ರ ನೋಡುತ್ತಾರೆ."
+      },
+      "delete": {
+        "title": "ಬಳಕೆದಾರರನ್ನು ಅಳಿಸಿ",
+        "confirm": "ನೀವು ನಿಜವಾಗಿಯೂ <strong>{{name}}</strong> ಅವರನ್ನು ಅಳಿಸಲು ಬಯಸುತ್ತೀರಾ? ಈ ಕ್ರಮವನ್ನು ಹಿಂತಿರುಗಿಸಲಾಗುವುದಿಲ್ಲ."
+      }
+    }
+  },
+  "status": {
+    "pending": "ಬಾಕಿ",
+    "routed": "ಮಾರ್ಗದರ್ಶಿಸಲಾಗಿದೆ",
+    "in_progress": "ಪ್ರಗತಿಯಲ್ಲಿದೆ",
+    "completed": "ಪೂರ್ಣಗೊಂಡಿದೆ",
+    "rejected": "ತಿರಸ್ಕರಿಸಲಾಗಿದೆ",
+    "closed": "ಮುಚ್ಚಲಾಗಿದೆ"
+  },
+  "category": {
+    "electricity": "ವಿದ್ಯುತ್",
+    "municipality": "ಮಹಾನಗರ ಪಾಲಿಕೆ",
+    "road_and_transportation": "ರಸ್ತೆ ಮತ್ತು ಸಾರಿಗೆ",
+    "water": "ನೀರು",
+    "traffic": "ಸಂಚಾರ"
+  },
+  "newsCategory": {
+    "generic": "ಸಾಮಾನ್ಯ",
+    "electricity": "ವಿದ್ಯುತ್",
+    "municipality": "ಮಹಾನಗರ ಪಾಲಿಕೆ",
+    "road_and_transportation": "ರಸ್ತೆ ಮತ್ತು ಸಾರಿಗೆ",
+    "water": "ನೀರು",
+    "traffic": "ಸಂಚಾರ"
+  },
+  "newsType": {
+    "news": "ಸುದ್ದಿ",
+    "announcement": "ಪ್ರಕಟಣೆ"
+  },
+  "role": {
+    "citizen": "ನಾಗರಿಕ",
+    "dept_admin": "ಇಲಾಖೆ ನಿರ್ವಾಹಕ",
+    "admin": "ನಿರ್ವಾಹಕ"
+  },
+  "rejection": {
+    "wrong_department": "ತಪ್ಪು ಇಲಾಖೆ",
+    "duplicate_request": "ಪುನರಾವರ್ತಿತ ವಿನಂತಿ",
+    "insufficient_information": "ಸಾಕಷ್ಟು ಮಾಹಿತಿಯಿಲ್ಲ",
+    "not_actionable": "ಕ್ರಮ ತೆಗೆದುಕೊಳ್ಳಲಾಗದು",
+    "other": "ಇತರೆ"
+  }
+}

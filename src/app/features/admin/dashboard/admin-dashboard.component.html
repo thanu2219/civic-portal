@@ -1,53 +1,53 @@
 <div class="admin-layout">
   <aside class="admin-sidebar">
-    <h2>Admin Panel</h2>
+    <h2>{{ 'admin.panel' | translate }}</h2>
     <nav>
-      <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
-      <a routerLink="/admin/requests" routerLinkActive="active">Request Queue</a>
-      <a routerLink="/admin/news" routerLinkActive="active">News &amp; Announcements</a>
+      <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">{{ 'admin.nav.dashboard' | translate }}</a>
+      <a routerLink="/admin/requests" routerLinkActive="active">{{ 'admin.nav.requests' | translate }}</a>
+      <a routerLink="/admin/news" routerLinkActive="active">{{ 'admin.nav.news' | translate }}</a>
       @if (auth.isAdmin()) {
-        <a routerLink="/admin/users" routerLinkActive="active">Manage Users</a>
+        <a routerLink="/admin/users" routerLinkActive="active">{{ 'admin.nav.users' | translate }}</a>
       }
     </nav>
   </aside>
 
   <main class="admin-main">
-    <h1>Dashboard</h1>
+    <h1>{{ 'admin.dashboard.title' | translate }}</h1>
 
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-number">{{ stats.total }}</div>
-        <div class="stat-label">Total Requests</div>
+        <div class="stat-label">{{ 'admin.dashboard.statTotal' | translate }}</div>
       </div>
       <div class="stat-card stat-pending">
         <div class="stat-number">{{ stats.pending }}</div>
-        <div class="stat-label">Pending Review</div>
+        <div class="stat-label">{{ 'admin.dashboard.statPending' | translate }}</div>
       </div>
       <div class="stat-card stat-progress">
         <div class="stat-number">{{ stats.inProgress }}</div>
-        <div class="stat-label">In Progress</div>
+        <div class="stat-label">{{ 'admin.dashboard.statInProgress' | translate }}</div>
       </div>
       <div class="stat-card stat-done">
         <div class="stat-number">{{ stats.completed }}</div>
-        <div class="stat-label">Completed</div>
+        <div class="stat-label">{{ 'admin.dashboard.statCompleted' | translate }}</div>
       </div>
     </div>
 
     <div class="quick-actions">
-      <h2>Quick Actions</h2>
+      <h2>{{ 'admin.dashboard.quickActions' | translate }}</h2>
       <div class="action-grid">
         <a routerLink="/admin/requests" class="action-card">
           <span>📋</span>
-          <span>Review Pending Requests</span>
+          <span>{{ 'admin.dashboard.reviewPending' | translate }}</span>
         </a>
         <a routerLink="/admin/news" class="action-card">
           <span>📰</span>
-          <span>News &amp; Announcements</span>
+          <span>{{ 'admin.dashboard.manageNews' | translate }}</span>
         </a>
         @if (auth.isAdmin()) {
           <a routerLink="/admin/users" class="action-card">
             <span>👥</span>
-            <span>Manage Users</span>
+            <span>{{ 'admin.dashboard.manageUsers' | translate }}</span>
           </a>
         }
       </div>

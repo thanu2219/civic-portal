@@ -1,7 +1,7 @@
 <div class="page-container">
   <div class="page-header">
-    <h1>My Requests</h1>
-    <a routerLink="/requests/new" class="btn btn-primary">Report New Issue</a>
+    <h1>{{ 'request.list.title' | translate }}</h1>
+    <a routerLink="/requests/new" class="btn btn-primary">{{ 'request.list.newBtn' | translate }}</a>
   </div>
 
   @if (error) {
@@ -9,26 +9,26 @@
   }
 
   @if (loading) {
-    <div class="loading-spinner">Loading...</div>
+    <div class="loading-spinner">{{ 'common.loading' | translate }}</div>
   } @else if (!requests.length) {
     <div class="empty-state">
-      <p>You haven't submitted any requests yet.</p>
-      <a routerLink="/requests/new" class="btn btn-primary">Report Your First Issue</a>
+      <p>{{ 'request.list.emptyTitle' | translate }}</p>
+      <a routerLink="/requests/new" class="btn btn-primary">{{ 'request.list.emptyBtn' | translate }}</a>
     </div>
   } @else {
     <div class="request-grid">
       @for (req of requests; track req.id) {
         <a [routerLink]="['/requests', req.id]" class="request-card">
           <div class="request-card-header">
-            <span class="badge" [attr.data-status]="displayStatus(req.status)">{{ getStatusLabel(req.status) }}</span>
-            <span class="category-tag">{{ getCategoryLabel(req.category) }}</span>
+            <span class="badge" [attr.data-status]="displayStatus(req.status)">{{ ('status.' + displayStatus(req.status)) | translate }}</span>
+            <span class="category-tag">{{ ('category.' + req.category) | translate }}</span>
           </div>
           <h3>{{ req.title }}</h3>
           <p>{{ req.description | slice:0:100 }}{{ req.description.length > 100 ? '...' : '' }}</p>
           <div class="request-meta">
             <span>{{ req.created_at | slice:0:10 }}</span>
             @if (req.department) {
-              <span>Dept: {{ req.department.name }}</span>
+              <span>{{ 'request.list.deptLabel' | translate }}: {{ req.department.name }}</span>
             }
           </div>
         </a>

@@ -1,18 +1,18 @@
 <div class="page-container">
   @if (loading) {
-    <div class="loading-spinner">Loading...</div>
+    <div class="loading-spinner">{{ 'common.loading' | translate }}</div>
   } @else if (notAvailable) {
     <div class="empty-state">
-      <p>This post isn't available right now. It may not have started yet, or its scheduled window has ended.</p>
-      <a routerLink="/news" class="btn btn-outline">Back to News &amp; Announcements</a>
+      <p>{{ 'news.detail.notAvailable' | translate }}</p>
+      <a routerLink="/news" class="btn btn-outline">{{ 'news.detail.backBtn' | translate }}</a>
     </div>
   } @else if (!post) {
     <div class="empty-state">
-      <p>Post not found.</p>
-      <a routerLink="/news" class="btn btn-outline">Back to News &amp; Announcements</a>
+      <p>{{ 'news.detail.notFound' | translate }}</p>
+      <a routerLink="/news" class="btn btn-outline">{{ 'news.detail.backBtn' | translate }}</a>
     </div>
   } @else {
-    <a routerLink="/news" class="back-link">← Back to News &amp; Announcements</a>
+    <a routerLink="/news" class="back-link">{{ 'news.detail.backLink' | translate }}</a>
 
     <article class="article-card" [class.is-announcement]="post.post_type === 'announcement'">
       @if (post.image_url) {
@@ -21,9 +21,9 @@
       <div class="article-body">
         <div class="article-tags">
           <span class="type-tag" [attr.data-type]="post.post_type">
-            {{ post.post_type === 'announcement' ? 'Announcement' : 'News' }}
+            {{ ('newsType.' + post.post_type) | translate }}
           </span>
-          <span class="dept-tag" [attr.data-dept]="post.category">{{ categoryLabel(post.category) }}</span>
+          <span class="dept-tag" [attr.data-dept]="post.category">{{ ('newsCategory.' + post.category) | translate }}</span>
         </div>
         <h1>{{ post.title }}</h1>
         <div class="article-meta">
@@ -37,23 +37,23 @@
 
     <!-- Comments -->
     <section class="comments-section">
-      <h2>Comments ({{ comments.length }})</h2>
+      <h2>{{ 'news.detail.comments' | translate: { count: comments.length } }}</h2>
 
       @if (auth.isLoggedIn()) {
         <form class="comment-form" (ngSubmit)="submitComment()">
           <textarea
             [(ngModel)]="newComment"
             name="comment"
-            placeholder="Write a comment..."
+            [placeholder]="'news.detail.commentPlaceholder' | translate"
             rows="3"
           ></textarea>
           <button type="submit" class="btn btn-primary" [disabled]="submitting || !newComment.trim()">
-            {{ submitting ? 'Posting...' : 'Post Comment' }}
+            {{ (submitting ? 'news.detail.posting' : 'news.detail.postComment') | translate }}
           </button>
         </form>
       } @else {
         <p class="login-prompt">
-          <a routerLink="/login">Sign in</a> to leave a comment.
+          <a routerLink="/login">{{ 'news.detail.signInToComment' | translate }}</a> {{ 'news.detail.signInToCommentSuffix' | translate }}
         </p>
       }
 
@@ -62,7 +62,7 @@
           @for (comment of comments; track comment.id) {
             <div class="comment-item">
               <div class="comment-header">
-                <strong>{{ comment.profile?.full_name ?? 'Anonymous' }}</strong>
+                <strong>{{ comment.profile?.full_name ?? ('common.anonymous' | translate) }}</strong>
                 <span class="comment-date">{{ comment.created_at | slice:0:16 }}</span>
               </div>
               <p>{{ comment.content }}</p>
@@ -70,7 +70,7 @@
           }
         </div>
       } @else {
-        <p class="no-comments">No comments yet. Be the first to share your thoughts!</p>
+        <p class="no-comments">{{ 'news.detail.noComments' | translate }}</p>
       }
     </section>
   }

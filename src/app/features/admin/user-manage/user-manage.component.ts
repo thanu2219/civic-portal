@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { UserService } from '../../../core/services/user.service';
 import { DepartmentService } from '../../../core/services/department.service';
 import { AuthService } from '../../../core/services/auth.service';
@@ -16,7 +17,7 @@ type TabKey = 'admin' | 'dept_admin' | 'citizen';
 @Component({
   selector: 'app-user-manage',
   standalone: true,
-  imports: [FormsModule, RouterLink, RouterLinkActive],
+  imports: [FormsModule, RouterLink, RouterLinkActive, TranslatePipe],
   templateUrl: './user-manage.component.html',
   styleUrl: './user-manage.component.scss',
 })

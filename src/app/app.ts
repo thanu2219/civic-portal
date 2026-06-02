@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
+import { LanguageService } from './core/services/language.service';
 
 @Component({
   selector: 'app-root',
@@ -10,4 +11,8 @@ import { FooterComponent } from './shared/components/footer/footer.component';
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class AppComponent {}
+export class AppComponent {
+  constructor() {
+    inject(LanguageService).init();
+  }
+}

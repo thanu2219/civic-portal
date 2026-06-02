@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SlicePipe, TitleCasePipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { RequestService } from '../../../core/services/request.service';
 import { DepartmentService } from '../../../core/services/department.service';
 import { AuthService } from '../../../core/services/auth.service';
@@ -19,7 +20,7 @@ import {
 @Component({
   selector: 'app-request-queue',
   standalone: true,
-  imports: [FormsModule, RouterLink, RouterLinkActive, SlicePipe, TitleCasePipe],
+  imports: [FormsModule, RouterLink, RouterLinkActive, SlicePipe, TitleCasePipe, TranslatePipe],
   templateUrl: './request-queue.component.html',
   styleUrl: './request-queue.component.scss',
 })

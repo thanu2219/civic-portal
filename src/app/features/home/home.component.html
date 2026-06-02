@@ -2,15 +2,15 @@
   <!-- Hero -->
   <section class="hero">
     <div class="hero-content">
-      <h1>Report. Track. Resolve.</h1>
-      <p>Your voice matters. Report civic issues in your area and track them until resolution.</p>
+      <h1>{{ 'home.hero.title' | translate }}</h1>
+      <p>{{ 'home.hero.subtitle' | translate }}</p>
       <div class="hero-actions">
         @if (auth.isLoggedIn()) {
-          <a routerLink="/requests/new" class="btn btn-primary btn-lg">Report an Issue</a>
-          <a routerLink="/requests" class="btn btn-outline btn-lg">My Requests</a>
+          <a routerLink="/requests/new" class="btn btn-primary btn-lg">{{ 'home.hero.reportBtn' | translate }}</a>
+          <a routerLink="/requests" class="btn btn-outline btn-lg">{{ 'home.hero.myRequestsBtn' | translate }}</a>
         } @else {
-          <a routerLink="/register" class="btn btn-primary btn-lg">Get Started</a>
-          <a routerLink="/login" class="btn btn-outline btn-lg">Sign In</a>
+          <a routerLink="/register" class="btn btn-primary btn-lg">{{ 'home.hero.getStartedBtn' | translate }}</a>
+          <a routerLink="/login" class="btn btn-outline btn-lg">{{ 'home.hero.signInBtn' | translate }}</a>
         }
       </div>
     </div>
@@ -18,34 +18,34 @@
 
   <!-- How it Works -->
   <section class="section how-it-works">
-    <h2>How It Works</h2>
+    <h2>{{ 'home.howItWorks.title' | translate }}</h2>
     <div class="steps-grid">
       <div class="step-card">
         <div class="step-number">1</div>
-        <h3>Report</h3>
-        <p>Submit your civic issue with photos and details. Choose a category that fits.</p>
+        <h3>{{ 'home.howItWorks.step1Title' | translate }}</h3>
+        <p>{{ 'home.howItWorks.step1Body' | translate }}</p>
       </div>
       <div class="step-card">
         <div class="step-number">2</div>
-        <h3>Review</h3>
-        <p>Our team reviews your request and assigns it to the concerned department.</p>
+        <h3>{{ 'home.howItWorks.step2Title' | translate }}</h3>
+        <p>{{ 'home.howItWorks.step2Body' | translate }}</p>
       </div>
       <div class="step-card">
         <div class="step-number">3</div>
-        <h3>Resolve</h3>
-        <p>The department works on the issue and provides resolution details.</p>
+        <h3>{{ 'home.howItWorks.step3Title' | translate }}</h3>
+        <p>{{ 'home.howItWorks.step3Body' | translate }}</p>
       </div>
     </div>
   </section>
 
   <!-- Categories -->
   <section class="section categories">
-    <h2>Issue Categories</h2>
+    <h2>{{ 'home.categoriesTitle' | translate }}</h2>
     <div class="category-grid">
       @for (cat of categories; track cat[0]) {
         <div class="category-card">
           <span class="category-icon">{{ categoryIcons[cat[0]] }}</span>
-          <span class="category-name">{{ cat[1] }}</span>
+          <span class="category-name">{{ ('category.' + cat[0]) | translate }}</span>
         </div>
       }
     </div>
@@ -53,23 +53,23 @@
 
   <!-- Stats -->
   <section class="section stats-section">
-    <h2>Platform Statistics</h2>
+    <h2>{{ 'home.stats.title' | translate }}</h2>
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-number">{{ stats.total }}</div>
-        <div class="stat-label">Total Reports</div>
+        <div class="stat-label">{{ 'home.stats.total' | translate }}</div>
       </div>
       <div class="stat-card">
         <div class="stat-number">{{ stats.pending }}</div>
-        <div class="stat-label">Pending Review</div>
+        <div class="stat-label">{{ 'home.stats.pending' | translate }}</div>
       </div>
       <div class="stat-card">
         <div class="stat-number">{{ stats.inProgress }}</div>
-        <div class="stat-label">In Progress</div>
+        <div class="stat-label">{{ 'home.stats.inProgress' | translate }}</div>
       </div>
       <div class="stat-card">
         <div class="stat-number">{{ stats.completed }}</div>
-        <div class="stat-label">Resolved</div>
+        <div class="stat-label">{{ 'home.stats.resolved' | translate }}</div>
       </div>
     </div>
   </section>
@@ -77,12 +77,12 @@
   <!-- Recent News & Announcements -->
   @if (recentNews.length) {
     <section class="section news-teaser">
-      <h2>Latest News &amp; Announcements</h2>
+      <h2>{{ 'home.latestNews' | translate }}</h2>
       <div class="news-grid">
         @for (post of recentNews; track post.id) {
           <a [routerLink]="['/news', post.id]" class="news-card" [class.is-announcement]="post.post_type === 'announcement'">
             <span class="type-tag" [attr.data-type]="post.post_type">
-              {{ post.post_type === 'announcement' ? 'Announcement' : 'News' }}
+              {{ ('newsType.' + post.post_type) | translate }}
             </span>
             @if (post.image_url) {
               <img [src]="post.image_url" [alt]="post.title" class="news-img" />
@@ -96,7 +96,7 @@
         }
       </div>
       <div class="section-footer">
-        <a routerLink="/news" class="btn btn-outline">View All</a>
+        <a routerLink="/news" class="btn btn-outline">{{ 'common.viewAll' | translate }}</a>
       </div>
     </section>
   }

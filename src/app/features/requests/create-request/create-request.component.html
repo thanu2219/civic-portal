@@ -1,7 +1,7 @@
 <div class="page-container">
   <div class="form-card">
-    <h1>Report an Issue</h1>
-    <p class="subtitle">Provide details about the civic issue you'd like to report.</p>
+    <h1>{{ 'request.create.title' | translate }}</h1>
+    <p class="subtitle">{{ 'request.create.subtitle' | translate }}</p>
 
     @if (error) {
       <div class="alert alert-error">{{ error }}</div>
@@ -9,53 +9,53 @@
 
     <form (ngSubmit)="onSubmit()">
       <div class="form-group">
-        <label for="title">Title *</label>
+        <label for="title">{{ 'request.create.titleLabel' | translate }}</label>
         <input
           id="title"
           type="text"
           [(ngModel)]="title"
           name="title"
-          placeholder="Brief summary of the issue"
+          [placeholder]="'request.create.titlePlaceholder' | translate"
           required
         />
       </div>
 
       <div class="form-group">
-        <label for="category">Category *</label>
+        <label for="category">{{ 'request.create.categoryLabel' | translate }}</label>
         <select id="category" [(ngModel)]="category" name="category" required>
-          <option value="" disabled>Select a category</option>
+          <option value="" disabled>{{ 'request.create.categoryPlaceholder' | translate }}</option>
           @for (cat of categories; track cat[0]) {
-            <option [value]="cat[0]">{{ cat[1] }}</option>
+            <option [value]="cat[0]">{{ ('category.' + cat[0]) | translate }}</option>
           }
         </select>
       </div>
 
       <div class="form-group">
-        <label for="location">Location *</label>
+        <label for="location">{{ 'request.create.locationLabel' | translate }}</label>
         <input
           id="location"
           type="text"
           [(ngModel)]="location"
           name="location"
-          placeholder="Street, landmark, area or address"
+          [placeholder]="'request.create.locationPlaceholder' | translate"
           required
         />
       </div>
 
       <div class="form-group">
-        <label for="description">Description *</label>
+        <label for="description">{{ 'request.create.descriptionLabel' | translate }}</label>
         <textarea
           id="description"
           [(ngModel)]="description"
           name="description"
           rows="5"
-          placeholder="Describe the issue in detail — location, severity, how long it has persisted..."
+          [placeholder]="'request.create.descriptionPlaceholder' | translate"
           required
         ></textarea>
       </div>
 
       <div class="form-group">
-        <label>Photos (max 5, up to 5 MB each)</label>
+        <label>{{ 'request.create.photosLabel' | translate }}</label>
         <div class="file-upload">
           <input
             type="file"
@@ -65,7 +65,7 @@
             id="photos"
           />
           <label for="photos" class="file-label">
-            <span>📷</span> Click to upload photos
+            <span>📷</span> {{ 'request.create.photosCta' | translate }}
           </label>
         </div>
 
@@ -82,7 +82,7 @@
       </div>
 
       <button type="submit" class="btn btn-primary btn-full" [disabled]="loading">
-        {{ loading ? 'Submitting...' : 'Submit Report' }}
+        {{ (loading ? 'request.create.submittingBtn' : 'request.create.submitBtn') | translate }}
       </button>
     </form>
   </div>

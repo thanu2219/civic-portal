@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { SlicePipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { AuthService } from '../../core/services/auth.service';
 import { RequestService } from '../../core/services/request.service';
 import { NewsService } from '../../core/services/news.service';
@@ -9,7 +10,7 @@ import { NewsPost, CATEGORY_LABELS, RequestCategory } from '../../core/models/ty
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, SlicePipe],
+  imports: [RouterLink, SlicePipe, TranslatePipe],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })

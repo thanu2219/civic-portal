@@ -1,13 +1,14 @@
 import { Component, ChangeDetectorRef, NgZone } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { RequestService } from '../../../core/services/request.service';
 import { CATEGORY_LABELS, RequestCategory } from '../../../core/models/types';
 
 @Component({
   selector: 'app-create-request',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, TranslatePipe],
   templateUrl: './create-request.component.html',
   styleUrl: './create-request.component.scss',
 })

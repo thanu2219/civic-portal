@@ -1,8 +1,8 @@
 <div class="auth-page">
   <div class="auth-card">
     @if (auth.isRecoveryMode()) {
-      <h1>Set New Password</h1>
-      <p class="subtitle">Enter your new password below</p>
+      <h1>{{ 'auth.reset.newTitle' | translate }}</h1>
+      <p class="subtitle">{{ 'auth.reset.newSubtitle' | translate }}</p>
 
       @if (error) {
         <div class="alert alert-error">{{ error }}</div>
@@ -11,42 +11,42 @@
       @if (resetSuccess) {
         <div class="alert alert-success">{{ resetSuccess }}</div>
         <p class="auth-footer">
-          <a routerLink="/login" (click)="toggleResetMode()">Go to Sign In</a>
+          <a routerLink="/login" (click)="toggleResetMode()">{{ 'auth.reset.goToSignIn' | translate }}</a>
         </p>
       } @else {
         <form (ngSubmit)="onUpdatePassword()">
           <div class="form-group">
-            <label for="new-password">New Password</label>
+            <label for="new-password">{{ 'auth.reset.newPasswordLabel' | translate }}</label>
             <input
               id="new-password"
               type="password"
               [(ngModel)]="newPassword"
               name="newPassword"
-              placeholder="At least 6 characters"
+              [placeholder]="'auth.reset.newPasswordPlaceholder' | translate"
               required
             />
           </div>
 
           <div class="form-group">
-            <label for="confirm-new-password">Confirm New Password</label>
+            <label for="confirm-new-password">{{ 'auth.reset.confirmNewLabel' | translate }}</label>
             <input
               id="confirm-new-password"
               type="password"
               [(ngModel)]="confirmNewPassword"
               name="confirmNewPassword"
-              placeholder="Re-enter your new password"
+              [placeholder]="'auth.reset.confirmNewPlaceholder' | translate"
               required
             />
           </div>
 
           <button type="submit" class="btn btn-primary btn-full" [disabled]="loading">
-            {{ loading ? 'Updating...' : 'Update Password' }}
+            {{ (loading ? 'common.updating' : 'auth.reset.updateBtn') | translate }}
           </button>
         </form>
       }
     } @else if (resetMode) {
-      <h1>Reset Password</h1>
-      <p class="subtitle">Enter your email and we'll send you a reset link</p>
+      <h1>{{ 'auth.reset.title' | translate }}</h1>
+      <p class="subtitle">{{ 'auth.reset.subtitle' | translate }}</p>
 
       @if (error) {
         <div class="alert alert-error">{{ error }}</div>
@@ -58,28 +58,28 @@
 
       <form (ngSubmit)="onResetPassword()">
         <div class="form-group">
-          <label for="reset-email">Email Address</label>
+          <label for="reset-email">{{ 'auth.login.emailLabel' | translate }}</label>
           <input
             id="reset-email"
             type="email"
             [(ngModel)]="email"
             name="email"
-            placeholder="you@example.com"
+            [placeholder]="'auth.login.emailPlaceholder' | translate"
             required
           />
         </div>
 
         <button type="submit" class="btn btn-primary btn-full" [disabled]="loading">
-          {{ loading ? 'Sending...' : 'Send Reset Link' }}
+          {{ (loading ? 'auth.reset.sendingBtn' : 'auth.reset.sendLinkBtn') | translate }}
         </button>
       </form>
 
       <p class="auth-footer">
-        <a (click)="toggleResetMode()" class="link-btn">← Back to Sign In</a>
+        <a (click)="toggleResetMode()" class="link-btn">{{ 'auth.reset.backToSignIn' | translate }}</a>
       </p>
     } @else {
-      <h1>Welcome Back</h1>
-      <p class="subtitle">Sign in to your CivicPortal account</p>
+      <h1>{{ 'auth.login.title' | translate }}</h1>
+      <p class="subtitle">{{ 'auth.login.subtitle' | translate }}</p>
 
       @if (error) {
         <div class="alert alert-error">{{ error }}</div>
@@ -87,40 +87,40 @@
 
       <form (ngSubmit)="onSubmit()">
         <div class="form-group">
-          <label for="email">Email Address</label>
+          <label for="email">{{ 'auth.login.emailLabel' | translate }}</label>
           <input
             id="email"
             type="email"
             [(ngModel)]="email"
             name="email"
-            placeholder="you@example.com"
+            [placeholder]="'auth.login.emailPlaceholder' | translate"
             required
           />
         </div>
 
         <div class="form-group">
-          <label for="password">Password</label>
+          <label for="password">{{ 'auth.login.passwordLabel' | translate }}</label>
           <input
             id="password"
             type="password"
             [(ngModel)]="password"
             name="password"
-            placeholder="Your password"
+            [placeholder]="'auth.login.passwordPlaceholder' | translate"
             required
           />
         </div>
 
         <div class="forgot-password">
-          <a (click)="toggleResetMode()" class="link-btn">Forgot password?</a>
+          <a (click)="toggleResetMode()" class="link-btn">{{ 'auth.login.forgot' | translate }}</a>
         </div>
 
         <button type="submit" class="btn btn-primary btn-full" [disabled]="loading">
-          {{ loading ? 'Signing in...' : 'Sign In' }}
+          {{ (loading ? 'auth.login.signingIn' : 'auth.login.signIn') | translate }}
         </button>
       </form>
 
       <p class="auth-footer">
-        Don't have an account? <a routerLink="/register">Register here</a>
+        {{ 'auth.login.noAccount' | translate }} <a routerLink="/register">{{ 'auth.login.registerHere' | translate }}</a>
       </p>
     }
   </div>

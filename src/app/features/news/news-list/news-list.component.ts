@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { SlicePipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { NewsService } from '../../../core/services/news.service';
 import {
   NewsPost,
@@ -17,7 +18,7 @@ type CategoryFilter = 'all' | NewsCategory;
 @Component({
   selector: 'app-news-list',
   standalone: true,
-  imports: [RouterLink, FormsModule, SlicePipe],
+  imports: [RouterLink, FormsModule, SlicePipe, TranslatePipe],
   templateUrl: './news-list.component.html',
   styleUrl: './news-list.component.scss',
 })

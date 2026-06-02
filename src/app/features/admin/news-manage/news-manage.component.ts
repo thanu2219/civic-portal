@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SlicePipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import {
   NewsService,
   getScheduleState,
@@ -25,7 +26,7 @@ type ScheduleFilter = 'all' | 'live' | 'scheduled' | 'expired';
 @Component({
   selector: 'app-news-manage',
   standalone: true,
-  imports: [FormsModule, RouterLink, RouterLinkActive, SlicePipe],
+  imports: [FormsModule, RouterLink, RouterLinkActive, SlicePipe, TranslatePipe],
   templateUrl: './news-manage.component.html',
   styleUrl: './news-manage.component.scss',
 })

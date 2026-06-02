@@ -1,14 +1,14 @@
 <div class="auth-page">
   <div class="auth-card">
-    <h1>Create Account</h1>
-    <p class="subtitle">Join CivicPortal to report and track civic issues</p>
+    <h1>{{ 'auth.register.title' | translate }}</h1>
+    <p class="subtitle">{{ 'auth.register.subtitle' | translate }}</p>
 
     @if (registered) {
       <div class="confirmation-box">
         <div class="confirmation-icon">✉️</div>
-        <h2>Check Your Email</h2>
+        <h2>{{ 'auth.register.checkEmail' | translate }}</h2>
         <p>{{ success }}</p>
-        <a routerLink="/login" class="btn btn-primary btn-full">Go to Sign In</a>
+        <a routerLink="/login" class="btn btn-primary btn-full">{{ 'auth.register.goToSignIn' | translate }}</a>
       </div>
     } @else {
       @if (error) {
@@ -17,60 +17,60 @@
 
       <form (ngSubmit)="onSubmit()">
         <div class="form-group">
-          <label for="fullName">Full Name</label>
+          <label for="fullName">{{ 'auth.register.fullNameLabel' | translate }}</label>
           <input
             id="fullName"
             type="text"
             [(ngModel)]="fullName"
             name="fullName"
-            placeholder="John Doe"
+            [placeholder]="'auth.register.fullNamePlaceholder' | translate"
             required
           />
         </div>
 
         <div class="form-group">
-          <label for="email">Email Address</label>
+          <label for="email">{{ 'auth.register.emailLabel' | translate }}</label>
           <input
             id="email"
             type="email"
             [(ngModel)]="email"
             name="email"
-            placeholder="you@example.com"
+            [placeholder]="'auth.register.emailPlaceholder' | translate"
             required
           />
         </div>
 
         <div class="form-group">
-          <label for="password">Password</label>
+          <label for="password">{{ 'auth.register.passwordLabel' | translate }}</label>
           <input
             id="password"
             type="password"
             [(ngModel)]="password"
             name="password"
-            placeholder="Min 6 characters"
+            [placeholder]="'auth.register.passwordPlaceholder' | translate"
             required
           />
         </div>
 
         <div class="form-group">
-          <label for="confirmPassword">Confirm Password</label>
+          <label for="confirmPassword">{{ 'auth.register.confirmLabel' | translate }}</label>
           <input
             id="confirmPassword"
             type="password"
             [(ngModel)]="confirmPassword"
             name="confirmPassword"
-            placeholder="Repeat your password"
+            [placeholder]="'auth.register.confirmPlaceholder' | translate"
             required
           />
         </div>
 
         <button type="submit" class="btn btn-primary btn-full" [disabled]="loading">
-          {{ loading ? 'Creating account...' : 'Create Account' }}
+          {{ (loading ? 'auth.register.creatingBtn' : 'auth.register.createBtn') | translate }}
         </button>
       </form>
 
       <p class="auth-footer">
-        Already have an account? <a routerLink="/login">Sign in here</a>
+        {{ 'auth.register.haveAccount' | translate }} <a routerLink="/login">{{ 'auth.register.signInHere' | translate }}</a>
       </p>
     }
   </div>

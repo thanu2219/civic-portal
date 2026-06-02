@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { SlicePipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { NewsService, isWithinSchedule } from '../../../core/services/news.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { DepartmentService } from '../../../core/services/department.service';
@@ -10,7 +11,7 @@ import { NewsPost, NewsComment, NewsCategory, NEWS_CATEGORY_LABELS } from '../..
 @Component({
   selector: 'app-news-detail',
   standalone: true,
-  imports: [RouterLink, FormsModule, SlicePipe],
+  imports: [RouterLink, FormsModule, SlicePipe, TranslatePipe],
   templateUrl: './news-detail.component.html',
   styleUrl: './news-detail.component.scss',
 })

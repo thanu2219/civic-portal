@@ -1,61 +1,57 @@
 <div class="admin-layout">
   <aside class="admin-sidebar">
-    <h2>Admin Panel</h2>
+    <h2>{{ 'admin.panel' | translate }}</h2>
     <nav>
-      <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
-      <a routerLink="/admin/requests" routerLinkActive="active">Request Queue</a>
-      <a routerLink="/admin/news" routerLinkActive="active">News &amp; Announcements</a>
+      <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">{{ 'admin.nav.dashboard' | translate }}</a>
+      <a routerLink="/admin/requests" routerLinkActive="active">{{ 'admin.nav.requests' | translate }}</a>
+      <a routerLink="/admin/news" routerLinkActive="active">{{ 'admin.nav.news' | translate }}</a>
       @if (auth.isAdmin()) {
-        <a routerLink="/admin/users" routerLinkActive="active">Manage Users</a>
+        <a routerLink="/admin/users" routerLinkActive="active">{{ 'admin.nav.users' | translate }}</a>
       }
     </nav>
   </aside>
 
   <main class="admin-main">
     <div class="page-header">
-      <h1>News &amp; Announcements</h1>
+      <h1>{{ 'admin.news.title' | translate }}</h1>
       <button class="btn btn-primary" (click)="openNewForm()">
-        + New Post
+        {{ 'admin.news.newPost' | translate }}
       </button>
     </div>
 
     @if (!auth.isAdmin()) {
-      <p class="role-hint">
-        You can see posts you created and posts for your department. Pending posts can still be edited; rejected ones can be deleted.
-      </p>
+      <p class="role-hint">{{ 'admin.news.deptHint' | translate }}</p>
     } @else {
-      <p class="role-hint">
-        Review pending submissions from department admins. Approve to publish, or reject with a reason. Rejected posts can be deleted.
-      </p>
+      <p class="role-hint">{{ 'admin.news.adminHint' | translate }}</p>
     }
 
     <!-- Tabs -->
     <div class="news-tabs" role="tablist">
       @if (auth.isAdmin()) {
         <button class="tab-btn" [class.active]="activeTab === 'pending'" (click)="setTab('pending')">
-          Pending <span class="tab-count">{{ pendingPosts.length }}</span>
+          {{ 'admin.news.tabPending' | translate }} <span class="tab-count">{{ pendingPosts.length }}</span>
         </button>
         <button class="tab-btn" [class.active]="activeTab === 'approved'" (click)="setTab('approved')">
-          Approved <span class="tab-count">{{ approvedPosts.length }}</span>
+          {{ 'admin.news.tabApproved' | translate }} <span class="tab-count">{{ approvedPosts.length }}</span>
         </button>
         <button class="tab-btn" [class.active]="activeTab === 'rejected'" (click)="setTab('rejected')">
-          Rejected <span class="tab-count">{{ rejectedPosts.length }}</span>
+          {{ 'admin.news.tabRejected' | translate }} <span class="tab-count">{{ rejectedPosts.length }}</span>
         </button>
         <button class="tab-btn" [class.active]="activeTab === 'all'" (click)="setTab('all')">
-          All <span class="tab-count">{{ allPosts.length }}</span>
+          {{ 'admin.news.tabAll' | translate }} <span class="tab-count">{{ allPosts.length }}</span>
         </button>
       } @else {
         <button class="tab-btn" [class.active]="activeTab === 'mine'" (click)="setTab('mine')">
-          My Department <span class="tab-count">{{ allPosts.length }}</span>
+          {{ 'admin.news.tabMine' | translate }} <span class="tab-count">{{ allPosts.length }}</span>
         </button>
         <button class="tab-btn" [class.active]="activeTab === 'pending'" (click)="setTab('pending')">
-          Pending <span class="tab-count">{{ pendingPosts.length }}</span>
+          {{ 'admin.news.tabPending' | translate }} <span class="tab-count">{{ pendingPosts.length }}</span>
         </button>
         <button class="tab-btn" [class.active]="activeTab === 'approved'" (click)="setTab('approved')">
-          Approved <span class="tab-count">{{ approvedPosts.length }}</span>
+          {{ 'admin.news.tabApproved' | translate }} <span class="tab-count">{{ approvedPosts.length }}</span>
         </button>
         <button class="tab-btn" [class.active]="activeTab === 'rejected'" (click)="setTab('rejected')">
-          Rejected <span class="tab-count">{{ rejectedPosts.length }}</span>
+          {{ 'admin.news.tabRejected' | translate }} <span class="tab-count">{{ rejectedPosts.length }}</span>
         </button>
       }
     </div>
@@ -63,40 +59,40 @@
     <!-- Schedule sub-filter (only meaningful for approved posts) -->
     @if (activeTab === 'approved') {
       <div class="schedule-filter">
-        <span class="schedule-filter-label">Schedule:</span>
+        <span class="schedule-filter-label">{{ 'admin.news.scheduleFilter' | translate }}</span>
         <button class="chip" [class.active]="scheduleFilter === 'all'" (click)="setScheduleFilter('all')">
-          All <span class="chip-count">{{ approvedPosts.length }}</span>
+          {{ 'admin.news.scheduleAll' | translate }} <span class="chip-count">{{ approvedPosts.length }}</span>
         </button>
         <button class="chip" [class.active]="scheduleFilter === 'live'" (click)="setScheduleFilter('live')">
-          Live <span class="chip-count">{{ approvedLiveCount }}</span>
+          {{ 'admin.news.scheduleLive' | translate }} <span class="chip-count">{{ approvedLiveCount }}</span>
         </button>
         <button class="chip" [class.active]="scheduleFilter === 'scheduled'" (click)="setScheduleFilter('scheduled')">
-          Scheduled <span class="chip-count">{{ approvedScheduledCount }}</span>
+          {{ 'admin.news.scheduleScheduled' | translate }} <span class="chip-count">{{ approvedScheduledCount }}</span>
         </button>
         <button class="chip" [class.active]="scheduleFilter === 'expired'" (click)="setScheduleFilter('expired')">
-          Expired <span class="chip-count">{{ approvedExpiredCount }}</span>
+          {{ 'admin.news.scheduleExpired' | translate }} <span class="chip-count">{{ approvedExpiredCount }}</span>
         </button>
       </div>
     }
 
     @if (loading) {
-      <div class="loading-spinner">Loading...</div>
+      <div class="loading-spinner">{{ 'common.loading' | translate }}</div>
     } @else if (!visiblePosts.length) {
-      <div class="empty-state"><p>No posts in this view.</p></div>
+      <div class="empty-state"><p>{{ 'admin.news.empty' | translate }}</p></div>
     } @else {
-      <p class="table-hint">Click a row to view full details. Use the action buttons below to edit or delete.</p>
+      <p class="table-hint">{{ 'admin.news.rowHint' | translate }}</p>
       <div class="news-table">
         <table>
           <thead>
             <tr>
-              <th>Title</th>
-              <th>Type</th>
-              <th>Category</th>
-              <th>Status</th>
-              <th>Schedule</th>
-              @if (auth.isAdmin()) { <th>Author</th> }
-              <th>Date</th>
-              <th>Actions</th>
+              <th>{{ 'admin.news.table.title' | translate }}</th>
+              <th>{{ 'admin.news.table.type' | translate }}</th>
+              <th>{{ 'admin.news.table.category' | translate }}</th>
+              <th>{{ 'admin.news.table.status' | translate }}</th>
+              <th>{{ 'admin.news.table.schedule' | translate }}</th>
+              @if (auth.isAdmin()) { <th>{{ 'admin.news.table.author' | translate }}</th> }
+              <th>{{ 'admin.news.table.date' | translate }}</th>
+              <th>{{ 'admin.news.table.actions' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -107,22 +103,22 @@
                 </td>
                 <td>
                   <span class="type-tag" [attr.data-type]="post.post_type">
-                    {{ typeLabels[post.post_type] }}
+                    {{ ('newsType.' + post.post_type) | translate }}
                   </span>
                 </td>
-                <td><span class="cat-tag">{{ categoryLabels[post.category] }}</span></td>
-                <td><span class="status-badge" [attr.data-status]="post.status">{{ post.status }}</span></td>
+                <td><span class="cat-tag">{{ ('newsCategory.' + post.category) | translate }}</span></td>
+                <td><span class="status-badge" [attr.data-status]="post.status">{{ ('status.' + post.status) | translate }}</span></td>
                 <td>
                   @if (scheduleStateOf(post) === 'none') {
                     <span class="no-actions">—</span>
                   } @else {
                     <span class="schedule-badge" [attr.data-state]="scheduleStateOf(post)">
-                      {{ scheduleStateOf(post) }}
+                      {{ ('admin.news.schedule' + (scheduleStateOf(post) === 'live' ? 'Live' : scheduleStateOf(post) === 'scheduled' ? 'Scheduled' : 'Expired')) | translate }}
                     </span>
                     @if (post.start_date || post.end_date) {
                       <div class="schedule-dates">
-                        @if (post.start_date) { <div>Starts: {{ post.start_date | slice:0:16 }}</div> }
-                        @if (post.end_date) { <div>Ends: {{ post.end_date | slice:0:16 }}</div> }
+                        @if (post.start_date) { <div>{{ 'admin.news.scheduleStarts' | translate: { date: (post.start_date | slice:0:16) } }}</div> }
+                        @if (post.end_date) { <div>{{ 'admin.news.scheduleEnds' | translate: { date: (post.end_date | slice:0:16) } }}</div> }
                       </div>
                     }
                   }
@@ -133,10 +129,10 @@
                 <td>{{ post.created_at | slice:0:10 }}</td>
                 <td class="actions-cell" (click)="$event.stopPropagation()">
                   @if (canEdit(post)) {
-                    <button class="btn-sm btn-edit" (click)="openEditForm(post)">Edit</button>
+                    <button class="btn-sm btn-edit" (click)="openEditForm(post)">{{ 'common.edit' | translate }}</button>
                   }
                   @if (canDelete(post)) {
-                    <button class="btn-sm btn-delete" (click)="deletePost(post)">Delete</button>
+                    <button class="btn-sm btn-delete" (click)="deletePost(post)">{{ 'common.delete' | translate }}</button>
                   }
                   @if (!canEdit(post) && !canDelete(post)) {
                     <span class="no-actions">—</span>
@@ -154,24 +150,24 @@
       <div class="modal-overlay" (click)="closeDetail()">
         <div class="modal modal-lg" (click)="$event.stopPropagation()">
           <div class="detail-header">
-            <span class="type-tag" [attr.data-type]="detailPost.post_type">{{ typeLabels[detailPost.post_type] }}</span>
-            <span class="cat-tag">{{ categoryLabels[detailPost.category] }}</span>
-            <span class="status-badge" [attr.data-status]="detailPost.status">{{ detailPost.status }}</span>
+            <span class="type-tag" [attr.data-type]="detailPost.post_type">{{ ('newsType.' + detailPost.post_type) | translate }}</span>
+            <span class="cat-tag">{{ ('newsCategory.' + detailPost.category) | translate }}</span>
+            <span class="status-badge" [attr.data-status]="detailPost.status">{{ ('status.' + detailPost.status) | translate }}</span>
             @if (scheduleStateOf(detailPost) !== 'none') {
               <span class="schedule-badge" [attr.data-state]="scheduleStateOf(detailPost)">
-                {{ scheduleStateOf(detailPost) }}
+                {{ ('admin.news.schedule' + (scheduleStateOf(detailPost) === 'live' ? 'Live' : scheduleStateOf(detailPost) === 'scheduled' ? 'Scheduled' : 'Expired')) | translate }}
               </span>
             }
           </div>
           @if (detailPost.start_date || detailPost.end_date) {
             <div class="schedule-dates detail-schedule">
-              @if (detailPost.start_date) { <div>Starts: {{ detailPost.start_date | slice:0:16 }}</div> }
-              @if (detailPost.end_date) { <div>Ends: {{ detailPost.end_date | slice:0:16 }}</div> }
+              @if (detailPost.start_date) { <div>{{ 'admin.news.scheduleStarts' | translate: { date: (detailPost.start_date | slice:0:16) } }}</div> }
+              @if (detailPost.end_date) { <div>{{ 'admin.news.scheduleEnds' | translate: { date: (detailPost.end_date | slice:0:16) } }}</div> }
             </div>
           }
           <h2>{{ detailPost.title }}</h2>
           <p class="detail-meta">
-            By {{ detailPost.author?.full_name || 'Unknown' }} · {{ detailPost.created_at | slice:0:10 }}
+            {{ detailPost.author?.full_name || ('common.anonymous' | translate) }} · {{ detailPost.created_at | slice:0:10 }}
           </p>
           @if (detailPost.image_url) {
             <img [src]="detailPost.image_url" alt="cover" class="detail-img" />
@@ -180,19 +176,19 @@
 
           @if (detailPost.status === 'rejected' && detailPost.rejection_reason) {
             <div class="reject-banner">
-              <strong>Rejection reason:</strong> {{ detailPost.rejection_reason }}
+              <strong>{{ 'admin.news.reject.rejectionReasonHeading' | translate }}</strong> {{ detailPost.rejection_reason }}
             </div>
           }
 
           <div class="modal-actions">
             @if (auth.isAdmin() && detailPost.status === 'pending') {
-              <button class="btn btn-success" (click)="approve(detailPost); closeDetail()">Approve</button>
-              <button class="btn btn-danger" (click)="openReject(detailPost); closeDetail()">Reject</button>
+              <button class="btn btn-success" (click)="approve(detailPost); closeDetail()">{{ 'common.approve' | translate }}</button>
+              <button class="btn btn-danger" (click)="openReject(detailPost); closeDetail()">{{ 'common.reject' | translate }}</button>
             }
             @if (detailPost.status === 'rejected') {
-              <button class="btn btn-danger" (click)="deletePost(detailPost); closeDetail()">Delete</button>
+              <button class="btn btn-danger" (click)="deletePost(detailPost); closeDetail()">{{ 'common.delete' | translate }}</button>
             }
-            <button class="btn btn-outline" (click)="closeDetail()">Close</button>
+            <button class="btn btn-outline" (click)="closeDetail()">{{ 'common.close' | translate }}</button>
           </div>
         </div>
       </div>
@@ -202,7 +198,7 @@
     @if (showForm) {
       <div class="modal-overlay" (click)="showForm = false">
         <div class="modal modal-lg" (click)="$event.stopPropagation()">
-          <h2>{{ editId ? 'Edit Post' : 'New Post' }}</h2>
+          <h2>{{ (editId ? 'admin.news.form.editTitle' : 'admin.news.form.newTitle') | translate }}</h2>
 
           @if (formError) {
             <div class="alert alert-error">{{ formError }}</div>
@@ -210,79 +206,77 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label>Type *</label>
+              <label>{{ 'admin.news.form.typeLabel' | translate }}</label>
               <select [(ngModel)]="formType">
                 @for (t of typeList; track t) {
-                  <option [value]="t">{{ typeLabels[t] }}</option>
+                  <option [value]="t">{{ ('newsType.' + t) | translate }}</option>
                 }
               </select>
             </div>
             <div class="form-group">
-              <label>Category *</label>
+              <label>{{ 'admin.news.form.categoryLabel' | translate }}</label>
               <select [(ngModel)]="formCategory">
                 @for (c of availableCategories; track c[0]) {
-                  <option [value]="c[0]">{{ c[1] }}</option>
+                  <option [value]="c[0]">{{ ('newsCategory.' + c[0]) | translate }}</option>
                 }
               </select>
               @if (!auth.isAdmin()) {
-                <p class="field-hint">
-                  You can post under <strong>Generic</strong> or your own department only.
-                </p>
+                <p class="field-hint" [innerHTML]="'admin.news.form.deptScopeHint' | translate"></p>
               }
             </div>
           </div>
 
           <div class="form-group">
-            <label>Title *</label>
-            <input type="text" [(ngModel)]="formTitle" placeholder="Post title" />
+            <label>{{ 'admin.news.form.titleLabel' | translate }}</label>
+            <input type="text" [(ngModel)]="formTitle" [placeholder]="'admin.news.form.titlePlaceholder' | translate" />
           </div>
 
           <div class="form-group">
-            <label>Body *</label>
-            <textarea [(ngModel)]="formBody" rows="8" placeholder="Write the full content here..."></textarea>
+            <label>{{ 'admin.news.form.bodyLabel' | translate }}</label>
+            <textarea [(ngModel)]="formBody" rows="8" [placeholder]="'admin.news.form.bodyPlaceholder' | translate"></textarea>
           </div>
 
-          <p class="field-hint schedule-rule">
-            Leave both dates blank to publish immediately once approved.
-            Otherwise the post will only be visible to the public between the
-            start and end dates.
-          </p>
+          <p class="field-hint schedule-rule">{{ 'admin.news.form.scheduleRule' | translate }}</p>
           <div class="form-row">
             <div class="form-group">
-              <label>Start Date (optional)</label>
+              <label>{{ 'admin.news.form.startDateLabel' | translate }}</label>
               <input type="datetime-local" [(ngModel)]="formStartDate" />
-              <p class="field-hint">Hide from public until this date.</p>
+              <p class="field-hint">{{ 'admin.news.form.startDateHint' | translate }}</p>
             </div>
             <div class="form-group">
-              <label>End Date (optional)</label>
+              <label>{{ 'admin.news.form.endDateLabel' | translate }}</label>
               <input type="datetime-local" [(ngModel)]="formEndDate" />
-              <p class="field-hint">Auto-hide from public after this date.</p>
+              <p class="field-hint">{{ 'admin.news.form.endDateHint' | translate }}</p>
             </div>
           </div>
 
           @if (!editId) {
             <div class="form-group">
-              <label>Cover Image (optional)</label>
+              <label>{{ 'admin.news.form.coverImageLabel' | translate }}</label>
               <input type="file" accept="image/*" (change)="onFileSelect($event)" />
             </div>
           }
 
           @if (!editId) {
             @if (!auth.isAdmin()) {
-              <p class="field-hint">
-                Your post will be submitted for admin approval before being published. You can edit it while it is pending.
-              </p>
+              <p class="field-hint">{{ 'admin.news.form.deptCreateHint' | translate }}</p>
             } @else {
-              <p class="field-hint">
-                Posts cannot be edited after creation.
-              </p>
+              <p class="field-hint">{{ 'admin.news.form.adminCreateHint' | translate }}</p>
             }
           }
 
           <div class="modal-actions">
-            <button class="btn btn-outline" (click)="showForm = false">Cancel</button>
+            <button class="btn btn-outline" (click)="showForm = false">{{ 'common.cancel' | translate }}</button>
             <button class="btn btn-primary" [disabled]="formLoading" (click)="submitForm()">
-              {{ formLoading ? 'Saving...' : (editId ? 'Save Changes' : (auth.isAdmin() ? 'Publish' : 'Submit for Approval')) }}
+              @if (formLoading) {
+                {{ 'admin.news.form.savingBtn' | translate }}
+              } @else if (editId) {
+                {{ 'common.save' | translate }}
+              } @else if (auth.isAdmin()) {
+                {{ 'admin.news.form.publishBtn' | translate }}
+              } @else {
+                {{ 'admin.news.form.submitForApprovalBtn' | translate }}
+              }
             </button>
           </div>
         </div>
@@ -293,15 +287,15 @@
     @if (rejectTarget) {
       <div class="modal-overlay" (click)="closeReject()">
         <div class="modal" (click)="$event.stopPropagation()">
-          <h2>Reject Post</h2>
+          <h2>{{ 'admin.news.reject.title' | translate }}</h2>
           <p class="modal-subtitle">{{ rejectTarget.title }}</p>
 
           <div class="form-group">
-            <label>Reason *</label>
+            <label>{{ 'admin.news.reject.reasonLabel' | translate }}</label>
             <textarea
               [(ngModel)]="rejectReason"
               rows="4"
-              placeholder="Explain why this post is being rejected..."
+              [placeholder]="'admin.news.reject.reasonPlaceholder' | translate"
             ></textarea>
           </div>
 
@@ -310,9 +304,9 @@
           }
 
           <div class="modal-actions">
-            <button class="btn btn-outline" (click)="closeReject()">Cancel</button>
+            <button class="btn btn-outline" (click)="closeReject()">{{ 'common.cancel' | translate }}</button>
             <button class="btn btn-danger" [disabled]="rejectLoading" (click)="confirmReject()">
-              {{ rejectLoading ? 'Rejecting...' : 'Reject' }}
+              {{ (rejectLoading ? 'admin.news.reject.rejectingBtn' : 'common.reject') | translate }}
             </button>
           </div>
         </div>

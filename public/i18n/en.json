@@ -1,0 +1,397 @@
+{
+  "common": {
+    "appName": "CivicPortal",
+    "loading": "Loading...",
+    "saving": "Saving...",
+    "submitting": "Submitting...",
+    "processing": "Processing...",
+    "deleting": "Deleting...",
+    "sending": "Sending...",
+    "creating": "Creating account...",
+    "updating": "Updating...",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "close": "Close",
+    "save": "Save Changes",
+    "edit": "Edit",
+    "delete": "Delete",
+    "approve": "Approve",
+    "reject": "Reject",
+    "resolve": "Resolve",
+    "back": "Back",
+    "viewAll": "View All",
+    "anonymous": "Anonymous",
+    "notAvailable": "—",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "language": {
+    "label": "Language",
+    "kannada": "ಕನ್ನಡ",
+    "english": "English",
+    "switchTo": "Switch language"
+  },
+  "navbar": {
+    "home": "Home",
+    "news": "News & Announcements",
+    "myRequests": "My Requests",
+    "reportIssue": "Report Issue",
+    "admin": "Admin",
+    "signIn": "Sign In",
+    "register": "Register",
+    "signOut": "Sign Out"
+  },
+  "footer": {
+    "tagline": "Empowering citizens to report and track civic issues.",
+    "copy": "© {{year}} CivicPortal. All rights reserved."
+  },
+  "home": {
+    "hero": {
+      "title": "Report. Track. Resolve.",
+      "subtitle": "Your voice matters. Report civic issues in your area and track them until resolution.",
+      "reportBtn": "Report an Issue",
+      "myRequestsBtn": "My Requests",
+      "getStartedBtn": "Get Started",
+      "signInBtn": "Sign In"
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "step1Title": "Report",
+      "step1Body": "Submit your civic issue with photos and details. Choose a category that fits.",
+      "step2Title": "Review",
+      "step2Body": "Our team reviews your request and assigns it to the concerned department.",
+      "step3Title": "Resolve",
+      "step3Body": "The department works on the issue and provides resolution details."
+    },
+    "categoriesTitle": "Issue Categories",
+    "stats": {
+      "title": "Platform Statistics",
+      "total": "Total Reports",
+      "pending": "Pending Review",
+      "inProgress": "In Progress",
+      "resolved": "Resolved"
+    },
+    "latestNews": "Latest News & Announcements"
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome Back",
+      "subtitle": "Sign in to your CivicPortal account",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Your password",
+      "forgot": "Forgot password?",
+      "signingIn": "Signing in...",
+      "signIn": "Sign In",
+      "noAccount": "Don't have an account?",
+      "registerHere": "Register here"
+    },
+    "reset": {
+      "title": "Reset Password",
+      "subtitle": "Enter your email and we'll send you a reset link",
+      "sendingBtn": "Sending...",
+      "sendLinkBtn": "Send Reset Link",
+      "backToSignIn": "← Back to Sign In",
+      "newTitle": "Set New Password",
+      "newSubtitle": "Enter your new password below",
+      "newPasswordLabel": "New Password",
+      "newPasswordPlaceholder": "At least 6 characters",
+      "confirmNewLabel": "Confirm New Password",
+      "confirmNewPlaceholder": "Re-enter your new password",
+      "updateBtn": "Update Password",
+      "goToSignIn": "Go to Sign In"
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitle": "Join CivicPortal to report and track civic issues",
+      "checkEmail": "Check Your Email",
+      "goToSignIn": "Go to Sign In",
+      "fullNameLabel": "Full Name",
+      "fullNamePlaceholder": "John Doe",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Min 6 characters",
+      "confirmLabel": "Confirm Password",
+      "confirmPlaceholder": "Repeat your password",
+      "creatingBtn": "Creating account...",
+      "createBtn": "Create Account",
+      "haveAccount": "Already have an account?",
+      "signInHere": "Sign in here"
+    }
+  },
+  "request": {
+    "list": {
+      "title": "My Requests",
+      "newBtn": "Report New Issue",
+      "emptyTitle": "You haven't submitted any requests yet.",
+      "emptyBtn": "Report Your First Issue",
+      "deptLabel": "Dept"
+    },
+    "create": {
+      "title": "Report an Issue",
+      "subtitle": "Provide details about the civic issue you'd like to report.",
+      "titleLabel": "Title *",
+      "titlePlaceholder": "Brief summary of the issue",
+      "categoryLabel": "Category *",
+      "categoryPlaceholder": "Select a category",
+      "locationLabel": "Location *",
+      "locationPlaceholder": "Street, landmark, area or address",
+      "descriptionLabel": "Description *",
+      "descriptionPlaceholder": "Describe the issue in detail — location, severity, how long it has persisted...",
+      "photosLabel": "Photos (max 5, up to 5 MB each)",
+      "photosCta": "Click to upload photos",
+      "submittingBtn": "Submitting...",
+      "submitBtn": "Submit Report"
+    },
+    "detail": {
+      "backLink": "← Back to My Requests",
+      "notFound": "Request not found.",
+      "backBtn": "Back to My Requests",
+      "submittedOn": "Submitted {{date}}",
+      "locationHeading": "Location",
+      "descriptionHeading": "Description",
+      "photosHeading": "Photos",
+      "resolutionHeading": "Resolution",
+      "rejectionHeading": "Rejection Reason",
+      "timelineHeading": "Activity Timeline"
+    },
+    "timeline": {
+      "approved": "Admin Approved",
+      "rejected": "Rejected",
+      "rerouted": "Rerouted",
+      "resolved": "Resolved"
+    }
+  },
+  "news": {
+    "list": {
+      "title": "News & Announcements",
+      "subtitle": "Stay up to date with the latest civic announcements and news.",
+      "all": "All",
+      "news": "News",
+      "announcements": "Announcements",
+      "allCategories": "All Categories",
+      "searchPlaceholder": "Search by title or content...",
+      "empty": "No posts match your filters.",
+      "newsHeading": "News",
+      "announcementsHeading": "Announcements"
+    },
+    "detail": {
+      "notAvailable": "This post isn't available right now. It may not have started yet, or its scheduled window has ended.",
+      "notFound": "Post not found.",
+      "backLink": "← Back to News & Announcements",
+      "backBtn": "Back to News & Announcements",
+      "comments": "Comments ({{count}})",
+      "commentPlaceholder": "Write a comment...",
+      "posting": "Posting...",
+      "postComment": "Post Comment",
+      "signInToComment": "Sign in",
+      "signInToCommentSuffix": "to leave a comment.",
+      "noComments": "No comments yet. Be the first to share your thoughts!"
+    }
+  },
+  "admin": {
+    "panel": "Admin Panel",
+    "nav": {
+      "dashboard": "Dashboard",
+      "requests": "Request Queue",
+      "news": "News & Announcements",
+      "users": "Manage Users"
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "statTotal": "Total Requests",
+      "statPending": "Pending Review",
+      "statInProgress": "In Progress",
+      "statCompleted": "Completed",
+      "quickActions": "Quick Actions",
+      "reviewPending": "Review Pending Requests",
+      "manageNews": "News & Announcements",
+      "manageUsers": "Manage Users"
+    },
+    "requests": {
+      "title": "Request Queue",
+      "bulkResolveBtn": "Bulk Resolve",
+      "cancelBulkBtn": "Cancel Bulk",
+      "tabActive": "Active",
+      "tabApproved": "Approved",
+      "tabResolved": "Resolved",
+      "tabRejected": "Rejected",
+      "allCategories": "All Categories",
+      "selected": "{{count}} selected",
+      "bulkPlaceholder": "Resolution for all selected requests...",
+      "resolveSelected": "Resolve Selected",
+      "resolvingBtn": "Resolving...",
+      "tableTitle": "Title",
+      "tableCategory": "Category",
+      "tableStatus": "Status",
+      "tableSubmitted": "Submitted",
+      "tableSubmittedBy": "Submitted By",
+      "rowHint": "Click a row to view full details and take action.",
+      "empty": "No requests in this view.",
+      "detail": {
+        "submittedBy": "by {{name}}",
+        "locationHeading": "Location",
+        "descriptionHeading": "Description",
+        "photosHeading": "Photos",
+        "resolutionHeading": "Resolution",
+        "rejectionHeading": "Rejection Reason",
+        "timelineHeading": "Activity Timeline",
+        "adminApproved": "Admin Approved",
+        "by": "by {{name}}"
+      },
+      "modal": {
+        "approveTitle": "Approve Request",
+        "rejectTitle": "Reject Request",
+        "resolveTitle": "Resolve Request",
+        "deptRejectTitle": "Reject Request",
+        "assignDeptLabel": "Assign to Department *",
+        "selectDept": "Select department",
+        "notesLabel": "Notes (optional)",
+        "notesPlaceholder": "Additional notes...",
+        "rejectionReasonLabel": "Rejection Reason *",
+        "rejectionReasonPlaceholder": "Explain why this request is being rejected...",
+        "resolutionLabel": "Resolution Details *",
+        "resolutionPlaceholder": "Describe how the issue was resolved...",
+        "resolutionPhotoLabel": "Resolution Photo (optional)",
+        "deptReasonSelect": "Select reason",
+        "wrongDeptInfo": "This request will be sent back to the admin queue for re-routing to the correct department.",
+        "explainLabel": "Please explain *",
+        "explainPlaceholder": "Provide details..."
+      }
+    },
+    "news": {
+      "title": "News & Announcements",
+      "newPost": "+ New Post",
+      "deptHint": "You can see posts you created and posts for your department. Pending posts can still be edited; rejected ones can be deleted.",
+      "adminHint": "Review pending submissions from department admins. Approve to publish, or reject with a reason. Rejected posts can be deleted.",
+      "tabPending": "Pending",
+      "tabApproved": "Approved",
+      "tabRejected": "Rejected",
+      "tabAll": "All",
+      "tabMine": "My Department",
+      "scheduleFilter": "Schedule:",
+      "scheduleAll": "All",
+      "scheduleLive": "Live",
+      "scheduleScheduled": "Scheduled",
+      "scheduleExpired": "Expired",
+      "rowHint": "Click a row to view full details. Use the action buttons below to edit or delete.",
+      "empty": "No posts in this view.",
+      "table": {
+        "title": "Title",
+        "type": "Type",
+        "category": "Category",
+        "status": "Status",
+        "schedule": "Schedule",
+        "author": "Author",
+        "date": "Date",
+        "actions": "Actions"
+      },
+      "scheduleStarts": "Starts: {{date}}",
+      "scheduleEnds": "Ends: {{date}}",
+      "form": {
+        "newTitle": "New Post",
+        "editTitle": "Edit Post",
+        "typeLabel": "Type *",
+        "categoryLabel": "Category *",
+        "deptScopeHint": "You can post under <strong>Generic</strong> or your own department only.",
+        "titleLabel": "Title *",
+        "titlePlaceholder": "Post title",
+        "bodyLabel": "Body *",
+        "bodyPlaceholder": "Write the full content here...",
+        "scheduleRule": "Leave both dates blank to publish immediately once approved. Otherwise the post will only be visible to the public between the start and end dates.",
+        "startDateLabel": "Start Date (optional)",
+        "startDateHint": "Hide from public until this date.",
+        "endDateLabel": "End Date (optional)",
+        "endDateHint": "Auto-hide from public after this date.",
+        "coverImageLabel": "Cover Image (optional)",
+        "deptCreateHint": "Your post will be submitted for admin approval before being published. You can edit it while it is pending.",
+        "adminCreateHint": "Posts cannot be edited after creation.",
+        "publishBtn": "Publish",
+        "submitForApprovalBtn": "Submit for Approval",
+        "savingBtn": "Saving..."
+      },
+      "reject": {
+        "title": "Reject Post",
+        "reasonLabel": "Reason *",
+        "reasonPlaceholder": "Explain why this post is being rejected...",
+        "rejectingBtn": "Rejecting...",
+        "rejectionReasonHeading": "Rejection reason:"
+      }
+    },
+    "users": {
+      "title": "Manage Users",
+      "tabAdmins": "Admins",
+      "tabDeptAdmins": "Dept Admins",
+      "tabCitizens": "Citizens",
+      "searchAdmins": "Search admins by name or email...",
+      "searchDeptAdmins": "Search dept admins by name, email, or department...",
+      "searchCitizens": "Search citizens by name or email...",
+      "tableName": "Name",
+      "tableEmail": "Email",
+      "tableRole": "Role",
+      "tableDepartment": "Department",
+      "tableActions": "Actions",
+      "notAssigned": "Not assigned",
+      "emptyAdmins": "No admins match your search.",
+      "emptyDeptAdmins": "No dept admins match your search.",
+      "emptyCitizens": "No citizens match your search.",
+      "edit": {
+        "title": "Edit User",
+        "fullNameLabel": "Full Name",
+        "fullNamePlaceholder": "Full name",
+        "emailLabel": "Email",
+        "emailHint": "Email cannot be changed.",
+        "roleLabel": "Role",
+        "deptLabel": "Department *",
+        "selectDept": "Select department",
+        "noDepts": "No departments found in database. Make sure your departments table is seeded.",
+        "deptHint": "Department admin will only see requests for this department."
+      },
+      "delete": {
+        "title": "Delete User",
+        "confirm": "Are you sure you want to delete <strong>{{name}}</strong>? This action cannot be undone."
+      }
+    }
+  },
+  "status": {
+    "pending": "Pending",
+    "routed": "Routed",
+    "in_progress": "Work In Progress",
+    "completed": "Completed",
+    "rejected": "Rejected",
+    "closed": "Closed"
+  },
+  "category": {
+    "electricity": "Electricity",
+    "municipality": "Municipality",
+    "road_and_transportation": "Road & Transportation",
+    "water": "Water",
+    "traffic": "Traffic"
+  },
+  "newsCategory": {
+    "generic": "Generic",
+    "electricity": "Electricity",
+    "municipality": "Municipality",
+    "road_and_transportation": "Road & Transportation",
+    "water": "Water",
+    "traffic": "Traffic"
+  },
+  "newsType": {
+    "news": "News",
+    "announcement": "Announcement"
+  },
+  "role": {
+    "citizen": "Citizen",
+    "dept_admin": "Department Admin",
+    "admin": "Admin"
+  },
+  "rejection": {
+    "wrong_department": "Wrong Department",
+    "duplicate_request": "Duplicate Request",
+    "insufficient_information": "Insufficient Information",
+    "not_actionable": "Not Actionable",
+    "other": "Other"
+  }
+}

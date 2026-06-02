@@ -1,22 +1,22 @@
 <div class="admin-layout">
   <aside class="admin-sidebar">
-    <h2>Admin Panel</h2>
+    <h2>{{ 'admin.panel' | translate }}</h2>
     <nav>
-      <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
-      <a routerLink="/admin/requests" routerLinkActive="active">Request Queue</a>
-      <a routerLink="/admin/news" routerLinkActive="active">News &amp; Announcements</a>
+      <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">{{ 'admin.nav.dashboard' | translate }}</a>
+      <a routerLink="/admin/requests" routerLinkActive="active">{{ 'admin.nav.requests' | translate }}</a>
+      <a routerLink="/admin/news" routerLinkActive="active">{{ 'admin.nav.news' | translate }}</a>
       @if (auth.isAdmin()) {
-        <a routerLink="/admin/users" routerLinkActive="active">Manage Users</a>
+        <a routerLink="/admin/users" routerLinkActive="active">{{ 'admin.nav.users' | translate }}</a>
       }
     </nav>
   </aside>
 
   <main class="admin-main">
     <div class="page-header">
-      <h1>Request Queue</h1>
+      <h1>{{ 'admin.requests.title' | translate }}</h1>
       @if (auth.isDeptAdmin()) {
         <button class="btn btn-outline" (click)="bulkMode = !bulkMode">
-          {{ bulkMode ? 'Cancel Bulk' : 'Bulk Resolve' }}
+          {{ (bulkMode ? 'admin.requests.cancelBulkBtn' : 'admin.requests.bulkResolveBtn') | translate }}
         </button>
       }
     </div>
@@ -25,23 +25,23 @@
     <div class="queue-tabs" role="tablist">
       @if (auth.isAdmin()) {
         <button class="tab-btn" [class.active]="activeTab === 'active'" (click)="setTab('active')">
-          Active <span class="tab-count">{{ tabCounts.active }}</span>
+          {{ 'admin.requests.tabActive' | translate }} <span class="tab-count">{{ tabCounts.active }}</span>
         </button>
         <button class="tab-btn" [class.active]="activeTab === 'approved'" (click)="setTab('approved')">
-          Approved <span class="tab-count">{{ tabCounts.approved }}</span>
+          {{ 'admin.requests.tabApproved' | translate }} <span class="tab-count">{{ tabCounts.approved }}</span>
         </button>
         <button class="tab-btn" [class.active]="activeTab === 'rejected'" (click)="setTab('rejected')">
-          Rejected <span class="tab-count">{{ tabCounts.rejected }}</span>
+          {{ 'admin.requests.tabRejected' | translate }} <span class="tab-count">{{ tabCounts.rejected }}</span>
         </button>
       } @else {
         <button class="tab-btn" [class.active]="activeTab === 'active'" (click)="setTab('active')">
-          Active <span class="tab-count">{{ tabCounts.active }}</span>
+          {{ 'admin.requests.tabActive' | translate }} <span class="tab-count">{{ tabCounts.active }}</span>
         </button>
         <button class="tab-btn" [class.active]="activeTab === 'resolved'" (click)="setTab('resolved')">
-          Resolved <span class="tab-count">{{ tabCounts.resolved }}</span>
+          {{ 'admin.requests.tabResolved' | translate }} <span class="tab-count">{{ tabCounts.resolved }}</span>
         </button>
         <button class="tab-btn" [class.active]="activeTab === 'rejected'" (click)="setTab('rejected')">
-          Rejected <span class="tab-count">{{ tabCounts.rejected }}</span>
+          {{ 'admin.requests.tabRejected' | translate }} <span class="tab-count">{{ tabCounts.rejected }}</span>
         </button>
       }
     </div>
@@ -49,9 +49,9 @@
     <!-- Category filter -->
     <div class="filters">
       <select [(ngModel)]="filterCategory" (ngModelChange)="load()">
-        <option value="">All Categories</option>
+        <option value="">{{ 'admin.requests.allCategories' | translate }}</option>
         @for (cat of categories; track cat[0]) {
-          <option [value]="cat[0]">{{ cat[1] }}</option>
+          <option [value]="cat[0]">{{ ('category.' + cat[0]) | translate }}</option>
         }
       </select>
     </div>
@@ -59,14 +59,14 @@
     <!-- Bulk bar -->
     @if (bulkMode && selectedIds.size) {
       <div class="bulk-bar">
-        <span>{{ selectedIds.size }} selected</span>
+        <span>{{ 'admin.requests.selected' | translate: { count: selectedIds.size } }}</span>
         <textarea
           [(ngModel)]="bulkResolution"
-          placeholder="Resolution for all selected requests..."
+          [placeholder]="'admin.requests.bulkPlaceholder' | translate"
           rows="2"
         ></textarea>
         <button class="btn btn-primary" [disabled]="actionLoading" (click)="submitBulkResolve()">
-          {{ actionLoading ? 'Resolving...' : 'Resolve Selected' }}
+          {{ (actionLoading ? 'admin.requests.resolvingBtn' : 'admin.requests.resolveSelected') | translate }}
         </button>
       </div>
     }
@@ -78,14 +78,14 @@
           <div>
             <h2>{{ viewRequest.title }}</h2>
             <div class="detail-panel-meta">
-              <span class="category-tag">{{ getCategoryLabel(viewRequest.category) }}</span>
-              <span class="badge" [attr.data-status]="viewRequest.status">{{ getStatusLabel(viewRequest.status) }}</span>
+              <span class="category-tag">{{ ('category.' + viewRequest.category) | translate }}</span>
+              <span class="badge" [attr.data-status]="viewRequest.status">{{ ('status.' + viewRequest.status) | translate }}</span>
               @if (viewRequest.department) {
                 <span class="dept-tag">{{ viewRequest.department.name }}</span>
               }
               <span class="date-tag">{{ viewRequest.created_at | slice:0:10 }}</span>
               @if (viewRequest.profile) {
-                <span class="user-tag">by {{ viewRequest.profile.full_name }}</span>
+                <span class="user-tag">{{ 'admin.requests.detail.by' | translate: { name: viewRequest.profile.full_name } }}</span>
               }
             </div>
           </div>
@@ -93,19 +93,19 @@
         </div>
 
         @if (viewLoading) {
-          <div class="loading-spinner">Loading details...</div>
+          <div class="loading-spinner">{{ 'common.loading' | translate }}</div>
         } @else {
           <div class="detail-panel-body">
             @if (viewRequest.location) {
-              <h3>Location</h3>
+              <h3>{{ 'admin.requests.detail.locationHeading' | translate }}</h3>
               <p>{{ viewRequest.location }}</p>
             }
 
-            <h3>Description</h3>
+            <h3>{{ 'admin.requests.detail.descriptionHeading' | translate }}</h3>
             <p>{{ viewRequest.description }}</p>
 
             @if (viewRequest.photos.length) {
-              <h3>Photos</h3>
+              <h3>{{ 'admin.requests.detail.photosHeading' | translate }}</h3>
               <div class="detail-photos">
                 @for (photo of viewRequest.photos; track photo) {
                   <img [src]="photo" alt="Incident photo" />
@@ -115,7 +115,7 @@
 
             @if (viewRequest.resolution) {
               <div class="resolution-box">
-                <h3>Resolution</h3>
+                <h3>{{ 'admin.requests.detail.resolutionHeading' | translate }}</h3>
                 <p>{{ viewRequest.resolution }}</p>
                 @if (viewRequest.resolution_photo) {
                   <img [src]="viewRequest.resolution_photo" alt="Resolution photo" class="resolution-img" />
@@ -125,14 +125,14 @@
 
             @if (viewRequest.rejection_reason) {
               <div class="rejection-box">
-                <h3>Rejection Reason</h3>
+                <h3>{{ 'admin.requests.detail.rejectionHeading' | translate }}</h3>
                 <p>{{ viewRequest.rejection_reason }}</p>
               </div>
             }
 
             <!-- Timeline -->
             @if (viewEvents.length) {
-              <h3>Activity Timeline</h3>
+              <h3>{{ 'admin.requests.detail.timelineHeading' | translate }}</h3>
               <div class="detail-timeline">
                 @for (event of viewEvents; track event.id) {
                   <div class="timeline-entry">
@@ -140,7 +140,7 @@
                     <div>
                       <strong>
                         @if (event.action === 'approved') {
-                          Admin Approved
+                          {{ 'admin.requests.detail.adminApproved' | translate }}
                         } @else {
                           {{ event.action | titlecase }}
                         }
@@ -150,7 +150,7 @@
                         <p class="timeline-notes">{{ event.notes }}</p>
                       }
                       @if (event.actor && event.action !== 'approved') {
-                        <span class="timeline-actor-sm">by {{ event.actor.full_name }}</span>
+                        <span class="timeline-actor-sm">{{ 'admin.requests.detail.by' | translate: { name: event.actor.full_name } }}</span>
                       }
                     </div>
                   </div>
@@ -162,12 +162,12 @@
           <!-- Action buttons in detail panel -->
           <div class="detail-panel-actions">
             @if (auth.isAdmin() && viewRequest.status === 'pending') {
-              <button class="btn btn-approve-lg" (click)="openModalFromDetail('approve')">Approve</button>
-              <button class="btn btn-reject-lg" (click)="openModalFromDetail('reject')">Reject</button>
+              <button class="btn btn-approve-lg" (click)="openModalFromDetail('approve')">{{ 'common.approve' | translate }}</button>
+              <button class="btn btn-reject-lg" (click)="openModalFromDetail('reject')">{{ 'common.reject' | translate }}</button>
             }
             @if (auth.isDeptAdmin() && (viewRequest.status === 'routed' || viewRequest.status === 'in_progress')) {
-              <button class="btn btn-resolve-lg" (click)="openModalFromDetail('resolve')">Resolve</button>
-              <button class="btn btn-reject-lg" (click)="openModalFromDetail('dept_reject')">Reject</button>
+              <button class="btn btn-resolve-lg" (click)="openModalFromDetail('resolve')">{{ 'common.resolve' | translate }}</button>
+              <button class="btn btn-reject-lg" (click)="openModalFromDetail('dept_reject')">{{ 'common.reject' | translate }}</button>
             }
           </div>
         }
@@ -175,21 +175,21 @@
     }
 
     @if (loading) {
-      <div class="loading-spinner">Loading...</div>
+      <div class="loading-spinner">{{ 'common.loading' | translate }}</div>
     } @else if (!visibleRequests.length) {
-      <div class="empty-state"><p>No requests in this view.</p></div>
+      <div class="empty-state"><p>{{ 'admin.requests.empty' | translate }}</p></div>
     } @else {
-      <p class="table-hint">Click a row to view full details and take action.</p>
+      <p class="table-hint">{{ 'admin.requests.rowHint' | translate }}</p>
       <div class="request-table">
         <table>
           <thead>
             <tr>
               @if (bulkMode) { <th></th> }
-              <th>Title</th>
-              <th>Category</th>
-              <th>Status</th>
-              <th>Submitted</th>
-              <th>Submitted By</th>
+              <th>{{ 'admin.requests.tableTitle' | translate }}</th>
+              <th>{{ 'admin.requests.tableCategory' | translate }}</th>
+              <th>{{ 'admin.requests.tableStatus' | translate }}</th>
+              <th>{{ 'admin.requests.tableSubmitted' | translate }}</th>
+              <th>{{ 'admin.requests.tableSubmittedBy' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -207,8 +207,8 @@
                 <td>
                   <span class="title-text">{{ req.title }}</span>
                 </td>
-                <td><span class="category-tag">{{ getCategoryLabel(req.category) }}</span></td>
-                <td><span class="badge" [attr.data-status]="req.status">{{ getStatusLabel(req.status) }}</span></td>
+                <td><span class="category-tag">{{ ('category.' + req.category) | translate }}</span></td>
+                <td><span class="badge" [attr.data-status]="req.status">{{ ('status.' + req.status) | translate }}</span></td>
                 <td>{{ req.created_at | slice:0:10 }}</td>
                 <td>{{ req.profile?.full_name ?? '—' }}</td>
               </tr>
@@ -223,43 +223,43 @@
       <div class="modal-overlay" (click)="closeModal()">
         <div class="modal" (click)="$event.stopPropagation()">
           <h2>
-            @if (modalMode === 'approve') { Approve Request }
-            @if (modalMode === 'reject') { Reject Request }
-            @if (modalMode === 'resolve') { Resolve Request }
-            @if (modalMode === 'dept_reject') { Reject Request }
+            @if (modalMode === 'approve') { {{ 'admin.requests.modal.approveTitle' | translate }} }
+            @if (modalMode === 'reject') { {{ 'admin.requests.modal.rejectTitle' | translate }} }
+            @if (modalMode === 'resolve') { {{ 'admin.requests.modal.resolveTitle' | translate }} }
+            @if (modalMode === 'dept_reject') { {{ 'admin.requests.modal.deptRejectTitle' | translate }} }
           </h2>
           <p class="modal-subtitle">{{ activeRequest.title }}</p>
 
           @if (modalMode === 'approve') {
             <div class="form-group">
-              <label>Assign to Department *</label>
+              <label>{{ 'admin.requests.modal.assignDeptLabel' | translate }}</label>
               <select [(ngModel)]="selectedDepartment" required>
-                <option value="" disabled>Select department</option>
+                <option value="" disabled>{{ 'admin.requests.modal.selectDept' | translate }}</option>
                 @for (cat of categories; track cat[0]) {
-                  <option [value]="getDepartmentIdBySlug(cat[0])">{{ cat[1] }}</option>
+                  <option [value]="getDepartmentIdBySlug(cat[0])">{{ ('category.' + cat[0]) | translate }}</option>
                 }
               </select>
             </div>
             <div class="form-group">
-              <label>Notes (optional)</label>
-              <textarea [(ngModel)]="actionNotes" rows="3" placeholder="Additional notes..."></textarea>
+              <label>{{ 'admin.requests.modal.notesLabel' | translate }}</label>
+              <textarea [(ngModel)]="actionNotes" rows="3" [placeholder]="'admin.requests.modal.notesPlaceholder' | translate"></textarea>
             </div>
           }
 
           @if (modalMode === 'reject') {
             <div class="form-group">
-              <label>Rejection Reason *</label>
-              <textarea [(ngModel)]="actionNotes" rows="3" placeholder="Explain why this request is being rejected..." required></textarea>
+              <label>{{ 'admin.requests.modal.rejectionReasonLabel' | translate }}</label>
+              <textarea [(ngModel)]="actionNotes" rows="3" [placeholder]="'admin.requests.modal.rejectionReasonPlaceholder' | translate" required></textarea>
             </div>
           }
 
           @if (modalMode === 'resolve') {
             <div class="form-group">
-              <label>Resolution Details *</label>
-              <textarea [(ngModel)]="actionNotes" rows="3" placeholder="Describe how the issue was resolved..." required></textarea>
+              <label>{{ 'admin.requests.modal.resolutionLabel' | translate }}</label>
+              <textarea [(ngModel)]="actionNotes" rows="3" [placeholder]="'admin.requests.modal.resolutionPlaceholder' | translate" required></textarea>
             </div>
             <div class="form-group">
-              <label>Resolution Photo (optional)</label>
+              <label>{{ 'admin.requests.modal.resolutionPhotoLabel' | translate }}</label>
               <input type="file" accept="image/*" (change)="onResolutionPhotoSelect($event)" />
               @if (resolutionPhotoPreview) {
                 <div class="photo-preview-single">
@@ -272,21 +272,21 @@
 
           @if (modalMode === 'dept_reject') {
             <div class="form-group">
-              <label>Rejection Reason *</label>
+              <label>{{ 'admin.requests.modal.rejectionReasonLabel' | translate }}</label>
               <select [(ngModel)]="selectedRejectionReason" required>
-                <option value="" disabled>Select reason</option>
+                <option value="" disabled>{{ 'admin.requests.modal.deptReasonSelect' | translate }}</option>
                 @for (reason of rejectionReasons; track reason.value) {
-                  <option [value]="reason.value">{{ reason.label }}</option>
+                  <option [value]="reason.value">{{ ('rejection.' + reason.value) | translate }}</option>
                 }
               </select>
             </div>
             @if (selectedRejectionReason === 'wrong_department') {
-              <div class="alert alert-info">This request will be sent back to the admin queue for re-routing to the correct department.</div>
+              <div class="alert alert-info">{{ 'admin.requests.modal.wrongDeptInfo' | translate }}</div>
             }
             @if (selectedRejectionReason === 'other') {
               <div class="form-group">
-                <label>Please explain *</label>
-                <textarea [(ngModel)]="rejectionFreeText" rows="3" placeholder="Provide details..." required></textarea>
+                <label>{{ 'admin.requests.modal.explainLabel' | translate }}</label>
+                <textarea [(ngModel)]="rejectionFreeText" rows="3" [placeholder]="'admin.requests.modal.explainPlaceholder' | translate" required></textarea>
               </div>
             }
           }
@@ -296,9 +296,9 @@
           }
 
           <div class="modal-actions">
-            <button class="btn btn-outline" (click)="closeModal()">Cancel</button>
+            <button class="btn btn-outline" (click)="closeModal()">{{ 'common.cancel' | translate }}</button>
             <button class="btn btn-primary" [disabled]="actionLoading" (click)="submitAction()">
-              {{ actionLoading ? 'Processing...' : 'Confirm' }}
+              {{ (actionLoading ? 'common.processing' : 'common.confirm') | translate }}
             </button>
           </div>
         </div>

@@ -1,20 +1,15 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { SlicePipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { RequestService } from '../../../core/services/request.service';
 import { AuthService } from '../../../core/services/auth.service';
-import {
-  ServiceRequest,
-  RequestEvent,
-  CATEGORY_LABELS,
-  STATUS_LABELS,
-  RequestCategory,
-} from '../../../core/models/types';
+import { ServiceRequest, RequestEvent } from '../../../core/models/types';
 
 @Component({
   selector: 'app-request-detail',
   standalone: true,
-  imports: [RouterLink, SlicePipe],
+  imports: [RouterLink, SlicePipe, TranslatePipe],
   templateUrl: './request-detail.component.html',
   styleUrl: './request-detail.component.scss',
 })
@@ -22,9 +17,6 @@ export class RequestDetailComponent implements OnInit {
   request: ServiceRequest | null = null;
   events: RequestEvent[] = [];
   loading = true;
-
-  categoryLabels = CATEGORY_LABELS;
-  statusLabels = STATUS_LABELS;
 
   constructor(
     private route: ActivatedRoute,
@@ -53,25 +45,20 @@ export class RequestDetailComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  getCategoryLabel(cat: string): string {
-    return this.categoryLabels[cat as RequestCategory] ?? cat;
-  }
-
   // Citizens shouldn't see the internal "routed" state (an admin-routed-to-dept
-  // detail). Surface it as "Work In Progress" instead.
-  getStatusLabel(status: string): string {
-    if (status === 'routed') return this.statusLabels.in_progress;
-    return this.statusLabels[status as keyof typeof this.statusLabels] ?? status;
-  }
-
+  // detail). Surface it as "Work In Progress" via 'status.in_progress' key.
   displayStatus(status: string): string {
     return status === 'routed' ? 'in_progress' : status;
   }
 
-  timelineLabel(action: string): string {
-    // Generic label for admin approval — citizens see that their request was
-    // approved without knowing who did it.
-    if (action === 'approved') return 'Admin Approved';
+  // Maps an event action to an i18n key under request.timeline. Unknown
+  // actions fall back to a titlecased version of the raw action.
+  timelineKey(action: string): string {
+    const known = ['approved', 'rejected', 'rerouted', 'resolved'];
+    return known.includes(action) ? `request.timeline.${action}` : '';
+  }
+
+  timelineFallback(action: string): string {
     return action.charAt(0).toUpperCase() + action.slice(1);
   }
 }
