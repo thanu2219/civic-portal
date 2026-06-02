@@ -135,10 +135,15 @@
   flex-wrap: wrap;
 }
 
+.no-actions {
+  color: #bbb;
+  font-size: 0.9rem;
+}
+
 .btn-approve { background: #2e7d32; color: #fff; }
 .btn-reject { background: #c62828; color: #fff; }
 .btn-edit { background: #0f3460; color: #fff; }
-.btn-delete { background: #757575; color: #fff; }
+.btn-delete { background: #c62828; color: #fff; }
 
 .btn-success {
   background: #2e7d32;

@@ -21,7 +21,7 @@
 
     @if (!auth.isAdmin()) {
       <p class="role-hint">
-        You can see posts you created and posts for your department. Submitted posts cannot be edited; rejected ones can be deleted.
+        You can see posts you created and posts for your department. Pending posts can still be edited; rejected ones can be deleted.
       </p>
     } @else {
       <p class="role-hint">
@@ -65,7 +65,7 @@
     } @else if (!visiblePosts.length) {
       <div class="empty-state"><p>No posts in this view.</p></div>
     } @else {
-      <p class="table-hint">Click a row to view full details and take action.</p>
+      <p class="table-hint">Click a row to view full details. Use the action buttons below to edit or delete.</p>
       <div class="news-table">
         <table>
           <thead>
@@ -76,6 +76,7 @@
               <th>Status</th>
               @if (auth.isAdmin()) { <th>Author</th> }
               <th>Date</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -95,6 +96,17 @@
                   <td>{{ post.author?.full_name || '—' }}</td>
                 }
                 <td>{{ post.created_at | slice:0:10 }}</td>
+                <td class="actions-cell" (click)="$event.stopPropagation()">
+                  @if (canEdit(post)) {
+                    <button class="btn-sm btn-edit" (click)="openEditForm(post)">Edit</button>
+                  }
+                  @if (canDelete(post)) {
+                    <button class="btn-sm btn-delete" (click)="deletePost(post)">Delete</button>
+                  }
+                  @if (!canEdit(post) && !canDelete(post)) {
+                    <span class="no-actions">—</span>
+                  }
+                </td>
               </tr>
             }
           </tbody>
@@ -140,11 +152,11 @@
       </div>
     }
 
-    <!-- New post form -->
+    <!-- New / Edit post form -->
     @if (showForm) {
       <div class="modal-overlay" (click)="showForm = false">
         <div class="modal modal-lg" (click)="$event.stopPropagation()">
-          <h2>New Post</h2>
+          <h2>{{ editId ? 'Edit Post' : 'New Post' }}</h2>
 
           @if (formError) {
             <div class="alert alert-error">{{ formError }}</div>
@@ -184,14 +196,33 @@
             <textarea [(ngModel)]="formBody" rows="8" placeholder="Write the full content here..."></textarea>
           </div>
 
-          <div class="form-group">
-            <label>Cover Image (optional)</label>
-            <input type="file" accept="image/*" (change)="onFileSelect($event)" />
+          <div class="form-row">
+            <div class="form-group">
+              <label>Start Date (optional)</label>
+              <input type="datetime-local" [(ngModel)]="formStartDate" />
+              <p class="field-hint">Hide from public until this date.</p>
+            </div>
+            <div class="form-group">
+              <label>End Date (optional)</label>
+              <input type="datetime-local" [(ngModel)]="formEndDate" />
+              <p class="field-hint">Auto-hide from public after this date.</p>
+            </div>
           </div>
 
-          @if (!auth.isAdmin()) {
+          @if (!editId) {
+            <div class="form-group">
+              <label>Cover Image (optional)</label>
+              <input type="file" accept="image/*" (change)="onFileSelect($event)" />
+            </div>
+          }
+
+          @if (editId) {
             <p class="field-hint">
-              Your post will be submitted for admin approval before being published. Once submitted, posts cannot be edited.
+              Editing a pending post. Once approved or rejected, it can no longer be edited.
+            </p>
+          } @else if (!auth.isAdmin()) {
+            <p class="field-hint">
+              Your post will be submitted for admin approval before being published. You can edit it while it is pending.
             </p>
           } @else {
             <p class="field-hint">
@@ -202,7 +233,7 @@
           <div class="modal-actions">
             <button class="btn btn-outline" (click)="showForm = false">Cancel</button>
             <button class="btn btn-primary" [disabled]="formLoading" (click)="submitForm()">
-              {{ formLoading ? 'Saving...' : (auth.isAdmin() ? 'Publish' : 'Submit for Approval') }}
+              {{ formLoading ? 'Saving...' : (editId ? 'Save Changes' : (auth.isAdmin() ? 'Publish' : 'Submit for Approval')) }}
             </button>
           </div>
         </div>

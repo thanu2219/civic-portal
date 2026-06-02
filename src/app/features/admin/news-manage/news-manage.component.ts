@@ -31,11 +31,14 @@ export class NewsManageComponent implements OnInit {
   activeTab: AdminTab | DeptTab = 'pending';
 
   showForm = false;
+  editId: string | null = null;
   formTitle = '';
   formBody = '';
   formType: NewsPostType = 'news';
   formCategory: NewsCategory = 'generic';
   formImage: File | null = null;
+  formStartDate = '';
+  formEndDate = '';
   formLoading = false;
   formError = '';
 
@@ -130,13 +133,53 @@ export class NewsManageComponent implements OnInit {
   }
 
   openNewForm() {
+    this.editId = null;
     this.formTitle = '';
     this.formBody = '';
     this.formType = 'news';
     this.formCategory = this.availableCategories[0]?.[0] ?? 'generic';
     this.formImage = null;
+    this.formStartDate = '';
+    this.formEndDate = '';
     this.formError = '';
     this.showForm = true;
+  }
+
+  openEditForm(post: NewsPost) {
+    this.editId = post.id;
+    this.formTitle = post.title;
+    this.formBody = post.body;
+    this.formType = post.post_type;
+    this.formCategory = post.category;
+    this.formImage = null;
+    this.formStartDate = this.toLocalDatetimeInput(post.start_date);
+    this.formEndDate = this.toLocalDatetimeInput(post.end_date);
+    this.formError = '';
+    this.showForm = true;
+  }
+
+  private toLocalDatetimeInput(value: string | null): string {
+    if (!value) return '';
+    const d = new Date(value);
+    const tz = d.getTimezoneOffset() * 60000;
+    return new Date(d.getTime() - tz).toISOString().slice(0, 16);
+  }
+
+  private datetimeInputToIso(value: string): string | null {
+    if (!value) return null;
+    return new Date(value).toISOString();
+  }
+
+  canEdit(post: NewsPost): boolean {
+    if (this.auth.isAdmin()) return false;
+    if (post.status !== 'pending') return false;
+    const me = this.auth.profile();
+    if (!me) return false;
+    return post.author_id === me.id || this.myDeptSlugs.includes(post.category);
+  }
+
+  canDelete(post: NewsPost): boolean {
+    return post.status === 'rejected';
   }
 
   onFileSelect(event: Event) {
@@ -161,20 +204,41 @@ export class NewsManageComponent implements OnInit {
       return;
     }
 
+    const startIso = this.datetimeInputToIso(this.formStartDate);
+    const endIso = this.datetimeInputToIso(this.formEndDate);
+
+    if (startIso && endIso && new Date(endIso) <= new Date(startIso)) {
+      this.formError = 'End date must be after start date.';
+      return;
+    }
+
     this.formLoading = true;
     this.formError = '';
     this.cdr.detectChanges();
 
     try {
-      await this.newsService.createPost(
-        {
+      if (this.editId) {
+        await this.newsService.updateContent(this.editId, {
           title: this.formTitle,
           body: this.formBody,
           post_type: this.formType,
           category: this.formCategory,
-        },
-        this.formImage ?? undefined
-      );
+          start_date: startIso,
+          end_date: endIso,
+        });
+      } else {
+        await this.newsService.createPost(
+          {
+            title: this.formTitle,
+            body: this.formBody,
+            post_type: this.formType,
+            category: this.formCategory,
+            start_date: startIso,
+            end_date: endIso,
+          },
+          this.formImage ?? undefined
+        );
+      }
       this.showForm = false;
       await this.load();
     } catch (err: any) {

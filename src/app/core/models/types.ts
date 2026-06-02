@@ -130,6 +130,8 @@ export interface NewsPost {
   rejection_reason: string | null;
   approved_by: string | null;
   approved_at: string | null;
+  start_date: string | null;
+  end_date: string | null;
   created_at: string;
   updated_at: string;
   author?: Profile;

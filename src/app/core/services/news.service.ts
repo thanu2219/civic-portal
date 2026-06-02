@@ -13,6 +13,17 @@ export interface CreateNewsPayload {
   body: string;
   post_type: NewsPostType;
   category: NewsCategory;
+  start_date?: string | null;
+  end_date?: string | null;
+}
+
+export interface UpdateNewsPayload {
+  title?: string;
+  body?: string;
+  post_type?: NewsPostType;
+  category?: NewsCategory;
+  start_date?: string | null;
+  end_date?: string | null;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -36,18 +47,22 @@ export class NewsService {
   }
 
   async getPosts(limit?: number): Promise<NewsPost[]> {
-    let query = this.db
+    const { data, error } = await this.db
       .from('news_posts')
       .select('*')
       .eq('status', 'approved')
       .order('created_at', { ascending: false });
 
-    if (limit) query = query.limit(limit);
-
-    const { data, error } = await query;
     if (error) throw error;
 
-    const posts = (data ?? []) as NewsPost[];
+    const now = Date.now();
+    const inWindow = (data ?? []).filter((p: any) => {
+      if (p.start_date && new Date(p.start_date).getTime() > now) return false;
+      if (p.end_date && new Date(p.end_date).getTime() < now) return false;
+      return true;
+    }) as NewsPost[];
+
+    const posts = limit ? inWindow.slice(0, limit) : inWindow;
     await this.attachAuthors(posts);
     return posts;
   }
@@ -160,8 +175,26 @@ export class NewsService {
       approved_by: isAdmin ? user.id : null,
       approved_at: isAdmin ? new Date().toISOString() : null,
       rejection_reason: null,
+      start_date: payload.start_date ?? null,
+      end_date: payload.end_date ?? null,
     });
 
+    if (error) throw error;
+  }
+
+  async updateContent(id: string, payload: UpdateNewsPayload): Promise<void> {
+    const updates: any = { updated_at: new Date().toISOString() };
+    if (payload.title !== undefined) updates.title = payload.title;
+    if (payload.body !== undefined) updates.body = payload.body;
+    if (payload.post_type !== undefined) updates.post_type = payload.post_type;
+    if (payload.category !== undefined) updates.category = payload.category;
+    if (payload.start_date !== undefined) updates.start_date = payload.start_date;
+    if (payload.end_date !== undefined) updates.end_date = payload.end_date;
+
+    const { error } = await this.db
+      .from('news_posts')
+      .update(updates)
+      .eq('id', id);
     if (error) throw error;
   }
 
