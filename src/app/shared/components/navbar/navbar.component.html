@@ -13,8 +13,17 @@
       <div class="nav-tabs">
         <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="menuOpen=false">{{ 'navbar.home' | translate }}</a>
         <a routerLink="/news" routerLinkActive="active" (click)="menuOpen=false">{{ 'navbar.news' | translate }}</a>
-        <a routerLink="/requests" routerLinkActive="active" (click)="menuOpen=false">{{ 'navbar.myRequests' | translate }}</a>
-        <a routerLink="/requests/new" routerLinkActive="active" (click)="menuOpen=false" class="btn-report">{{ 'navbar.reportIssue' | translate }}</a>
+        <a
+          [routerLink]="auth.isLoggedIn() ? '/requests' : '/register'"
+          [routerLinkActive]="auth.isLoggedIn() ? 'active' : ''"
+          (click)="menuOpen=false"
+        >{{ 'navbar.myRequests' | translate }}</a>
+        <a
+          [routerLink]="auth.isLoggedIn() ? '/requests/new' : '/register'"
+          [routerLinkActive]="auth.isLoggedIn() ? 'active' : ''"
+          (click)="menuOpen=false"
+          class="btn-report"
+        >{{ 'navbar.reportIssue' | translate }}</a>
         <a
           routerLink="/admin"
           routerLinkActive="active"
