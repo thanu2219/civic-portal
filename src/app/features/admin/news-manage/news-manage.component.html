@@ -262,18 +262,16 @@
             </div>
           }
 
-          @if (editId) {
-            <p class="field-hint">
-              Editing a pending post. Once approved or rejected, it can no longer be edited.
-            </p>
-          } @else if (!auth.isAdmin()) {
-            <p class="field-hint">
-              Your post will be submitted for admin approval before being published. You can edit it while it is pending.
-            </p>
-          } @else {
-            <p class="field-hint">
-              Posts cannot be edited after creation.
-            </p>
+          @if (!editId) {
+            @if (!auth.isAdmin()) {
+              <p class="field-hint">
+                Your post will be submitted for admin approval before being published. You can edit it while it is pending.
+              </p>
+            } @else {
+              <p class="field-hint">
+                Posts cannot be edited after creation.
+              </p>
+            }
           }
 
           <div class="modal-actions">
