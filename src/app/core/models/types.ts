@@ -40,6 +40,30 @@ export const DEPT_REJECTION_REASONS = [
   { value: 'other', label: 'Other', reroutes: false },
 ] as const;
 
+// Slug values that are safe to translate via the i18n 'rejection.*' namespace.
+// Legacy rows may contain free-text or English labels; in that case we fall
+// back to displaying the stored value verbatim.
+const REJECTION_SLUGS = new Set<string>(
+  DEPT_REJECTION_REASONS.filter(r => r.value !== 'other').map(r => r.value)
+);
+
+const LEGACY_LABEL_TO_SLUG: Record<string, string> = DEPT_REJECTION_REASONS
+  .filter(r => r.value !== 'other')
+  .reduce((acc, r) => { acc[r.label] = r.value; return acc; }, {} as Record<string, string>);
+
+/**
+ * Maps a stored rejection_reason value to an i18n key (or null if it should be
+ * displayed as raw free text). Handles both new slug-based values and legacy
+ * English label values from before the migration to slugs.
+ */
+export function rejectionReasonI18nKey(value: string | null | undefined): string | null {
+  if (!value) return null;
+  if (REJECTION_SLUGS.has(value)) return `rejection.${value}`;
+  const legacySlug = LEGACY_LABEL_TO_SLUG[value.trim()];
+  if (legacySlug) return `rejection.${legacySlug}`;
+  return null;
+}
+
 export interface Profile {
   id: string;
   email: string;

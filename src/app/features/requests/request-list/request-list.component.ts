@@ -1,7 +1,7 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { SlicePipe } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { RequestService } from '../../../core/services/request.service';
 import { ServiceRequest } from '../../../core/models/types';
 
@@ -16,6 +16,8 @@ export class RequestListComponent implements OnInit {
   requests: ServiceRequest[] = [];
   loading = true;
   error = '';
+
+  private translate = inject(TranslateService);
 
   constructor(
     private requestService: RequestService,
@@ -35,7 +37,7 @@ export class RequestListComponent implements OnInit {
       this.requests = await this.requestService.getMyRequests();
     } catch (err: any) {
       console.error('Failed to load requests:', err);
-      this.error = err.message || 'Failed to load requests.';
+      this.error = err.message || this.translate.instant('request.list.loadFailed');
     }
 
     this.loading = false;

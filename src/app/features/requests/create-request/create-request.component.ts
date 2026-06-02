@@ -1,7 +1,7 @@
-import { Component, ChangeDetectorRef, NgZone } from '@angular/core';
+import { Component, ChangeDetectorRef, NgZone, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { RequestService } from '../../../core/services/request.service';
 import { CATEGORY_LABELS, RequestCategory } from '../../../core/models/types';
 
@@ -23,6 +23,7 @@ export class CreateRequestComponent {
   error = '';
 
   categories = Object.entries(CATEGORY_LABELS) as [RequestCategory, string][];
+  private translate = inject(TranslateService);
 
   constructor(
     private requestService: RequestService,
@@ -31,19 +32,23 @@ export class CreateRequestComponent {
     private zone: NgZone
   ) {}
 
+  private t(key: string, params?: Record<string, unknown>): string {
+    return this.translate.instant(key, params);
+  }
+
   onFileSelect(event: Event) {
     const input = event.target as HTMLInputElement;
     if (!input.files) return;
 
     const newFiles = Array.from(input.files);
     if (this.photos.length + newFiles.length > 5) {
-      this.error = 'Maximum 5 photos allowed.';
+      this.error = this.t('request.create.errors.tooManyPhotos');
       return;
     }
 
     for (const file of newFiles) {
       if (file.size > 5 * 1024 * 1024) {
-        this.error = `File "${file.name}" exceeds 5 MB limit.`;
+        this.error = this.t('request.create.errors.photoTooLarge', { name: file.name });
         return;
       }
     }
@@ -69,7 +74,7 @@ export class CreateRequestComponent {
 
   async onSubmit() {
     if (!this.title || !this.description || !this.category || !this.location.trim()) {
-      this.error = 'Please fill in all required fields.';
+      this.error = this.t('request.create.errors.fillRequired');
       return;
     }
 
@@ -91,7 +96,7 @@ export class CreateRequestComponent {
     } catch (err: any) {
       console.error('Request submission failed:', err);
       this.zone.run(() => {
-        this.error = err.message || err.error_description || 'Failed to submit request. Please try again.';
+        this.error = err.message || err.error_description || this.t('request.create.errors.submitFailed');
         this.loading = false;
         this.cdr.detectChanges();
       });

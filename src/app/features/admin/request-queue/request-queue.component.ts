@@ -1,8 +1,8 @@
-import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, NgZone, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SlicePipe, TitleCasePipe } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { RequestService } from '../../../core/services/request.service';
 import { DepartmentService } from '../../../core/services/department.service';
 import { AuthService } from '../../../core/services/auth.service';
@@ -15,6 +15,7 @@ import {
   CATEGORY_LABELS,
   STATUS_LABELS,
   DEPT_REJECTION_REASONS,
+  rejectionReasonI18nKey,
 } from '../../../core/models/types';
 
 @Component({
@@ -63,6 +64,8 @@ export class RequestQueueComponent implements OnInit {
   bulkMode = false;
   bulkResolution = '';
 
+  private translate = inject(TranslateService);
+
   constructor(
     private requestService: RequestService,
     private departmentService: DepartmentService,
@@ -70,6 +73,10 @@ export class RequestQueueComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private zone: NgZone
   ) {}
+
+  private t(key: string, params?: Record<string, unknown>): string {
+    return this.translate.instant(key, params);
+  }
 
   ngOnInit() {
     this.load();
@@ -186,7 +193,7 @@ export class RequestQueueComponent implements OnInit {
 
     const file = input.files[0];
     if (file.size > 5 * 1024 * 1024) {
-      this.actionError = 'Photo must be under 5 MB.';
+      this.actionError = this.t('admin.requests.modal.photoTooLarge');
       return;
     }
 
@@ -210,29 +217,43 @@ export class RequestQueueComponent implements OnInit {
     return this.rejectionReasons.find(r => r.value === this.selectedRejectionReason);
   }
 
+  // Returns the i18n key for a known rejection slug, or null if the value is
+  // free text and should be displayed verbatim.
+  rejectionI18nKey(value: string | null | undefined): string | null {
+    return rejectionReasonI18nKey(value);
+  }
+
+  // Maps an event action to an i18n key under request.timeline. Unknown action
+  // values fall back to a raw titlecased label via the | titlecase pipe in the
+  // template.
+  timelineKey(action: string): string {
+    const known = ['approved', 'rejected', 'rerouted', 'resolved', 'submitted', 'created', 'routed'];
+    return known.includes(action) ? `request.timeline.${action}` : '';
+  }
+
   async submitAction() {
     if (!this.activeRequest || !this.modalMode) return;
     this.actionError = '';
 
     if (this.modalMode === 'approve' && !this.selectedDepartment) {
-      this.actionError = 'Please select a department.';
+      this.actionError = this.t('admin.requests.modal.missingDept');
       return;
     }
     if (this.modalMode === 'reject' && !this.actionNotes.trim()) {
-      this.actionError = 'Please provide a rejection reason.';
+      this.actionError = this.t('admin.requests.modal.missingRejectionReason');
       return;
     }
     if (this.modalMode === 'resolve' && !this.actionNotes.trim()) {
-      this.actionError = 'Please provide resolution details.';
+      this.actionError = this.t('admin.requests.modal.missingResolution');
       return;
     }
     if (this.modalMode === 'dept_reject') {
       if (!this.selectedRejectionReason) {
-        this.actionError = 'Please select a rejection reason.';
+        this.actionError = this.t('admin.requests.modal.missingPresetReason');
         return;
       }
       if (this.selectedRejectionReason === 'other' && !this.rejectionFreeText.trim()) {
-        this.actionError = 'Please provide a rejection reason.';
+        this.actionError = this.t('admin.requests.modal.missingRejectionReason');
         return;
       }
     }
@@ -255,9 +276,12 @@ export class RequestQueueComponent implements OnInit {
           this.resolutionPhoto ?? undefined
         );
       } else if (this.modalMode === 'dept_reject') {
+        // Persist the slug (e.g. 'wrong_department') for preset reasons so the
+        // value can be translated at display time. Free-text ('other') is
+        // stored verbatim and rendered as-is by the display helpers.
         const reason = this.selectedRejectionReason === 'other'
           ? this.rejectionFreeText
-          : this.selectedReasonConfig?.label ?? this.selectedRejectionReason;
+          : this.selectedRejectionReason;
 
         if (this.selectedReasonConfig?.reroutes) {
           await this.requestService.rerouteRequest(this.activeRequest.id, reason);
@@ -281,7 +305,7 @@ export class RequestQueueComponent implements OnInit {
       }
     } catch (err: any) {
       console.error('Action failed:', err);
-      this.actionError = err.message || 'Action failed. Please try again.';
+      this.actionError = err.message || this.t('admin.requests.modal.actionFailed');
     }
 
     this.actionLoading = false;

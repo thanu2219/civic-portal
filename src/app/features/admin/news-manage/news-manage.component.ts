@@ -1,8 +1,8 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SlicePipe } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   NewsService,
   getScheduleState,
@@ -69,6 +69,7 @@ export class NewsManageComponent implements OnInit {
   }
 
   myDeptSlugs: string[] = [];
+  private translate = inject(TranslateService);
 
   constructor(
     private newsService: NewsService,
@@ -76,6 +77,10 @@ export class NewsManageComponent implements OnInit {
     public auth: AuthService,
     private cdr: ChangeDetectorRef
   ) {}
+
+  private t(key: string, params?: Record<string, unknown>): string {
+    return this.translate.instant(key, params);
+  }
 
   ngOnInit() {
     this.activeTab = this.auth.isAdmin() ? 'pending' : 'mine';
@@ -277,7 +282,7 @@ export class NewsManageComponent implements OnInit {
       this.showForm = false;
       await this.load();
     } catch (err: any) {
-      this.formError = err.message || 'Failed to save.';
+      this.formError = err.message || this.t('admin.news.form.saveFailed');
     }
 
     this.formLoading = false;
@@ -289,7 +294,7 @@ export class NewsManageComponent implements OnInit {
       await this.newsService.approvePost(post.id);
       await this.load();
     } catch (err: any) {
-      alert(err.message || 'Failed to approve.');
+      alert(err.message || this.t('alerts.failedApprove'));
     }
   }
 
@@ -308,7 +313,7 @@ export class NewsManageComponent implements OnInit {
   async confirmReject() {
     if (!this.rejectTarget) return;
     if (!this.rejectReason.trim()) {
-      this.rejectError = 'Please provide a reason for rejection.';
+      this.rejectError = this.t('admin.news.reject.missingReason');
       return;
     }
     this.rejectLoading = true;
@@ -319,19 +324,19 @@ export class NewsManageComponent implements OnInit {
       this.rejectReason = '';
       await this.load();
     } catch (err: any) {
-      this.rejectError = err.message || 'Failed to reject.';
+      this.rejectError = err.message || this.t('admin.news.reject.failed');
     }
     this.rejectLoading = false;
     this.cdr.detectChanges();
   }
 
   async deletePost(post: NewsPost) {
-    if (!confirm(`Delete "${post.title}"?`)) return;
+    if (!confirm(this.t('admin.news.confirmDelete', { title: post.title }))) return;
     try {
       await this.newsService.deletePost(post.id);
       await this.load();
     } catch (err: any) {
-      alert(err.message || 'Failed to delete.');
+      alert(err.message || this.t('alerts.failedDelete'));
     }
   }
 

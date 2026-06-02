@@ -85,7 +85,11 @@
       "signingIn": "Signing in...",
       "signIn": "Sign In",
       "noAccount": "Don't have an account?",
-      "registerHere": "Register here"
+      "registerHere": "Register here",
+      "errors": {
+        "fillFields": "Please fill in all fields.",
+        "signInFailed": "Sign in failed. Please try again."
+      }
     },
     "reset": {
       "title": "Reset Password",
@@ -100,7 +104,17 @@
       "confirmNewLabel": "Confirm New Password",
       "confirmNewPlaceholder": "Re-enter your new password",
       "updateBtn": "Update Password",
-      "goToSignIn": "Go to Sign In"
+      "goToSignIn": "Go to Sign In",
+      "errors": {
+        "missingEmail": "Please enter your email address above.",
+        "missingPasswords": "Please fill in both password fields.",
+        "shortPassword": "Password must be at least 6 characters.",
+        "mismatch": "Passwords do not match.",
+        "sendFailed": "Failed to send reset email. Please try again.",
+        "updateFailed": "Failed to update password. Please try again."
+      },
+      "linkSent": "Password reset link sent! Check your email.",
+      "updatedSuccess": "Password updated successfully! You can now sign in."
     },
     "register": {
       "title": "Create Account",
@@ -118,7 +132,15 @@
       "creatingBtn": "Creating account...",
       "createBtn": "Create Account",
       "haveAccount": "Already have an account?",
-      "signInHere": "Sign in here"
+      "signInHere": "Sign in here",
+      "errors": {
+        "fillFields": "Please fill in all fields.",
+        "mismatch": "Passwords do not match.",
+        "shortPassword": "Password must be at least 6 characters.",
+        "duplicate": "An account with this email already exists.",
+        "failed": "Registration failed. Please try again."
+      },
+      "successMessage": "Account created successfully! Please check your email for a confirmation link. After confirming, you can sign in."
     }
   },
   "request": {
@@ -127,7 +149,8 @@
       "newBtn": "Report New Issue",
       "emptyTitle": "You haven't submitted any requests yet.",
       "emptyBtn": "Report Your First Issue",
-      "deptLabel": "Dept"
+      "deptLabel": "Dept",
+      "loadFailed": "Failed to load requests."
     },
     "create": {
       "title": "Report an Issue",
@@ -143,7 +166,13 @@
       "photosLabel": "Photos (max 5, up to 5 MB each)",
       "photosCta": "Click to upload photos",
       "submittingBtn": "Submitting...",
-      "submitBtn": "Submit Report"
+      "submitBtn": "Submit Report",
+      "errors": {
+        "tooManyPhotos": "Maximum 5 photos allowed.",
+        "photoTooLarge": "File \"{{name}}\" exceeds 5 MB limit.",
+        "fillRequired": "Please fill in all required fields.",
+        "submitFailed": "Failed to submit request. Please try again."
+      }
     },
     "detail": {
       "backLink": "← Back to My Requests",
@@ -161,7 +190,10 @@
       "approved": "Admin Approved",
       "rejected": "Rejected",
       "rerouted": "Rerouted",
-      "resolved": "Resolved"
+      "resolved": "Resolved",
+      "submitted": "Submitted",
+      "created": "Created",
+      "routed": "Routed"
     }
   },
   "news": {
@@ -258,7 +290,13 @@
         "deptReasonSelect": "Select reason",
         "wrongDeptInfo": "This request will be sent back to the admin queue for re-routing to the correct department.",
         "explainLabel": "Please explain *",
-        "explainPlaceholder": "Provide details..."
+        "explainPlaceholder": "Provide details...",
+        "actionFailed": "Action failed. Please try again.",
+        "photoTooLarge": "Photo must be under 5 MB.",
+        "missingDept": "Please select a department.",
+        "missingRejectionReason": "Please provide a rejection reason.",
+        "missingResolution": "Please provide resolution details.",
+        "missingPresetReason": "Please select a rejection reason."
       }
     },
     "news": {
@@ -310,15 +348,19 @@
         "adminCreateHint": "Posts cannot be edited after creation.",
         "publishBtn": "Publish",
         "submitForApprovalBtn": "Submit for Approval",
-        "savingBtn": "Saving..."
+        "savingBtn": "Saving...",
+        "saveFailed": "Failed to save."
       },
       "reject": {
         "title": "Reject Post",
         "reasonLabel": "Reason *",
         "reasonPlaceholder": "Explain why this post is being rejected...",
         "rejectingBtn": "Rejecting...",
-        "rejectionReasonHeading": "Rejection reason:"
-      }
+        "rejectionReasonHeading": "Rejection reason:",
+        "missingReason": "Please provide a reason for rejection.",
+        "failed": "Failed to reject."
+      },
+      "confirmDelete": "Delete \"{{title}}\"?"
     },
     "users": {
       "title": "Manage Users",
@@ -347,13 +389,20 @@
         "deptLabel": "Department *",
         "selectDept": "Select department",
         "noDepts": "No departments found in database. Make sure your departments table is seeded.",
-        "deptHint": "Department admin will only see requests for this department."
+        "deptHint": "Department admin will only see requests for this department.",
+        "missingDept": "Please select a department for dept admin.",
+        "saveFailed": "Failed to save user."
       },
       "delete": {
         "title": "Delete User",
-        "confirm": "Are you sure you want to delete <strong>{{name}}</strong>? This action cannot be undone."
+        "confirm": "Are you sure you want to delete <strong>{{name}}</strong>? This action cannot be undone.",
+        "failed": "Failed to delete user."
       }
     }
+  },
+  "alerts": {
+    "failedApprove": "Failed to approve.",
+    "failedDelete": "Failed to delete."
   },
   "status": {
     "pending": "Pending",
@@ -361,7 +410,8 @@
     "in_progress": "Work In Progress",
     "completed": "Completed",
     "rejected": "Rejected",
-    "closed": "Closed"
+    "closed": "Closed",
+    "approved": "Approved"
   },
   "category": {
     "electricity": "Electricity",

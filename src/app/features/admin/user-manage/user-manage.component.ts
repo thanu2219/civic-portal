@@ -1,7 +1,7 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { UserService } from '../../../core/services/user.service';
 import { DepartmentService } from '../../../core/services/department.service';
 import { AuthService } from '../../../core/services/auth.service';
@@ -49,12 +49,18 @@ export class UserManageComponent implements OnInit {
   deleteTarget: UserWithDept | null = null;
   deleteLoading = false;
 
+  private translate = inject(TranslateService);
+
   constructor(
     private userService: UserService,
     private departmentService: DepartmentService,
     public auth: AuthService,
     private cdr: ChangeDetectorRef
   ) {}
+
+  private t(key: string): string {
+    return this.translate.instant(key);
+  }
 
   ngOnInit() {
     this.load();
@@ -141,7 +147,7 @@ export class UserManageComponent implements OnInit {
     this.actionError = '';
 
     if (this.selectedRole === 'dept_admin' && !this.selectedDept) {
-      this.actionError = 'Please select a department for dept admin.';
+      this.actionError = this.t('admin.users.edit.missingDept');
       return;
     }
 
@@ -173,7 +179,7 @@ export class UserManageComponent implements OnInit {
       await this.load();
     } catch (err: any) {
       console.error('Save user failed:', err);
-      this.actionError = err.message || 'Failed to save user.';
+      this.actionError = err.message || this.t('admin.users.edit.saveFailed');
     }
 
     this.actionLoading = false;
@@ -202,7 +208,7 @@ export class UserManageComponent implements OnInit {
       await this.load();
     } catch (err: any) {
       console.error('Delete user failed:', err);
-      alert(err.message || 'Failed to delete user.');
+      alert(err.message || this.t('admin.users.delete.failed'));
     }
 
     this.deleteLoading = false;

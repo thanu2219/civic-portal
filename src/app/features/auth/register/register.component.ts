@@ -1,7 +1,7 @@
-import { Component, ChangeDetectorRef, NgZone } from '@angular/core';
+import { Component, ChangeDetectorRef, NgZone, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
@@ -21,6 +21,8 @@ export class RegisterComponent {
   success = '';
   registered = false;
 
+  private translate = inject(TranslateService);
+
   constructor(
     private auth: AuthService,
     private router: Router,
@@ -28,22 +30,26 @@ export class RegisterComponent {
     private zone: NgZone
   ) {}
 
+  private t(key: string): string {
+    return this.translate.instant(key);
+  }
+
   async onSubmit() {
     this.error = '';
     this.success = '';
 
     if (!this.fullName || !this.email || !this.password) {
-      this.error = 'Please fill in all fields.';
+      this.error = this.t('auth.register.errors.fillFields');
       return;
     }
 
     if (this.password !== this.confirmPassword) {
-      this.error = 'Passwords do not match.';
+      this.error = this.t('auth.register.errors.mismatch');
       return;
     }
 
     if (this.password.length < 6) {
-      this.error = 'Password must be at least 6 characters.';
+      this.error = this.t('auth.register.errors.shortPassword');
       return;
     }
 
@@ -55,19 +61,19 @@ export class RegisterComponent {
 
       this.zone.run(() => {
         if (result.user?.identities?.length === 0) {
-          this.error = 'An account with this email already exists.';
+          this.error = this.t('auth.register.errors.duplicate');
         } else if (result.session) {
           this.router.navigate(['/']);
         } else {
           this.registered = true;
-          this.success = 'Account created successfully! Please check your email for a confirmation link. After confirming, you can sign in.';
+          this.success = this.t('auth.register.successMessage');
         }
         this.loading = false;
         this.cdr.detectChanges();
       });
     } catch (err: any) {
       this.zone.run(() => {
-        this.error = err.message || 'Registration failed. Please try again.';
+        this.error = err.message || this.t('auth.register.errors.failed');
         this.loading = false;
         this.cdr.detectChanges();
       });

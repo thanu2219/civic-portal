@@ -59,7 +59,11 @@
         @if (request.rejection_reason) {
           <div class="rejection-box">
             <h3>{{ 'request.detail.rejectionHeading' | translate }}</h3>
-            <p>{{ request.rejection_reason }}</p>
+            @if (rejectionI18nKey(request.rejection_reason); as key) {
+              <p>{{ key | translate }}</p>
+            } @else {
+              <p>{{ request.rejection_reason }}</p>
+            }
           </div>
         }
       </div>
@@ -76,8 +80,8 @@
               <div class="timeline-content">
                 <div class="timeline-header">
                   <strong>
-                    @if (timelineKey(event.action)) {
-                      {{ timelineKey(event.action) | translate }}
+                    @if (timelineKey(event.action); as tk) {
+                      {{ tk | translate }}
                     } @else {
                       {{ timelineFallback(event.action) }}
                     }
@@ -85,7 +89,11 @@
                   <span class="timeline-date">{{ event.created_at | slice:0:16 }}</span>
                 </div>
                 @if (event.notes) {
-                  <p>{{ event.notes }}</p>
+                  @if (rejectionI18nKey(event.notes); as nk) {
+                    <p>{{ nk | translate }}</p>
+                  } @else {
+                    <p>{{ event.notes }}</p>
+                  }
                 }
               </div>
             </div>

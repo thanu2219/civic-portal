@@ -1,7 +1,7 @@
-import { Component, ChangeDetectorRef, NgZone } from '@angular/core';
+import { Component, ChangeDetectorRef, NgZone, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
@@ -21,6 +21,8 @@ export class LoginComponent {
   resetMode = false;
   resetSuccess = '';
 
+  private translate = inject(TranslateService);
+
   constructor(
     public auth: AuthService,
     private router: Router,
@@ -28,9 +30,13 @@ export class LoginComponent {
     private zone: NgZone
   ) {}
 
+  private t(key: string): string {
+    return this.translate.instant(key);
+  }
+
   async onSubmit() {
     if (!this.email || !this.password) {
-      this.error = 'Please fill in all fields.';
+      this.error = this.t('auth.login.errors.fillFields');
       return;
     }
 
@@ -45,7 +51,7 @@ export class LoginComponent {
       });
     } catch (err: any) {
       this.zone.run(() => {
-        this.error = err.message || 'Sign in failed. Please try again.';
+        this.error = err.message || this.t('auth.login.errors.signInFailed');
         this.loading = false;
         this.cdr.detectChanges();
       });
@@ -54,7 +60,7 @@ export class LoginComponent {
 
   async onResetPassword() {
     if (!this.email) {
-      this.error = 'Please enter your email address above.';
+      this.error = this.t('auth.reset.errors.missingEmail');
       return;
     }
 
@@ -66,13 +72,13 @@ export class LoginComponent {
     try {
       await this.auth.resetPassword(this.email);
       this.zone.run(() => {
-        this.resetSuccess = 'Password reset link sent! Check your email.';
+        this.resetSuccess = this.t('auth.reset.linkSent');
         this.loading = false;
         this.cdr.detectChanges();
       });
     } catch (err: any) {
       this.zone.run(() => {
-        this.error = err.message || 'Failed to send reset email. Please try again.';
+        this.error = err.message || this.t('auth.reset.errors.sendFailed');
         this.loading = false;
         this.cdr.detectChanges();
       });
@@ -81,15 +87,15 @@ export class LoginComponent {
 
   async onUpdatePassword() {
     if (!this.newPassword || !this.confirmNewPassword) {
-      this.error = 'Please fill in both password fields.';
+      this.error = this.t('auth.reset.errors.missingPasswords');
       return;
     }
     if (this.newPassword.length < 6) {
-      this.error = 'Password must be at least 6 characters.';
+      this.error = this.t('auth.reset.errors.shortPassword');
       return;
     }
     if (this.newPassword !== this.confirmNewPassword) {
-      this.error = 'Passwords do not match.';
+      this.error = this.t('auth.reset.errors.mismatch');
       return;
     }
 
@@ -101,13 +107,13 @@ export class LoginComponent {
     try {
       await this.auth.updatePassword(this.newPassword);
       this.zone.run(() => {
-        this.resetSuccess = 'Password updated successfully! You can now sign in.';
+        this.resetSuccess = this.t('auth.reset.updatedSuccess');
         this.loading = false;
         this.cdr.detectChanges();
       });
     } catch (err: any) {
       this.zone.run(() => {
-        this.error = err.message || 'Failed to update password. Please try again.';
+        this.error = err.message || this.t('auth.reset.errors.updateFailed');
         this.loading = false;
         this.cdr.detectChanges();
       });

@@ -126,7 +126,11 @@
             @if (viewRequest.rejection_reason) {
               <div class="rejection-box">
                 <h3>{{ 'admin.requests.detail.rejectionHeading' | translate }}</h3>
-                <p>{{ viewRequest.rejection_reason }}</p>
+                @if (rejectionI18nKey(viewRequest.rejection_reason); as key) {
+                  <p>{{ key | translate }}</p>
+                } @else {
+                  <p>{{ viewRequest.rejection_reason }}</p>
+                }
               </div>
             }
 
@@ -141,13 +145,19 @@
                       <strong>
                         @if (event.action === 'approved') {
                           {{ 'admin.requests.detail.adminApproved' | translate }}
+                        } @else if (timelineKey(event.action); as tk) {
+                          {{ tk | translate }}
                         } @else {
                           {{ event.action | titlecase }}
                         }
                       </strong>
                       <span class="timeline-date-sm">{{ event.created_at | slice:0:16 }}</span>
                       @if (event.notes) {
-                        <p class="timeline-notes">{{ event.notes }}</p>
+                        @if (rejectionI18nKey(event.notes); as nk) {
+                          <p class="timeline-notes">{{ nk | translate }}</p>
+                        } @else {
+                          <p class="timeline-notes">{{ event.notes }}</p>
+                        }
                       }
                       @if (event.actor && event.action !== 'approved') {
                         <span class="timeline-actor-sm">{{ 'admin.requests.detail.by' | translate: { name: event.actor.full_name } }}</span>

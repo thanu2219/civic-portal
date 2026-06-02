@@ -4,7 +4,7 @@ import { SlicePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { RequestService } from '../../../core/services/request.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { ServiceRequest, RequestEvent } from '../../../core/models/types';
+import { ServiceRequest, RequestEvent, rejectionReasonI18nKey } from '../../../core/models/types';
 
 @Component({
   selector: 'app-request-detail',
@@ -54,11 +54,15 @@ export class RequestDetailComponent implements OnInit {
   // Maps an event action to an i18n key under request.timeline. Unknown
   // actions fall back to a titlecased version of the raw action.
   timelineKey(action: string): string {
-    const known = ['approved', 'rejected', 'rerouted', 'resolved'];
+    const known = ['approved', 'rejected', 'rerouted', 'resolved', 'submitted', 'created', 'routed'];
     return known.includes(action) ? `request.timeline.${action}` : '';
   }
 
   timelineFallback(action: string): string {
     return action.charAt(0).toUpperCase() + action.slice(1);
+  }
+
+  rejectionI18nKey(value: string | null | undefined): string | null {
+    return rejectionReasonI18nKey(value);
   }
 }
