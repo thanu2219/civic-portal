@@ -20,7 +20,7 @@
       @for (req of requests; track req.id) {
         <a [routerLink]="['/requests', req.id]" class="request-card">
           <div class="request-card-header">
-            <span class="badge" [attr.data-status]="req.status">{{ getStatusLabel(req.status) }}</span>
+            <span class="badge" [attr.data-status]="displayStatus(req.status)">{{ getStatusLabel(req.status) }}</span>
             <span class="category-tag">{{ getCategoryLabel(req.category) }}</span>
           </div>
           <h3>{{ req.title }}</h3>

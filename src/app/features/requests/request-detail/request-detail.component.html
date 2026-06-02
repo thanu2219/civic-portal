@@ -21,7 +21,7 @@
             }
           </div>
         </div>
-        <span class="badge badge-lg" [attr.data-status]="request.status">
+        <span class="badge badge-lg" [attr.data-status]="displayStatus(request.status)">
           {{ getStatusLabel(request.status) }}
         </span>
       </div>
@@ -75,14 +75,11 @@
               <div class="timeline-dot" [attr.data-action]="event.action"></div>
               <div class="timeline-content">
                 <div class="timeline-header">
-                  <strong>{{ event.action | titlecase }}</strong>
+                  <strong>{{ timelineLabel(event.action) }}</strong>
                   <span class="timeline-date">{{ event.created_at | slice:0:16 }}</span>
                 </div>
                 @if (event.notes) {
                   <p>{{ event.notes }}</p>
-                }
-                @if (event.actor) {
-                  <span class="timeline-actor">by {{ event.actor.full_name }}</span>
                 }
               </div>
             </div>

@@ -53,7 +53,14 @@ export class RequestListComponent implements OnInit {
     return this.categoryLabels[cat as RequestCategory] ?? cat;
   }
 
+  // Citizens shouldn't see the internal "routed" state (an admin-routed-to-dept
+  // detail). Surface it as "Work In Progress" instead.
   getStatusLabel(status: string): string {
+    if (status === 'routed') return this.statusLabels.in_progress;
     return this.statusLabels[status as keyof typeof this.statusLabels] ?? status;
+  }
+
+  displayStatus(status: string): string {
+    return status === 'routed' ? 'in_progress' : status;
   }
 }

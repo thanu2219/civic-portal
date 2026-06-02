@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { SlicePipe, TitleCasePipe } from '@angular/common';
+import { SlicePipe } from '@angular/common';
 import { RequestService } from '../../../core/services/request.service';
 import { AuthService } from '../../../core/services/auth.service';
 import {
@@ -14,7 +14,7 @@ import {
 @Component({
   selector: 'app-request-detail',
   standalone: true,
-  imports: [RouterLink, SlicePipe, TitleCasePipe],
+  imports: [RouterLink, SlicePipe],
   templateUrl: './request-detail.component.html',
   styleUrl: './request-detail.component.scss',
 })
@@ -57,7 +57,21 @@ export class RequestDetailComponent implements OnInit {
     return this.categoryLabels[cat as RequestCategory] ?? cat;
   }
 
+  // Citizens shouldn't see the internal "routed" state (an admin-routed-to-dept
+  // detail). Surface it as "Work In Progress" instead.
   getStatusLabel(status: string): string {
+    if (status === 'routed') return this.statusLabels.in_progress;
     return this.statusLabels[status as keyof typeof this.statusLabels] ?? status;
+  }
+
+  displayStatus(status: string): string {
+    return status === 'routed' ? 'in_progress' : status;
+  }
+
+  timelineLabel(action: string): string {
+    // Generic label for admin approval — citizens see that their request was
+    // approved without knowing who did it.
+    if (action === 'approved') return 'Admin Approved';
+    return action.charAt(0).toUpperCase() + action.slice(1);
   }
 }

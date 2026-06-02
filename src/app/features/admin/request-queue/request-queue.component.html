@@ -138,12 +138,18 @@
                   <div class="timeline-entry">
                     <span class="timeline-dot-sm" [attr.data-action]="event.action"></span>
                     <div>
-                      <strong>{{ event.action | titlecase }}</strong>
+                      <strong>
+                        @if (event.action === 'approved') {
+                          Admin Approved
+                        } @else {
+                          {{ event.action | titlecase }}
+                        }
+                      </strong>
                       <span class="timeline-date-sm">{{ event.created_at | slice:0:16 }}</span>
                       @if (event.notes) {
                         <p class="timeline-notes">{{ event.notes }}</p>
                       }
-                      @if (event.actor) {
+                      @if (event.actor && event.action !== 'approved') {
                         <span class="timeline-actor-sm">by {{ event.actor.full_name }}</span>
                       }
                     </div>
