@@ -26,6 +26,28 @@ export interface UpdateNewsPayload {
   end_date?: string | null;
 }
 
+export type NewsScheduleState = 'live' | 'scheduled' | 'expired' | 'none';
+
+export function isWithinSchedule(
+  post: Pick<NewsPost, 'start_date' | 'end_date'>,
+  now: number = Date.now()
+): boolean {
+  if (post.start_date && new Date(post.start_date).getTime() > now) return false;
+  if (post.end_date && new Date(post.end_date).getTime() < now) return false;
+  return true;
+}
+
+export function getScheduleState(
+  post: Pick<NewsPost, 'start_date' | 'end_date' | 'status'>,
+  now: number = Date.now()
+): NewsScheduleState {
+  if (post.status !== 'approved') return 'none';
+  if (!post.start_date && !post.end_date) return 'none';
+  if (post.start_date && new Date(post.start_date).getTime() > now) return 'scheduled';
+  if (post.end_date && new Date(post.end_date).getTime() < now) return 'expired';
+  return 'live';
+}
+
 @Injectable({ providedIn: 'root' })
 export class NewsService {
   constructor(private supabaseService: SupabaseService) {}
@@ -56,11 +78,7 @@ export class NewsService {
     if (error) throw error;
 
     const now = Date.now();
-    const inWindow = (data ?? []).filter((p: any) => {
-      if (p.start_date && new Date(p.start_date).getTime() > now) return false;
-      if (p.end_date && new Date(p.end_date).getTime() < now) return false;
-      return true;
-    }) as NewsPost[];
+    const inWindow = ((data ?? []) as NewsPost[]).filter(p => isWithinSchedule(p, now));
 
     const posts = limit ? inWindow.slice(0, limit) : inWindow;
     await this.attachAuthors(posts);

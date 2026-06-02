@@ -2,7 +2,11 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SlicePipe } from '@angular/common';
-import { NewsService } from '../../../core/services/news.service';
+import {
+  NewsService,
+  getScheduleState,
+  NewsScheduleState,
+} from '../../../core/services/news.service';
 import { DepartmentService } from '../../../core/services/department.service';
 import { AuthService } from '../../../core/services/auth.service';
 import {
@@ -16,6 +20,7 @@ import {
 
 type AdminTab = 'pending' | 'approved' | 'rejected' | 'all';
 type DeptTab = 'mine' | 'pending' | 'approved' | 'rejected';
+type ScheduleFilter = 'all' | 'live' | 'scheduled' | 'expired';
 
 @Component({
   selector: 'app-news-manage',
@@ -29,6 +34,7 @@ export class NewsManageComponent implements OnInit {
   loading = true;
 
   activeTab: AdminTab | DeptTab = 'pending';
+  scheduleFilter: ScheduleFilter = 'all';
 
   showForm = false;
   editId: string | null = null;
@@ -110,6 +116,13 @@ export class NewsManageComponent implements OnInit {
 
   setTab(tab: AdminTab | DeptTab) {
     this.activeTab = tab;
+    // Schedule sub-filter only applies on the approved tab; reset it otherwise
+    // so the chip state doesn't carry over invisibly.
+    if (tab !== 'approved') this.scheduleFilter = 'all';
+  }
+
+  setScheduleFilter(f: ScheduleFilter) {
+    this.scheduleFilter = f;
   }
 
   private byStatus(s: NewsPostStatus) {
@@ -122,14 +135,35 @@ export class NewsManageComponent implements OnInit {
   get allPosts() { return this.posts; }
 
   get visiblePosts(): NewsPost[] {
+    let list: NewsPost[];
     switch (this.activeTab) {
-      case 'pending': return this.pendingPosts;
-      case 'approved': return this.approvedPosts;
-      case 'rejected': return this.rejectedPosts;
+      case 'pending': list = this.pendingPosts; break;
+      case 'approved': list = this.approvedPosts; break;
+      case 'rejected': list = this.rejectedPosts; break;
       case 'mine':
       case 'all':
-      default: return this.allPosts;
+      default: list = this.allPosts;
     }
+    if (this.activeTab === 'approved' && this.scheduleFilter !== 'all') {
+      list = list.filter(p => this.scheduleStateOf(p) === this.scheduleFilter);
+    }
+    return list;
+  }
+
+  scheduleStateOf(post: NewsPost): NewsScheduleState {
+    return getScheduleState(post);
+  }
+
+  get approvedLiveCount(): number {
+    return this.approvedPosts.filter(p => this.scheduleStateOf(p) === 'live').length;
+  }
+
+  get approvedScheduledCount(): number {
+    return this.approvedPosts.filter(p => this.scheduleStateOf(p) === 'scheduled').length;
+  }
+
+  get approvedExpiredCount(): number {
+    return this.approvedPosts.filter(p => this.scheduleStateOf(p) === 'expired').length;
   }
 
   openNewForm() {

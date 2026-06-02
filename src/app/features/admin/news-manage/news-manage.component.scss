@@ -129,6 +129,81 @@
   &[data-status="rejected"] { background: #fdecea; color: #c62828; }
 }
 
+.schedule-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  padding: 2px 9px;
+  border-radius: 12px;
+  text-transform: capitalize;
+  font-weight: 600;
+
+  &[data-state="live"] { background: #e8f5e9; color: #2e7d32; }
+  &[data-state="scheduled"] { background: #e3f2fd; color: #0d47a1; }
+  &[data-state="expired"] { background: #f1f3f5; color: #6b7280; }
+}
+
+.schedule-dates {
+  margin-top: 4px;
+  font-size: 0.72rem;
+  color: #666;
+  line-height: 1.35;
+
+  &.detail-schedule {
+    margin: 0.25rem 0 0.75rem;
+    font-size: 0.82rem;
+  }
+}
+
+.schedule-filter {
+  display: flex;
+  gap: 0.4rem;
+  margin: -0.5rem 0 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+
+  .schedule-filter-label {
+    font-size: 0.82rem;
+    color: #555;
+    margin-right: 0.25rem;
+    font-weight: 500;
+  }
+
+  .chip {
+    background: #f1f3f5;
+    border: 1px solid transparent;
+    border-radius: 16px;
+    padding: 4px 12px;
+    font-size: 0.8rem;
+    color: #555;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+
+    &:hover { background: #e8ecf0; }
+
+    &.active {
+      background: #0f3460;
+      color: #fff;
+      border-color: #0f3460;
+    }
+  }
+
+  .chip-count {
+    background: rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
+    padding: 1px 7px;
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+
+  .chip.active .chip-count {
+    background: rgba(255, 255, 255, 0.22);
+    color: #fff;
+  }
+}
+
 .actions-cell {
   display: flex;
   gap: 0.35rem;

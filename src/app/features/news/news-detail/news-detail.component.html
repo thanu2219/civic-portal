@@ -1,6 +1,11 @@
 <div class="page-container">
   @if (loading) {
     <div class="loading-spinner">Loading...</div>
+  } @else if (notAvailable) {
+    <div class="empty-state">
+      <p>This post isn't available right now. It may not have started yet, or its scheduled window has ended.</p>
+      <a routerLink="/news" class="btn btn-outline">Back to News &amp; Announcements</a>
+    </div>
   } @else if (!post) {
     <div class="empty-state">
       <p>Post not found.</p>
