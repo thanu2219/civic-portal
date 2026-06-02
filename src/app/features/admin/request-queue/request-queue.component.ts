@@ -264,9 +264,18 @@ export class RequestQueueComponent implements OnInit {
           await this.requestService.deptRejectRequest(this.activeRequest.id, reason);
         }
       }
+
+      // After a reroute the request leaves the dept_admin's queue entirely
+      // (department_id is cleared), so re-opening the detail would 404.
+      const wasReroute =
+        this.modalMode === 'dept_reject' && !!this.selectedReasonConfig?.reroutes;
+
       this.closeModal();
       await this.load();
-      if (this.viewRequest) {
+      if (wasReroute) {
+        this.viewRequest = null;
+        this.viewEvents = [];
+      } else if (this.viewRequest) {
         await this.openDetail(this.viewRequest);
       }
     } catch (err: any) {
