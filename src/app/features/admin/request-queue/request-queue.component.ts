@@ -28,13 +28,14 @@ export class RequestQueueComponent implements OnInit {
   departments: Department[] = [];
   loading = true;
 
-  filterStatus: RequestStatus | '' = '';
   filterCategory: RequestCategory | '' = '';
-  statuses: RequestStatus[] = ['pending', 'in_progress', 'completed', 'closed'];
   categories = Object.entries(CATEGORY_LABELS) as [RequestCategory, string][];
   categoryLabels = CATEGORY_LABELS;
   statusLabels = STATUS_LABELS;
   rejectionReasons = DEPT_REJECTION_REASONS;
+
+  // Tabs: admin = active|approved|rejected, dept = active|resolved|rejected
+  activeTab: 'active' | 'approved' | 'resolved' | 'rejected' = 'active';
 
   // Detail panel
   viewRequest: ServiceRequest | null = null;
@@ -79,7 +80,6 @@ export class RequestQueueComponent implements OnInit {
 
     try {
       const filters: any = {};
-      if (this.filterStatus) filters.status = this.filterStatus;
       if (this.filterCategory) filters.category = this.filterCategory;
 
       this.requests = await this.requestService.getAllRequests(filters);
@@ -90,6 +90,42 @@ export class RequestQueueComponent implements OnInit {
 
     this.loading = false;
     this.cdr.detectChanges();
+  }
+
+  setTab(tab: 'active' | 'approved' | 'resolved' | 'rejected') {
+    this.activeTab = tab;
+  }
+
+  // Status sets per tab, role-aware
+  private inTab(req: ServiceRequest, tab: typeof this.activeTab): boolean {
+    if (this.auth.isAdmin()) {
+      switch (tab) {
+        case 'active': return req.status === 'pending';
+        case 'approved': return req.status === 'routed' || req.status === 'in_progress' || req.status === 'completed';
+        case 'rejected': return req.status === 'rejected';
+      }
+    } else {
+      // dept_admin
+      switch (tab) {
+        case 'active': return req.status === 'routed' || req.status === 'in_progress';
+        case 'resolved': return req.status === 'completed';
+        case 'rejected': return req.status === 'closed';
+      }
+    }
+    return true;
+  }
+
+  get visibleRequests(): ServiceRequest[] {
+    return this.requests.filter(r => this.inTab(r, this.activeTab));
+  }
+
+  get tabCounts() {
+    return {
+      active: this.requests.filter(r => this.inTab(r, 'active')).length,
+      approved: this.requests.filter(r => this.inTab(r, 'approved')).length,
+      resolved: this.requests.filter(r => this.inTab(r, 'resolved')).length,
+      rejected: this.requests.filter(r => this.inTab(r, 'rejected')).length,
+    };
   }
 
   async openDetail(request: ServiceRequest) {

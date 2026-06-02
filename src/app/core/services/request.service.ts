@@ -196,17 +196,17 @@ export class RequestService {
   async approveRequest(id: string, departmentId: string, notes?: string) {
     const { error } = await this.db
       .from('requests')
-      .update({ status: 'in_progress', department_id: departmentId })
+      .update({ status: 'routed', department_id: departmentId })
       .eq('id', id);
     if (error) throw error;
 
-    await this.addEvent(id, 'approved', notes ?? `Request approved and assigned to department.`);
+    await this.addEvent(id, 'approved', notes ?? `Request approved and routed to department.`);
   }
 
   async rejectRequest(id: string, reason: string) {
     const { error } = await this.db
       .from('requests')
-      .update({ status: 'closed', rejection_reason: reason })
+      .update({ status: 'rejected', rejection_reason: reason })
       .eq('id', id);
     if (error) throw error;
 
@@ -294,7 +294,9 @@ export class RequestService {
       return {
         total: all.length,
         pending: all.filter((r: any) => r.status === 'pending').length,
-        inProgress: all.filter((r: any) => r.status === 'in_progress').length,
+        inProgress: all.filter((r: any) =>
+          r.status === 'routed' || r.status === 'in_progress'
+        ).length,
         completed: all.filter((r: any) => r.status === 'completed').length,
       };
     } catch (err) {

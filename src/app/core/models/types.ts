@@ -1,6 +1,12 @@
 export type UserRole = 'citizen' | 'dept_admin' | 'admin';
 
-export type RequestStatus = 'pending' | 'in_progress' | 'completed' | 'closed';
+export type RequestStatus =
+  | 'pending'
+  | 'routed'
+  | 'in_progress'
+  | 'completed'
+  | 'rejected'
+  | 'closed';
 
 export type RequestCategory =
   | 'electricity'
@@ -19,8 +25,10 @@ export const CATEGORY_LABELS: Record<RequestCategory, string> = {
 
 export const STATUS_LABELS: Record<RequestStatus, string> = {
   pending: 'Pending',
+  routed: 'Routed',
   in_progress: 'Work In Progress',
   completed: 'Completed',
+  rejected: 'Rejected',
   closed: 'Closed',
 };
 

@@ -21,14 +21,33 @@
       }
     </div>
 
-    <!-- Filters -->
+    <!-- Tabs -->
+    <div class="queue-tabs" role="tablist">
+      @if (auth.isAdmin()) {
+        <button class="tab-btn" [class.active]="activeTab === 'active'" (click)="setTab('active')">
+          Active <span class="tab-count">{{ tabCounts.active }}</span>
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'approved'" (click)="setTab('approved')">
+          Approved <span class="tab-count">{{ tabCounts.approved }}</span>
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'rejected'" (click)="setTab('rejected')">
+          Rejected <span class="tab-count">{{ tabCounts.rejected }}</span>
+        </button>
+      } @else {
+        <button class="tab-btn" [class.active]="activeTab === 'active'" (click)="setTab('active')">
+          Active <span class="tab-count">{{ tabCounts.active }}</span>
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'resolved'" (click)="setTab('resolved')">
+          Resolved <span class="tab-count">{{ tabCounts.resolved }}</span>
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'rejected'" (click)="setTab('rejected')">
+          Rejected <span class="tab-count">{{ tabCounts.rejected }}</span>
+        </button>
+      }
+    </div>
+
+    <!-- Category filter -->
     <div class="filters">
-      <select [(ngModel)]="filterStatus" (ngModelChange)="load()">
-        <option value="">All Statuses</option>
-        @for (s of statuses; track s) {
-          <option [value]="s">{{ getStatusLabel(s) }}</option>
-        }
-      </select>
       <select [(ngModel)]="filterCategory" (ngModelChange)="load()">
         <option value="">All Categories</option>
         @for (cat of categories; track cat[0]) {
@@ -140,7 +159,7 @@
               <button class="btn btn-approve-lg" (click)="openModalFromDetail('approve')">Approve</button>
               <button class="btn btn-reject-lg" (click)="openModalFromDetail('reject')">Reject</button>
             }
-            @if (auth.isDeptAdmin() && viewRequest.status === 'in_progress') {
+            @if (auth.isDeptAdmin() && (viewRequest.status === 'routed' || viewRequest.status === 'in_progress')) {
               <button class="btn btn-resolve-lg" (click)="openModalFromDetail('resolve')">Resolve</button>
               <button class="btn btn-reject-lg" (click)="openModalFromDetail('dept_reject')">Reject</button>
             }
@@ -151,9 +170,10 @@
 
     @if (loading) {
       <div class="loading-spinner">Loading...</div>
-    } @else if (!requests.length) {
-      <div class="empty-state"><p>No requests match your filters.</p></div>
+    } @else if (!visibleRequests.length) {
+      <div class="empty-state"><p>No requests in this view.</p></div>
     } @else {
+      <p class="table-hint">Click a row to view full details and take action.</p>
       <div class="request-table">
         <table>
           <thead>
@@ -164,11 +184,10 @@
               <th>Status</th>
               <th>Submitted</th>
               <th>Submitted By</th>
-              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            @for (req of requests; track req.id) {
+            @for (req of visibleRequests; track req.id) {
               <tr class="clickable-row" [class.active-row]="viewRequest?.id === req.id" (click)="openDetail(req)">
                 @if (bulkMode) {
                   <td (click)="$event.stopPropagation()">
@@ -186,18 +205,6 @@
                 <td><span class="badge" [attr.data-status]="req.status">{{ getStatusLabel(req.status) }}</span></td>
                 <td>{{ req.created_at | slice:0:10 }}</td>
                 <td>{{ req.profile?.full_name ?? '—' }}</td>
-                <td class="actions-cell" (click)="$event.stopPropagation()">
-                  <!-- Admin actions on pending requests -->
-                  @if (auth.isAdmin() && req.status === 'pending') {
-                    <button class="btn-sm btn-approve" (click)="openModal(req, 'approve')">Approve</button>
-                    <button class="btn-sm btn-reject" (click)="openModal(req, 'reject')">Reject</button>
-                  }
-                  <!-- Dept admin actions on in-progress requests -->
-                  @if (auth.isDeptAdmin() && req.status === 'in_progress') {
-                    <button class="btn-sm btn-resolve" (click)="openModal(req, 'resolve')">Resolve</button>
-                    <button class="btn-sm btn-reject" (click)="openModal(req, 'dept_reject')">Reject</button>
-                  }
-                </td>
               </tr>
             }
           </tbody>
