@@ -10,39 +10,45 @@
     </button>
 
     <div class="navbar-menu" [class.open]="menuOpen">
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="menuOpen=false">{{ 'navbar.home' | translate }}</a>
-      <a routerLink="/news" routerLinkActive="active" (click)="menuOpen=false">{{ 'navbar.news' | translate }}</a>
+      <div class="nav-tabs">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="menuOpen=false">{{ 'navbar.home' | translate }}</a>
+        <a routerLink="/news" routerLinkActive="active" (click)="menuOpen=false">{{ 'navbar.news' | translate }}</a>
 
-      @if (auth.isLoggedIn()) {
-        <a routerLink="/requests" routerLinkActive="active" (click)="menuOpen=false">{{ 'navbar.myRequests' | translate }}</a>
-        <a routerLink="/requests/new" routerLinkActive="active" (click)="menuOpen=false" class="btn-report">{{ 'navbar.reportIssue' | translate }}</a>
+        @if (auth.isLoggedIn()) {
+          <a routerLink="/requests" routerLinkActive="active" (click)="menuOpen=false">{{ 'navbar.myRequests' | translate }}</a>
+          <a routerLink="/requests/new" routerLinkActive="active" (click)="menuOpen=false" class="btn-report">{{ 'navbar.reportIssue' | translate }}</a>
 
-        @if (auth.isStaff()) {
-          <a routerLink="/admin" routerLinkActive="active" (click)="menuOpen=false">{{ 'navbar.admin' | translate }}</a>
+          @if (auth.isStaff()) {
+            <a routerLink="/admin" routerLinkActive="active" (click)="menuOpen=false">{{ 'navbar.admin' | translate }}</a>
+          }
         }
+      </div>
 
-        <div class="user-menu">
-          <span class="user-name">{{ auth.profile()?.full_name }}</span>
-          <span class="user-role badge" [attr.data-role]="auth.role()">{{ ('role.' + auth.role()) | translate }}</span>
+      <div class="nav-actions">
+        @if (auth.isLoggedIn()) {
+          <div class="user-menu">
+            <span class="user-name">{{ auth.profile()?.full_name }}</span>
+            <span class="user-role badge" [attr.data-role]="auth.role()">{{ ('role.' + auth.role()) | translate }}</span>
+          </div>
           <button class="btn-logout" (click)="logout()">{{ 'navbar.signOut' | translate }}</button>
-        </div>
-      } @else {
-        <a routerLink="/login" routerLinkActive="active" (click)="menuOpen=false">{{ 'navbar.signIn' | translate }}</a>
-        <a routerLink="/register" routerLinkActive="active" (click)="menuOpen=false" class="btn-register">{{ 'navbar.register' | translate }}</a>
-      }
-
-      <div class="lang-switch" role="group" [attr.aria-label]="'language.switchTo' | translate">
-        @for (l of languages; track l.code) {
-          <button
-            type="button"
-            class="lang-btn"
-            [class.active]="lang.current() === l.code"
-            (click)="selectLanguage(l.code)"
-            [attr.aria-pressed]="lang.current() === l.code"
-          >
-            {{ l.nativeLabel }}
-          </button>
+        } @else {
+          <a routerLink="/login" routerLinkActive="active" (click)="menuOpen=false">{{ 'navbar.signIn' | translate }}</a>
+          <a routerLink="/register" routerLinkActive="active" (click)="menuOpen=false" class="btn-register">{{ 'navbar.register' | translate }}</a>
         }
+
+        <div class="lang-switch" role="group" [attr.aria-label]="'language.switchTo' | translate">
+          @for (l of languages; track l.code) {
+            <button
+              type="button"
+              class="lang-btn"
+              [class.active]="lang.current() === l.code"
+              (click)="selectLanguage(l.code)"
+              [attr.aria-pressed]="lang.current() === l.code"
+            >
+              {{ l.nativeLabel }}
+            </button>
+          }
+        </div>
       </div>
     </div>
   </div>
