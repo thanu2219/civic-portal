@@ -43,7 +43,14 @@
   },
   "footer": {
     "tagline": "Empowering citizens to report and track civic issues.",
-    "copy": "© {{year}} CivicPortal. All rights reserved."
+    "copy": "© {{year}} CivicPortal. All rights reserved.",
+    "disclaimer": "This is an independent citizen initiative. Not affiliated with or endorsed by any government body.",
+    "linksHeading": "Quick Links",
+    "about": "About",
+    "contact": "Contact Us",
+    "howItWorks": "How It Works",
+    "privacy": "Privacy",
+    "lastUpdated": "Last updated: {{date}}"
   },
   "home": {
     "hero": {
@@ -403,6 +410,47 @@
   "alerts": {
     "failedApprove": "Failed to approve.",
     "failedDelete": "Failed to delete."
+  },
+  "about": {
+    "title": "About This Project",
+    "subtitle": "An independent civic initiative for the people of Udupi.",
+    "missionHeading": "Our Mission",
+    "missionBody": "To give every citizen of Udupi a simple, transparent, Kannada-first way to report civic issues — potholes, water supply, street lights, garbage, drainage — and to follow them through to resolution.",
+    "whyHeading": "Why We Built This",
+    "whyBody": "Civic problems often go unreported, or get reported into systems where citizens cannot see what happens next. We believe a clean, mobile-friendly, Kannada-first tool can close that gap and bring transparency to local civic services.",
+    "howHeading": "How It Works Today",
+    "howIntro": "We are running an early citizen-led pilot. Here is what happens when you file a report:",
+    "howStep1": "You submit a report through this site in Kannada or English, with photos and location.",
+    "howStep2": "Our small volunteer team reviews the report and forwards it to the relevant Udupi CMC department through their existing channels.",
+    "howStep3": "We update the report with the status and any response we receive, so you can see what is happening.",
+    "howStep4": "If the issue is resolved, we close it with proof. If it stalls, we follow up.",
+    "scopeHeading": "Scope and Honesty",
+    "scopeBody": "This is currently a small citizen-run project, not an official government portal. We are working to formalize a partnership with the Udupi City Municipal Council, but until then please use the official emergency numbers for anything urgent.",
+    "teamHeading": "Who We Are",
+    "teamBody": "Built and maintained by {{name}}, a citizen of Udupi. If you would like to contribute as a volunteer — for outreach, translation, design, or engineering — please get in touch.",
+    "disclaimerHeading": "Important Disclaimer",
+    "disclaimerBody": "This website is an independent citizen initiative. It is not an official Government of India, Government of Karnataka, or Udupi CMC service. We do not represent any government body. For emergencies, please contact the appropriate emergency services directly."
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "We would love to hear from you — citizens, volunteers, officials, or press.",
+    "emailHeading": "Email",
+    "phoneHeading": "Phone",
+    "ownerHeading": "Project Lead",
+    "addressHeading": "Based In",
+    "address": "Udupi, Karnataka, India",
+    "supportHeading": "What can we help with?",
+    "supportCitizen": "Report a problem with the site or a stuck request",
+    "supportVolunteer": "Volunteer with us (outreach, translation, design, code)",
+    "supportOfficial": "Government or municipal partnerships",
+    "supportPress": "Press, media, or research enquiries",
+    "responseNote": "We aim to respond within 2 working days. This is a volunteer project — please be patient.",
+    "emergencyHeading": "Emergencies",
+    "emergencyBody": "This is not an emergency reporting system. For life-threatening situations, call the relevant emergency number:",
+    "emergencyPolice": "Police: 100",
+    "emergencyFire": "Fire: 101",
+    "emergencyAmbulance": "Ambulance: 108",
+    "emergencyWomen": "Women's Helpline: 1091"
   },
   "status": {
     "pending": "Pending",

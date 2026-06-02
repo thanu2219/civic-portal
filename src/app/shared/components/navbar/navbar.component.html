@@ -12,6 +12,7 @@
     <div class="navbar-menu" [class.open]="menuOpen">
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="menuOpen=false">{{ 'navbar.home' | translate }}</a>
       <a routerLink="/news" routerLinkActive="active" (click)="menuOpen=false">{{ 'navbar.news' | translate }}</a>
+      <a routerLink="/about" routerLinkActive="active" (click)="menuOpen=false">{{ 'footer.about' | translate }}</a>
 
       @if (auth.isLoggedIn()) {
         <a routerLink="/requests" routerLinkActive="active" (click)="menuOpen=false">{{ 'navbar.myRequests' | translate }}</a>
