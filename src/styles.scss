@@ -12,6 +12,22 @@ html {
   -webkit-font-smoothing: antialiased;
 }
 
+/*
+ * Kannada glyphs (with matras above/below) render visually taller than Latin at the
+ * same font-size. We pair Inter with Noto Sans Kannada and trim the *root* font-size
+ * down ~6% in Kannada mode so both scripts look optically balanced everywhere
+ * (navbar, headings, body, buttons). Size rule is scoped to <html> only so it does
+ * NOT compound down the DOM via em units.
+ */
+:lang(kn) {
+  font-family: 'Noto Sans Kannada', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+html:lang(kn) {
+  font-size: 15px;
+  line-height: 1.55;
+}
+
 body {
   background: #f5f6fa;
   color: #333;
