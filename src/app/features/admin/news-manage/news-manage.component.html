@@ -60,6 +60,25 @@
       }
     </div>
 
+    <!-- Schedule sub-filter (only meaningful for approved posts) -->
+    @if (activeTab === 'approved') {
+      <div class="schedule-filter">
+        <span class="schedule-filter-label">Schedule:</span>
+        <button class="chip" [class.active]="scheduleFilter === 'all'" (click)="setScheduleFilter('all')">
+          All <span class="chip-count">{{ approvedPosts.length }}</span>
+        </button>
+        <button class="chip" [class.active]="scheduleFilter === 'live'" (click)="setScheduleFilter('live')">
+          Live <span class="chip-count">{{ approvedLiveCount }}</span>
+        </button>
+        <button class="chip" [class.active]="scheduleFilter === 'scheduled'" (click)="setScheduleFilter('scheduled')">
+          Scheduled <span class="chip-count">{{ approvedScheduledCount }}</span>
+        </button>
+        <button class="chip" [class.active]="scheduleFilter === 'expired'" (click)="setScheduleFilter('expired')">
+          Expired <span class="chip-count">{{ approvedExpiredCount }}</span>
+        </button>
+      </div>
+    }
+
     @if (loading) {
       <div class="loading-spinner">Loading...</div>
     } @else if (!visiblePosts.length) {
@@ -74,6 +93,7 @@
               <th>Type</th>
               <th>Category</th>
               <th>Status</th>
+              <th>Schedule</th>
               @if (auth.isAdmin()) { <th>Author</th> }
               <th>Date</th>
               <th>Actions</th>
@@ -92,6 +112,21 @@
                 </td>
                 <td><span class="cat-tag">{{ categoryLabels[post.category] }}</span></td>
                 <td><span class="status-badge" [attr.data-status]="post.status">{{ post.status }}</span></td>
+                <td>
+                  @if (scheduleStateOf(post) === 'none') {
+                    <span class="no-actions">—</span>
+                  } @else {
+                    <span class="schedule-badge" [attr.data-state]="scheduleStateOf(post)">
+                      {{ scheduleStateOf(post) }}
+                    </span>
+                    @if (post.start_date || post.end_date) {
+                      <div class="schedule-dates">
+                        @if (post.start_date) { <div>Starts: {{ post.start_date | slice:0:16 }}</div> }
+                        @if (post.end_date) { <div>Ends: {{ post.end_date | slice:0:16 }}</div> }
+                      </div>
+                    }
+                  }
+                </td>
                 @if (auth.isAdmin()) {
                   <td>{{ post.author?.full_name || '—' }}</td>
                 }
@@ -122,7 +157,18 @@
             <span class="type-tag" [attr.data-type]="detailPost.post_type">{{ typeLabels[detailPost.post_type] }}</span>
             <span class="cat-tag">{{ categoryLabels[detailPost.category] }}</span>
             <span class="status-badge" [attr.data-status]="detailPost.status">{{ detailPost.status }}</span>
+            @if (scheduleStateOf(detailPost) !== 'none') {
+              <span class="schedule-badge" [attr.data-state]="scheduleStateOf(detailPost)">
+                {{ scheduleStateOf(detailPost) }}
+              </span>
+            }
           </div>
+          @if (detailPost.start_date || detailPost.end_date) {
+            <div class="schedule-dates detail-schedule">
+              @if (detailPost.start_date) { <div>Starts: {{ detailPost.start_date | slice:0:16 }}</div> }
+              @if (detailPost.end_date) { <div>Ends: {{ detailPost.end_date | slice:0:16 }}</div> }
+            </div>
+          }
           <h2>{{ detailPost.title }}</h2>
           <p class="detail-meta">
             By {{ detailPost.author?.full_name || 'Unknown' }} · {{ detailPost.created_at | slice:0:10 }}
