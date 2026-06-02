@@ -1,28 +1,10 @@
 <footer class="footer">
   <div class="footer-container">
-    <div class="footer-top">
-      <div class="footer-col footer-col-brand">
-        <div class="footer-brand">
-          <span class="brand-icon">🏛️</span>
-          <span>{{ 'common.appName' | translate }}</span>
-        </div>
-        <p class="footer-text">{{ 'footer.tagline' | translate }}</p>
-      </div>
-
-      <div class="footer-col">
-        <h4>{{ 'footer.linksHeading' | translate }}</h4>
-        <ul class="footer-links">
-          <li><a routerLink="/about">{{ 'footer.about' | translate }}</a></li>
-          <li><a routerLink="/contact">{{ 'footer.contact' | translate }}</a></li>
-          <li><a routerLink="/news">{{ 'navbar.news' | translate }}</a></li>
-        </ul>
-      </div>
+    <div class="footer-brand">
+      <span class="brand-icon">🏛️</span>
+      <span>{{ 'common.appName' | translate }}</span>
     </div>
-
-    <div class="footer-disclaimer">
-      {{ 'footer.disclaimer' | translate }}
-    </div>
-
+    <p class="footer-text">{{ 'footer.tagline' | translate }}</p>
     <p class="footer-copy">{{ 'footer.copy' | translate: { year: year } }}</p>
   </div>
 </footer>
